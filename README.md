@@ -15,3 +15,4 @@ The case study underscores RIPN’s capacity for real-time adaptability and syst
 By addressing limitations of existing Petri net extensions, RIPNs offer a scalable and unified approach for modeling 
 intelligent and adaptive Cyber-Physical Systems. 
 
+To open and edit them install first GREATSPN3 https://github.com/greatspn/SOURCES.git and importe the projects using the tool facilities.
