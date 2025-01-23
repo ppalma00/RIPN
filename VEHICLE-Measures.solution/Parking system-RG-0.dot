@@ -1,0 +1,23 @@
+digraph RRG {
+  rankdir=TB;
+  ratio=compress;
+  node[shape=ellipse, fontname=Arial];
+  init[shape=none, label=< >];
+  init -> M1 [len=0.5, color=navy];
+  M1 [ label=< <font color="#DDAAAA">M1:</font> <br/>P3>, penwidth=1 ];
+  M2 [ label=< <font color="#DDAAAA">M2:</font> <br/>P0>, penwidth=1 ];
+  M3 [ label=< <font color="#DDAAAA">M3:</font> <br/>P1>, penwidth=1 ];
+  M4 [ label=< <font color="#DDAAAA">M4:</font> <br/>P2>, penwidth=1 ];
+
+
+  edge[len=1.5, fontsize=10, fontname=Arial];
+  M1 -> M2 [label=<T0<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M2 -> M3 [label=<T1<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M2 -> M3 [label=<T2<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M3 -> M1 [label=<T5<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M3 -> M4 [label=<T4<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M3 -> M1 [label=<T3<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M4 -> M1 [label=<T7<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+  M4 -> M3 [label=<T6<br/><font face="Courier" color="#6060A0">exp[1]</font>>, penwidth=1 ];
+
+}

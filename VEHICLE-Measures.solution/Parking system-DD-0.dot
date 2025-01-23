@@ -1,0 +1,31 @@
+digraph structs {
+  newrank=true;
+  dpi=72;
+  subgraph cluster1 { style=invis;
+  node [shape=record, height=0.8, width=0.5, fontsize=50, penwidth=4, fillcolor=white, style=filled];
+  edge [arrowhead=vee, minlen=1, penwidth=4, color=blue];
+  n11 [label="<i0>0|<i1>1"];
+  n11:i0 -> n9:n;
+  n11:i1 -> n10:n;
+  n9 [label="<i0>0|<i1>1"];
+  n9:i0 -> n7:n;
+  n9:i1 -> n8:n;
+  n7 [label="<i0>0|<i1>1"];
+  n7:i0 -> n6:n;
+  n7:i1 -> n1:n;
+  n6 [label="<i1>1"];
+  n1 [label="<i0>0"];
+  n8 [label="<i0>0"];
+  n8:i0 -> n1:n;
+  n10 [label="<i0>0"];
+  n10:i0 -> n8:n;
+}
+  subgraph cluster2 { style=invis;
+  node [shape=none, fontsize=60, margin="0.5,0.1"];
+  LVL1_0 [label="P0"];
+  LVL2_0 [label="P3"];
+  LVL3_0 [label="P1"];
+  LVL4_0 [label="P2"];
+}
+{rank=same } -> {rank=same  n11 LVL4_0} -> {rank=same  n9 n10 LVL3_0} -> {rank=same  n7 n8 LVL2_0} -> {rank=same  n6 n1 LVL1_0} [style=invis]
+}
