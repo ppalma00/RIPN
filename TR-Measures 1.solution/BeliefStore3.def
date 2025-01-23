@@ -1,0 +1,27 @@
+|256
+%
+|
+(C0 c 1.2395833333333333 0.5  (@c
+u SEE_B,TOUCH,OPEN,HOLD,SEE_D,ATDROP
+))
+(SEE_B c 1.90625 0.5  (@c
+{see_bottle}
+))
+(TOUCH c 2.5729166666666665 0.5  (@c
+{touching}
+))
+(OPEN c 3.2395833333333335 0.5  (@c
+{gripper_open}
+))
+(HOLD c 3.90625 0.5  (@c
+{holding}
+))
+(SEE_D c 4.572916666666667 0.5  (@c
+{see_drop}
+))
+(ATDROP c 5.239583333333333 0.5  (@c
+{at_drop}
+))
+(m_0 m 10.0 2.0 (@m
+ S
+))

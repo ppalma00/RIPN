@@ -1,0 +1,4 @@
+FORMULA: MEASURE0
+LANGUAGE: CTLSTAR
+EF(#active_rule1_or_upper>1)
+

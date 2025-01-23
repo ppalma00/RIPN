@@ -1,0 +1,4 @@
+FORMULA: MEASURE0
+LANGUAGE: CTLSTAR
+EF(#open_gripper==1)
+

@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- This project file has been saved by the New GreatSPN Editor, v.100 --><project name="TR" version="121">
+  <gspn name="PT" show-color-cmd="false" show-fluid-cmd="false" show-timed-cmd="false" view-rates="false">
+    <nodes>
+      <place label-x="-3.0" label-y="0.0" marking="1" name="rule0_off" x="5.0" y="6.0"/>
+      <place label-x="2.5" label-y="1.0" name="rule0_on" x="5.0" y="21.0"/>
+      <transition label-x="0.5" label-y="1.0" magnets="NSEW_POINTS" name="true_C_rule0" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="5.55" y="11.0"/>
+      <transition label-y="1.0" magnets="NSEW_POINTS" name="false_cond_rule0" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="IMM" x="5.85" y="24.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule1_or_upper" x="12.0" y="5.0"/>
+      <transition label-x="1.0" label-y="1.0" magnets="NSEW_SQUARE_POINTS" name="end_exec0" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="11.85" y="11.0"/>
+      <place label-x="-3.0" label-y="0.0" marking="1" name="rule1_off" x="21.0" y="6.0"/>
+      <place label-x="2.5" label-y="1.0" name="rule1_on" x="21.0" y="21.0"/>
+      <transition label-x="0.5" label-y="1.0" magnets="NSEW_POINTS" name="true_C_rule1" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="21.55" y="11.0"/>
+      <transition label-y="1.0" magnets="NSEW_POINTS" name="false_cond_rule1" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="IMM" x="21.85" y="24.0"/>
+      <transition label-x="1.0" label-y="1.0" magnets="NSEW_POINTS" name="end_exec1" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="27.85" y="11.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule2_or_upper" x="28.0" y="5.0"/>
+      <place label-x="-3.0" label-y="0.0" marking="1" name="rule2_off" x="37.0" y="6.0"/>
+      <place label-x="2.5" label-y="1.0" name="rule2_on" x="37.0" y="21.0"/>
+      <transition label-x="0.5" label-y="1.0" magnets="NSEW_POINTS" name="true_C_rule2" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="37.550000000000004" y="11.0"/>
+      <transition label-y="1.0" magnets="NSEW_POINTS" name="false_cond_rule2" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="IMM" x="37.85" y="24.0"/>
+      <transition label-x="4.5" label-y="0.0" magnets="NSEW_POINTS" name="ready_for_rule2" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="37.849999999999994" y="18.0"/>
+      <place label-x="4.0" label-y="0.0" name="initiating_rule2" x="37.0" y="15.0"/>
+      <transition label-x="4.5" label-y="0.0" magnets="NSEW_POINTS" name="ready_for_rule1" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="21.85" y="18.0"/>
+      <place label-x="4.0" label-y="0.0" name="initiating_rule1" x="21.0" y="15.0"/>
+      <transition label-x="4.5" label-y="0.0" magnets="NSEW_POINTS" name="ready_for_rule0" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="5.85" y="18.0"/>
+      <place label-x="4.0" label-y="0.0" name="initiating_rule0" x="5.0" y="15.0"/>
+    </nodes>
+    <edges>
+      <arc head="true_C_rule0" head-magnet="1" kind="INPUT" tail="rule0_off"/>
+      <arc head="initiating_rule0" kind="OUTPUT" mult-y="1.5250000000000004" tail="true_C_rule0" tail-magnet="3"/>
+      <arc head="false_cond_rule0" head-magnet="1" kind="INPUT" tail="rule0_on"/>
+      <arc head="rule0_off" kind="OUTPUT" tail="false_cond_rule0" tail-magnet="1">
+        <point x="2.0" y="20.5"/>
+      </arc>
+      <arc head="true_C_rule0" head-magnet="2" kind="INHIBITOR" tail="active_rule1_or_upper"/>
+      <arc head="end_exec0" head-magnet="1" kind="INPUT" tail="rule0_on">
+        <point x="12.0" y="20.0"/>
+      </arc>
+      <arc head="rule0_off" kind="OUTPUT" tail="end_exec0">
+        <point x="9.5" y="9.0"/>
+      </arc>
+      <arc head="true_C_rule1" head-magnet="1" kind="INPUT" tail="rule1_off"/>
+      <arc head="initiating_rule1" kind="OUTPUT" mult-y="2.5250000000000004" tail="true_C_rule1" tail-magnet="3"/>
+      <arc head="false_cond_rule1" head-magnet="1" kind="INPUT" tail="rule1_on"/>
+      <arc head="rule1_off" kind="OUTPUT" tail="false_cond_rule1" tail-magnet="1">
+        <point x="19.0" y="20.5"/>
+      </arc>
+      <arc head="true_C_rule1" head-magnet="2" kind="INHIBITOR" tail="active_rule2_or_upper"/>
+      <arc head="end_exec1" head-magnet="1" kind="INPUT" tail="rule1_on">
+        <point x="29.0" y="18.5"/>
+      </arc>
+      <arc head="rule1_off" kind="OUTPUT" tail="end_exec1" tail-magnet="1">
+        <point x="26.0" y="9.0"/>
+      </arc>
+      <arc head="end_exec0" head-magnet="1" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="12.5" y="8.5"/>
+      </arc>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="end_exec0">
+        <point x="13.5" y="8.5"/>
+      </arc>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="end_exec1" tail-magnet="3">
+        <point x="29.5" y="8.0"/>
+      </arc>
+      <arc head="end_exec1" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="28.5" y="8.0"/>
+      </arc>
+      <arc head="false_cond_rule1" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="17.5" y="16.5"/>
+        <point x="18.0" y="24.0"/>
+      </arc>
+      <arc head="true_C_rule2" head-magnet="1" kind="INPUT" tail="rule2_off"/>
+      <arc head="initiating_rule2" kind="OUTPUT" tail="true_C_rule2" tail-magnet="3"/>
+      <arc head="false_cond_rule2" head-magnet="1" kind="INPUT" tail="rule2_on"/>
+      <arc head="rule2_off" kind="OUTPUT" tail="false_cond_rule2" tail-magnet="1">
+        <point x="34.0" y="20.5"/>
+      </arc>
+      <arc head="false_cond_rule2" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="32.0" y="16.0"/>
+        <point x="33.0" y="24.0"/>
+      </arc>
+      <arc head="false_cond_rule2" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="21.5" y="2.5"/>
+        <point x="49.5" y="4.0"/>
+        <point x="49.5" y="23.0"/>
+      </arc>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="true_C_rule1" tail-magnet="0"/>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="true_C_rule2" tail-magnet="0"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="true_C_rule2" tail-magnet="0">
+        <point x="17.0" y="2.0"/>
+      </arc>
+      <arc head="ready_for_rule2" head-magnet="1" kind="INPUT" tail="initiating_rule2"/>
+      <arc head="rule2_on" kind="OUTPUT" tail="ready_for_rule2"/>
+      <arc head="ready_for_rule1" head-magnet="1" kind="INPUT" tail="initiating_rule1"/>
+      <arc head="rule1_on" kind="OUTPUT" tail="ready_for_rule1"/>
+      <arc head="ready_for_rule0" head-magnet="1" kind="INPUT" tail="initiating_rule0"/>
+      <arc head="rule0_on" kind="OUTPUT" tail="ready_for_rule0"/>
+    </edges>
+  </gspn>
+  <measures gspn-name="PT" log-uuid="e77fd03c-8bd8-4011-a6ac-9cf260461abb" name="Measures" simplified-UI="false">
+    <assignments/>
+    <rgmedd2/>
+    <formulas>
+      <formula comment="Basic statistics of the toolchain execution." expr="liveness" language="CTL">
+        <result-table>
+          <mc-result name="MEASURE0" value="false 0/7">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+      <formula expr="onesafe" language="CTL">
+        <result-table>
+          <pdf-result filename="/Users/pedro/TR-Measures.solution/PT-DD-0.pdf" name="DD">
+            <bindings/>
+          </pdf-result>
+        </result-table>
+      </formula>
+      <formula expr="EF (#rule1_off == 1)" language="CTL">
+        <result-table>
+          <mc-result name="MEASURE0" value="true 7/7">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+    </formulas>
+  </measures>
+  <gspn name="PT0v3" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-y="-2.0" marking="1" name="rule0_off" x="7.0" y="8.0"/>
+      <place label-x="2.5" label-y="1.0" name="rule0_on" x="7.0" y="19.0"/>
+      <transition delay="1" delay-x="-1.5" label-x="0.5" magnets="NSEW_POINTS" name="true_cond_rule0" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="7.55" y="13.0"/>
+      <transition delay="1" delay-x="-2.0" delay-y="0.0" label-x="1.0" label-y="1.5" magnets="NSEW_POINTS" name="false_cond_rule0" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="2.55" y="19.0"/>
+      <place name="active_rule1_or_upper" x="11.0" y="13.0"/>
+      <transition label-x="0.5" label-y="-1.0" magnets="NSEW_SQUARE_POINTS" name="end_exec0" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="15.85" y="11.0"/>
+    </nodes>
+    <edges>
+      <arc head="true_cond_rule0" head-magnet="1" kind="INPUT" tail="rule0_off"/>
+      <arc head="false_cond_rule0" head-magnet="2" kind="INPUT" tail="rule0_on"/>
+      <arc head="true_cond_rule0" head-magnet="2" kind="INHIBITOR" tail="active_rule1_or_upper"/>
+      <arc head="end_exec0" head-magnet="1" kind="INPUT" tail="rule0_on">
+        <point x="16.0" y="20.0"/>
+      </arc>
+      <arc head="rule0_on" kind="OUTPUT" tail="true_cond_rule0" tail-magnet="3"/>
+      <arc head="rule0_off" kind="OUTPUT" tail="end_exec0">
+        <point x="16.0" y="9.0"/>
+      </arc>
+      <arc head="end_exec0" head-magnet="3" kind="INPUT" tail="active_rule1_or_upper"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="end_exec0" tail-magnet="3"/>
+      <arc head="rule0_off" kind="OUTPUT" tail="false_cond_rule0">
+        <point x="3.0" y="9.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <gspn name="PTmiddlev3" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="2.5" label-y="-1.5" name="active_rule1_or_upper" x="8.0" y="8.0"/>
+      <place label-x="2.5" label-y="-1.0" marking="1" name="rule1_off" x="11.0" y="4.0"/>
+      <place label-x="2.5" label-y="1.0" name="rule1_on" x="11.0" y="16.0"/>
+      <transition delay-x="-2.5" delay-y="0.0" label-x="1.5" magnets="NSEW_POINTS" name="true_cond_rule1" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="11.55" y="12.0"/>
+      <transition label-x="5.0" label-y="0.0" magnets="NSEW_POINTS" name="false_cond_rule1" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="11.55" y="19.0"/>
+      <transition label-x="-2.0" label-y="-1.0" magnets="NSEW_POINTS" name="end_exec1" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="IMM" x="20.85" y="8.0"/>
+      <place name="active_ruletop_or_upper" x="16.0" y="12.0"/>
+    </nodes>
+    <edges>
+      <arc head="true_cond_rule1" head-magnet="1" kind="INPUT" tail="rule1_off"/>
+      <arc head="false_cond_rule1" head-magnet="1" kind="INPUT" tail="rule1_on"/>
+      <arc head="true_cond_rule1" head-magnet="2" kind="INHIBITOR" tail="active_ruletop_or_upper"/>
+      <arc head="end_exec1" head-magnet="1" kind="INPUT" tail="rule1_on">
+        <point x="21.0" y="17.0"/>
+      </arc>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="true_cond_rule1" tail-magnet="0"/>
+      <arc head="end_exec1" kind="INPUT" mult-k="1.64715576171875" tail="active_rule1_or_upper">
+        <point x="17.5" y="9.0"/>
+      </arc>
+      <arc head="rule1_on" kind="OUTPUT" tail="true_cond_rule1" tail-magnet="1"/>
+      <arc head="end_exec1" kind="INPUT" tail="active_ruletop_or_upper"/>
+      <arc head="active_ruletop_or_upper" kind="OUTPUT" tail="end_exec1"/>
+      <arc head="rule1_off" kind="OUTPUT" tail="end_exec1" tail-magnet="1">
+        <point x="21.0" y="5.0"/>
+      </arc>
+      <arc head="false_cond_rule1" head-magnet="0" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="9.0" y="17.0"/>
+      </arc>
+      <arc head="rule1_off" kind="OUTPUT" tail="false_cond_rule1">
+        <point x="7.0" y="20.0"/>
+        <point x="7.0" y="5.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <gspn name="PTtopv3" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="0.5" label-y="-1.5" name="active_rule1_or_upper" x="9.0" y="6.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule2_or_upper" x="9.0" y="10.0"/>
+      <place label-x="3.0" label-y="-1.0" marking="1" name="rule2_off" x="15.0" y="3.0"/>
+      <place label-x="2.0" label-y="-1.5" name="rule2_on" x="15.0" y="13.0"/>
+      <transition label-x="1.5" label-y="-2.0" magnets="NSEW_POINTS" name="true_cond_rule2" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="15.55" y="8.0"/>
+      <transition delay-x="0.4999999999999929" delay-y="-1.0" label-x="-2.5" label-y="1.0" magnets="NSEW_POINTS" name="false_cond_rule2" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="15.55" y="17.0"/>
+    </nodes>
+    <edges>
+      <arc head="true_cond_rule2" head-magnet="1" kind="INPUT" tail="rule2_off"/>
+      <arc head="false_cond_rule2" head-magnet="1" kind="INPUT" tail="rule2_on"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="true_cond_rule2" tail-magnet="0">
+        <point x="15.0" y="8.5"/>
+      </arc>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="true_cond_rule2">
+        <point x="14.5" y="10.0"/>
+      </arc>
+      <arc head="false_cond_rule2" head-magnet="0" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="6.5" y="7.0"/>
+        <point x="6.5" y="18.0"/>
+      </arc>
+      <arc head="false_cond_rule2" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="10.0" y="18.0"/>
+      </arc>
+      <arc head="rule2_on" kind="OUTPUT" tail="true_cond_rule2" tail-magnet="3"/>
+      <arc head="rule2_off" kind="OUTPUT" tail="false_cond_rule2">
+        <point x="21.0" y="18.0"/>
+        <point x="21.0" y="4.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <multinet name="MultiNet v3" show-color-cmd="false" show-fluid-cmd="false">
+    <bindings-list/>
+    <subnet netname="PT0v3"/>
+    <subnet netname="PTmiddlev3"/>
+    <subnet netname="PTtopv3"/>
+  </multinet>
+  <measures gspn-name="MultiNet v3" log-uuid="fa4430bd-b19c-4b60-9815-0a185733e6fe" name="Measures 3" simplified-UI="false">
+    <assignments/>
+    <rgmedd2/>
+    <formulas>
+      <formula expr="deadlock" language="CTL">
+        <result-table>
+          <mc-result name="MEASURE0" value="false 0/7">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+      <formula expr="liveness" language="CTLSTAR">
+        <result-table>
+          <mc-result name="MEASURE0" value="true 7/7">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+      <formula expr="invariantly(#rule0_on+#rule1_on+#rule2_on==1)" language="CTLSTAR">
+        <result-table>
+          <mc-result name="MEASURE0" value="false 0/7">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+    </formulas>
+  </measures>
+  <gspn name="PN rule0" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="-3.0" label-y="0.0" marking="1" name="rule0_off" x="7.0" y="8.0"/>
+      <place label-x="-2.0" label-y="0.0" name="P0" x="7.0" y="21.0"/>
+      <transition delay="1" delay-x="-2.5" delay-y="0.5" label-x="-2.0" label-y="0.0" magnets="NSEW_POINTS" name="T0" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="7.55" y="13.0"/>
+      <place label-x="-0.5" label-y="2.0" name="active_rule1_or_upper" x="12.0" y="15.0"/>
+      <transition label-x="3.5" label-y="0.0" magnets="NSEW_SQUARE_POINTS" name="end_exec0" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="16.55" y="11.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="3.25" x="8.375" y="12.5">\textbf{if } [true]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="2.75" x="8.625" y="22.5">turn</text-box>
+    </nodes>
+    <edges>
+      <arc head="T0" head-magnet="1" kind="INPUT" tail="rule0_off"/>
+      <arc head="T0" head-magnet="2" kind="INHIBITOR" tail="active_rule1_or_upper"/>
+      <arc head="end_exec0" head-magnet="1" kind="INPUT" tail="P0">
+        <point x="17.0" y="22.0"/>
+      </arc>
+      <arc head="P0" kind="OUTPUT" tail="T0"/>
+      <arc head="rule0_off" kind="OUTPUT" tail="end_exec0">
+        <point x="17.0" y="9.0"/>
+      </arc>
+      <arc head="end_exec0" kind="INPUT" tail="active_rule1_or_upper"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="end_exec0"/>
+    </edges>
+  </gspn>
+  <gspn name="PN rule1" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="2.5" label-y="-1.5" name="active_rule1_or_upper" x="4.0" y="7.0"/>
+      <place label-y="-2.0" marking="1" name="rule1_off" x="11.0" y="4.0"/>
+      <place label-x="-1.5" label-y="-1.0" name="C1" x="11.0" y="17.0"/>
+      <transition label-x="-1.5" label-y="-1.0" magnets="NSEW_POINTS" name="T1" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="11.55" y="9.0"/>
+      <transition label-x="-1.9999999999999982" label-y="-1.0" magnets="NSEW_POINTS" name="T11" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="11.55" y="20.0"/>
+      <transition label-x="3.5" label-y="0.0" magnets="NSEW_POINTS" name="end_exec1" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="22.55" y="7.0"/>
+      <place name="active_rule2_or_upper" x="17.0" y="13.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="__textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.75" x="12.625" y="8.5">\textbf{if } [see_bottle]</text-box>
+      <text-box border-color="none" fill-color="none" height="0.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="3.25" x="12.375" y="18.5">move </text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.75" x="13.625" y="20.5">\textbf{if } [!see_bottle]</text-box>
+    </nodes>
+    <edges>
+      <arc head="T1" head-magnet="1" kind="INPUT" tail="rule1_off"/>
+      <arc head="T11" head-magnet="1" kind="INPUT" tail="C1"/>
+      <arc head="T1" head-magnet="2" kind="INHIBITOR" tail="active_rule2_or_upper"/>
+      <arc head="end_exec1" head-magnet="1" kind="INPUT" tail="C1">
+        <point x="23.0" y="18.0"/>
+      </arc>
+      <arc head="T11" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="5.0" y="21.0"/>
+        <point x="8.0" y="21.0"/>
+      </arc>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="T1" tail-magnet="0"/>
+      <arc head="C1" kind="OUTPUT" tail="T1" tail-magnet="3"/>
+      <arc head="rule1_off" kind="OUTPUT" tail="T11">
+        <point x="3.0" y="21.0"/>
+        <point x="3.0" y="5.0"/>
+      </arc>
+      <arc head="end_exec1" kind="INPUT" tail="active_rule2_or_upper"/>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="end_exec1"/>
+      <arc head="rule1_off" kind="OUTPUT" tail="end_exec1">
+        <point x="23.0" y="5.0"/>
+      </arc>
+      <arc head="end_exec1" head-magnet="0" kind="INPUT" tail="active_rule1_or_upper"/>
+    </edges>
+  </gspn>
+  <gspn name="PN rule2" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="0.5" label-y="-2.0" name="active_rule2_or_upper" x="9.0" y="12.0"/>
+      <place label-y="-2.0" marking="1" name="rule2_off" x="15.0" y="4.0"/>
+      <place label-x="-2.0" label-y="0.0" name="C2" x="15.0" y="16.0"/>
+      <transition label-x="-1.0" label-y="-1.0" magnets="NSEW_POINTS" name="T2" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="15.55" y="9.0"/>
+      <transition label-x="-1.9999999999999982" label-y="-1.0" magnets="NSEW_POINTS" name="T21" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="15.55" y="20.0"/>
+      <transition label-x="3.5" label-y="0.0" magnets="NSEW_POINTS" name="end_exec2" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="24.55" y="9.0"/>
+      <place name="active_rule3_or_upper" x="20.0" y="12.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule1_or_upper" x="9.0" y="8.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="__textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="16.875" y="8.5">\textbf{if } [touching]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="17.875" y="20.5">\textbf{if } [!touching]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="16.875" y="17.5">open_gripper</text-box>
+    </nodes>
+    <edges>
+      <arc head="T2" head-magnet="1" kind="INPUT" tail="rule2_off"/>
+      <arc head="T21" head-magnet="1" kind="INPUT" tail="C2"/>
+      <arc head="T2" head-magnet="2" kind="INHIBITOR" tail="active_rule3_or_upper"/>
+      <arc head="end_exec2" head-magnet="1" kind="INPUT" tail="C2">
+        <point x="25.0" y="17.0"/>
+      </arc>
+      <arc head="T21" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="10.0" y="21.0"/>
+        <point x="14.5" y="21.0"/>
+      </arc>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="T2" tail-magnet="0"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="T2"/>
+      <arc head="T21" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="6.5" y="9.0"/>
+        <point x="6.5" y="21.0"/>
+      </arc>
+      <arc head="end_exec2" head-magnet="1" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="13.0" y="8.0"/>
+        <point x="22.5" y="8.0"/>
+      </arc>
+      <arc head="end_exec2" head-magnet="0" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="16.0" y="12.0"/>
+        <point x="21.5" y="11.0"/>
+      </arc>
+      <arc head="C2" kind="OUTPUT" tail="T2" tail-magnet="1"/>
+      <arc head="rule2_off" kind="OUTPUT" mult-x="-1.069087344912635" mult-y="0.6924272125728059" tail="T21">
+        <point x="16.0" y="22.0"/>
+        <point x="6.0" y="22.0"/>
+        <point x="6.0" y="5.0"/>
+      </arc>
+      <arc head="end_exec2" kind="INPUT" tail="active_rule3_or_upper"/>
+      <arc head="active_rule3_or_upper" kind="OUTPUT" tail="end_exec2"/>
+      <arc head="rule2_off" kind="OUTPUT" tail="end_exec2" tail-magnet="1">
+        <point x="25.0" y="5.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <gspn name="PN rule 3" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-y="-2.0" name="active_rule3_or_upper" x="6.0" y="16.0"/>
+      <place label-y="-1.5" marking="1" name="rule3_off" x="15.0" y="5.0"/>
+      <place label-x="-2.0" label-y="0.0" name="C3" x="15.0" y="23.0"/>
+      <transition delay-x="-2.5" delay-y="0.5" label-x="-1.0" label-y="-1.0" magnets="NSEW_POINTS" name="T3" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="15.55" y="11.0"/>
+      <transition delay-x="-2.5" delay-y="0.5" label-x="-1.9999999999999982" label-y="-1.0" magnets="NSEW_POINTS" name="T31" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="15.55" y="26.0"/>
+      <transition label-x="3.5" label-y="0.0" magnets="NSEW_POINTS" name="end_exec3" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="26.55" y="11.0"/>
+      <place label-x="-0.5" label-y="2.0" name="active_rule4_or_upper" x="20.0" y="16.0"/>
+      <place name="active_rule2_or_upper" x="6.0" y="10.0"/>
+      <place name="active_rule1_or_upper" x="6.0" y="7.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="__textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="18.875" y="11.5">\textbf{if } [touching \\\&amp;\&amp; gripper_open]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="16.875" y="24.5">close_gripper</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="20.875" y="26.5">\textbf{if } [!(touching \&amp;\&amp; gripper_open)]</text-box>
+    </nodes>
+    <edges>
+      <arc head="T3" head-magnet="1" kind="INPUT" tail="rule3_off"/>
+      <arc head="T31" head-magnet="1" kind="INPUT" tail="C3"/>
+      <arc head="T3" head-magnet="2" kind="INHIBITOR" tail="active_rule4_or_upper"/>
+      <arc head="end_exec3" head-magnet="1" kind="INPUT" tail="C3">
+        <point x="27.0" y="24.0"/>
+      </arc>
+      <arc head="T31" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="7.0" y="27.0"/>
+        <point x="12.0" y="27.0"/>
+      </arc>
+      <arc head="active_rule3_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="T3" tail-magnet="0"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="T3"/>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="T3"/>
+      <arc head="T31" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="2.0" y="8.0"/>
+        <point x="2.0" y="27.0"/>
+      </arc>
+      <arc head="T31" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="3.0" y="11.0"/>
+        <point x="3.0" y="27.0"/>
+      </arc>
+      <arc head="end_exec3" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="11.5" y="8.0"/>
+        <point x="18.0" y="8.5"/>
+      </arc>
+      <arc head="end_exec3" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="11.0" y="10.5"/>
+        <point x="22.0" y="11.0"/>
+      </arc>
+      <arc head="end_exec3" head-magnet="3" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="15.0" y="20.5"/>
+        <point x="25.5" y="20.5"/>
+      </arc>
+      <arc head="C3" kind="OUTPUT" tail="T3" tail-magnet="3"/>
+      <arc head="rule3_off" kind="OUTPUT" tail="T31" tail-magnet="3">
+        <point x="16.0" y="28.5"/>
+        <point x="1.5" y="28.5"/>
+        <point x="1.5" y="6.0"/>
+      </arc>
+      <arc head="end_exec3" kind="INPUT" tail="active_rule4_or_upper"/>
+      <arc head="active_rule4_or_upper" kind="OUTPUT" tail="end_exec3"/>
+      <arc head="rule3_off" kind="OUTPUT" tail="end_exec3">
+        <point x="27.0" y="6.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <gspn name="PN rule4" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="0.5" label-y="-2.0" name="active_rule4_or_upper" x="8.0" y="19.0"/>
+      <place label-x="2.0" label-y="-1.5" marking="1" name="rule4_off" x="16.0" y="6.0"/>
+      <place label-x="-2.0" label-y="0.0" name="C4" x="16.0" y="21.0"/>
+      <transition label-x="-1.0" label-y="-1.0" magnets="NSEW_POINTS" name="T4" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="16.55" y="11.0"/>
+      <transition delay-x="-2.5" delay-y="0.5" label-x="-1.5" label-y="-1.0" magnets="NSEW_POINTS" name="T41" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="16.55" y="24.0"/>
+      <transition label-x="3.5" label-y="0.0" magnets="NSEW_POINTS" name="end_exec4" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="25.55" y="11.0"/>
+      <place label-x="-0.5" name="active_rule5_or_upper" x="21.0" y="15.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule3_or_upper" x="8.0" y="15.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule2_or_upper" x="8.0" y="11.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule1_or_upper" x="8.0" y="7.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="__textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="18.875" y="11.5">\textbf{if } [holding]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="2.625" x="17.6875" y="22.5">turn</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="17.875" y="24.5">\textbf{if } [!holding]</text-box>
+    </nodes>
+    <edges>
+      <arc head="T4" head-magnet="1" kind="INPUT" tail="rule4_off"/>
+      <arc head="T41" head-magnet="1" kind="INPUT" tail="C4"/>
+      <arc head="T4" head-magnet="2" kind="INHIBITOR" tail="active_rule5_or_upper"/>
+      <arc head="end_exec4" head-magnet="1" kind="INPUT" tail="C4">
+        <point x="26.0" y="22.0"/>
+      </arc>
+      <arc head="T41" kind="INPUT" tail="active_rule4_or_upper">
+        <point x="9.0" y="25.0"/>
+        <point x="13.0" y="25.0"/>
+      </arc>
+      <arc head="active_rule4_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="T4" tail-magnet="0"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="T4"/>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="T4"/>
+      <arc head="active_rule3_or_upper" kind="OUTPUT" tail="T4"/>
+      <arc head="T41" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="4.5" y="8.0"/>
+        <point x="4.5" y="25.0"/>
+      </arc>
+      <arc head="T41" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="5.0" y="12.0"/>
+        <point x="5.0" y="25.0"/>
+      </arc>
+      <arc head="T41" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="5.5" y="16.0"/>
+        <point x="5.5" y="25.0"/>
+      </arc>
+      <arc head="end_exec4" head-magnet="1" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="24.5" y="8.5"/>
+      </arc>
+      <arc head="end_exec4" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="14.5" y="10.0"/>
+        <point x="24.5" y="10.0"/>
+      </arc>
+      <arc head="end_exec4" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="19.0" y="14.0"/>
+        <point x="24.0" y="13.5"/>
+      </arc>
+      <arc head="end_exec4" kind="INPUT" tail="active_rule4_or_upper">
+        <point x="25.0" y="20.0"/>
+      </arc>
+      <arc head="C4" kind="OUTPUT" tail="T4"/>
+      <arc head="rule4_off" kind="OUTPUT" tail="T41">
+        <point x="17.0" y="26.0"/>
+        <point x="4.0" y="26.0"/>
+        <point x="4.0" y="4.5"/>
+        <point x="17.0" y="4.5"/>
+      </arc>
+      <arc head="end_exec4" head-magnet="3" kind="INPUT" tail="active_rule5_or_upper"/>
+      <arc head="active_rule5_or_upper" kind="OUTPUT" tail="end_exec4" tail-magnet="3"/>
+      <arc head="rule4_off" kind="OUTPUT" tail="end_exec4" tail-magnet="1">
+        <point x="26.0" y="7.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <gspn name="PN rule5" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="0.5" label-y="-2.0" name="active_rule5_or_upper" x="16.0" y="23.0"/>
+      <place label-x="-3.0" label-y="0.0" marking="1" name="rule5_off" x="25.0" y="8.0"/>
+      <place label-x="-2.0" label-y="0.0" name="C5" x="25.0" y="26.0"/>
+      <transition delay-x="-2.0" delay-y="0.0" label-x="-1.0" magnets="NSEW_POINTS" name="T5" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="25.55" y="14.0"/>
+      <transition label-x="-1.5" label-y="-1.0" magnets="NSEW_POINTS" name="T51" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="25.55" y="29.0"/>
+      <transition label-x="3.5" label-y="0.0" magnets="NSEW_POINTS" name="end_exec5" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="34.55" y="14.0"/>
+      <place label-x="-0.5" name="active_rule6_or_upper" x="30.0" y="20.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule4_or_upper" x="16.0" y="19.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule3_or_upper" x="16.0" y="15.0"/>
+      <place label-x="0.5" label-y="-2.0" name="active_rule2_or_upper" x="16.0" y="11.0"/>
+      <place label-x="0.5" label-y="-1.5" name="active_rule1_or_upper" x="16.0" y="7.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="__textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="27.875" y="13.5">\textbf{if } [holding \\\&amp;\&amp; see_drop]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="29.875" y="29.5">\textbf{if } [!(holding \&amp;\&amp; see_drop)]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="3.125" x="26.4375" y="27.5">move</text-box>
+    </nodes>
+    <edges>
+      <arc head="T5" head-magnet="1" kind="INPUT" tail="rule5_off"/>
+      <arc head="T51" head-magnet="1" kind="INPUT" tail="C5"/>
+      <arc head="T5" head-magnet="2" kind="INHIBITOR" tail="active_rule6_or_upper"/>
+      <arc head="end_exec5" head-magnet="1" kind="INPUT" tail="C5">
+        <point x="35.0" y="27.0"/>
+      </arc>
+      <arc head="T51" head-magnet="0" kind="INPUT" tail="active_rule5_or_upper">
+        <point x="17.0" y="30.0"/>
+        <point x="20.0" y="30.0"/>
+      </arc>
+      <arc head="active_rule5_or_upper" kind="OUTPUT" mult-k="0.4799804687499999" tail="T5" tail-magnet="0"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="T5"/>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="T5"/>
+      <arc head="active_rule3_or_upper" kind="OUTPUT" tail="T5"/>
+      <arc head="active_rule4_or_upper" kind="OUTPUT" tail="T5"/>
+      <arc head="T51" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="11.0" y="8.0"/>
+        <point x="11.0" y="30.0"/>
+      </arc>
+      <arc head="T51" head-magnet="1" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="12.0" y="12.0"/>
+        <point x="12.0" y="30.0"/>
+      </arc>
+      <arc head="T51" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="12.0" y="16.0"/>
+        <point x="12.0" y="30.0"/>
+      </arc>
+      <arc head="T51" head-magnet="0" kind="INPUT" tail="active_rule4_or_upper">
+        <point x="13.0" y="20.0"/>
+        <point x="13.0" y="30.0"/>
+      </arc>
+      <arc head="end_exec5" head-magnet="1" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="27.5" y="8.0"/>
+      </arc>
+      <arc head="end_exec5" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="29.0" y="12.0"/>
+      </arc>
+      <arc head="end_exec5" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="24.5" y="13.0"/>
+        <point x="30.0" y="13.0"/>
+      </arc>
+      <arc head="end_exec5" kind="INPUT" tail="active_rule4_or_upper">
+        <point x="24.0" y="19.0"/>
+        <point x="28.0" y="18.0"/>
+      </arc>
+      <arc head="end_exec5" head-magnet="1" kind="INPUT" tail="active_rule5_or_upper">
+        <point x="26.5" y="21.5"/>
+        <point x="31.0" y="18.5"/>
+      </arc>
+      <arc head="C5" kind="OUTPUT" tail="T5"/>
+      <arc head="rule5_off" kind="OUTPUT" tail="T51" tail-magnet="3">
+        <point x="23.5" y="31.0"/>
+        <point x="10.5" y="31.0"/>
+        <point x="10.5" y="6.0"/>
+        <point x="24.0" y="6.0"/>
+      </arc>
+      <arc head="end_exec5" head-magnet="3" kind="INPUT" tail="active_rule6_or_upper"/>
+      <arc head="active_rule6_or_upper" kind="OUTPUT" tail="end_exec5" tail-magnet="3"/>
+      <arc head="rule5_off" kind="OUTPUT" tail="end_exec5">
+        <point x="35.0" y="9.0"/>
+      </arc>
+    </edges>
+  </gspn>
+  <gspn name="PN rule6" show-color-cmd="false" show-fluid-cmd="false">
+    <nodes>
+      <place label-x="1.5" label-y="-2.0" name="active_rule4_or_upper" x="12.0" y="17.0"/>
+      <place label-x="1.5" label-y="-2.0" name="active_rule5_or_upper" x="12.0" y="21.0"/>
+      <place label-x="-3.0" label-y="0.0" marking="1" name="rule6_off" x="23.0" y="9.0"/>
+      <place label-x="-2.0" label-y="0.0" name="C6" x="23.0" y="21.0"/>
+      <transition delay-x="-2.500000000000007" delay-y="0.5" label-x="-1.000000000000007" magnets="NSEW_POINTS" name="T6" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.0000000000000004" superpos-y="0.0" type="EXP" x="23.550000000000008" y="14.0"/>
+      <transition delay-x="1.5" delay-y="-0.5" label-x="-1.0" label-y="-1.0" magnets="NSEW_POINTS" name="T61" nservers-x="0.5" rotation="4.71238898038469" superpos-x="2.5" superpos-y="0.0" type="EXP" x="23.55" y="27.0"/>
+      <place label-x="1.5" label-y="-2.0" name="active_rule3_or_upper" x="12.0" y="13.0"/>
+      <place label-x="1.5" label-y="-2.0" name="active_rule2_or_upper" x="12.0" y="9.0"/>
+      <place label-x="1.5" label-y="-1.5" name="active_rule1_or_upper" x="12.0" y="5.0"/>
+      <place label-x="1.5" label-y="-2.0" name="active_rule6_or_upper" x="12.0" y="25.0"/>
+      <text-box border-color="none" fill-color="none" height="1.0" name="__textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="5.625" x="26.1875" y="15.5">N:=N+1\\\textbf{if } [holding \&amp;\&amp; at_drop]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="24.875" y="28.5">\textbf{if } [!(holding \&amp;\&amp; at_drop)]</text-box>
+      <text-box border-color="none" fill-color="none" height="1.0" name="copy_copy___textBox0" shadow="true" shape="ROUND_RECTANGLE" text-color="#000000" text-size="SMALL" width="4.25" x="25.875" y="21.5">open_gripper</text-box>
+    </nodes>
+    <edges>
+      <arc head="T6" head-magnet="1" kind="INPUT" tail="rule6_off"/>
+      <arc head="T61" head-magnet="1" kind="INPUT" tail="C6"/>
+      <arc head="active_rule5_or_upper" kind="OUTPUT" tail="T6">
+        <point x="20.0" y="17.0"/>
+      </arc>
+      <arc head="rule6_off" kind="OUTPUT" tail="T61">
+        <point x="33.5" y="28.0"/>
+        <point x="33.5" y="10.0"/>
+      </arc>
+      <arc head="active_rule4_or_upper" kind="OUTPUT" tail="T6" tail-magnet="0"/>
+      <arc head="T61" head-magnet="0" kind="INPUT" tail="active_rule4_or_upper">
+        <point x="10.0" y="18.0"/>
+        <point x="10.0" y="28.0"/>
+      </arc>
+      <arc head="T61" kind="INPUT" mult-x="-2.1797579854255247" mult-y="1.3202420145744753" tail="active_rule6_or_upper">
+        <point x="13.0" y="28.0"/>
+      </arc>
+      <arc head="active_rule6_or_upper" kind="OUTPUT" tail="T6" tail-magnet="3"/>
+      <arc head="active_rule3_or_upper" kind="OUTPUT" tail="T6"/>
+      <arc head="active_rule2_or_upper" kind="OUTPUT" tail="T6"/>
+      <arc head="active_rule1_or_upper" kind="OUTPUT" tail="T6"/>
+      <arc head="T61" head-magnet="0" kind="INPUT" tail="active_rule3_or_upper">
+        <point x="9.5" y="14.0"/>
+        <point x="9.5" y="28.0"/>
+      </arc>
+      <arc head="T61" kind="INPUT" tail="active_rule2_or_upper">
+        <point x="9.0" y="10.0"/>
+        <point x="9.0" y="28.0"/>
+      </arc>
+      <arc head="T61" head-magnet="0" kind="INPUT" tail="active_rule1_or_upper">
+        <point x="8.5" y="6.0"/>
+        <point x="8.5" y="28.0"/>
+      </arc>
+      <arc head="T61" kind="INPUT" tail="active_rule5_or_upper">
+        <point x="10.5" y="22.0"/>
+        <point x="10.5" y="28.0"/>
+      </arc>
+      <arc head="C6" kind="OUTPUT" tail="T6" tail-magnet="3"/>
+    </edges>
+  </gspn>
+  <multinet name="robot collector" show-color-cmd="false" show-fluid-cmd="false">
+    <bindings-list/>
+    <subnet netname="PN rule0"/>
+    <subnet netname="PN rule1"/>
+    <subnet netname="PN rule2"/>
+    <subnet netname="PN rule 3"/>
+    <subnet netname="PN rule4"/>
+    <subnet netname="PN rule5"/>
+    <subnet netname="PN rule6"/>
+  </multinet>
+  <measures gspn-name="robot collector" log-uuid="06338988-e999-4f3d-8cc0-cbbef08632f3" name="Measures 1" simplified-UI="false">
+    <assignments/>
+    <rgmedd2/>
+    <formulas>
+      <formula expr="EF(#active_rule1_or_upper&gt;1)" language="CTLSTAR">
+        <result-table>
+          <mc-result name="MEASURE0" value="true 920/920">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+      <formula expr="onesafe" language="CTL">
+        <result-table>
+          <mc-result name="MEASURE0" value="false 0/920">
+            <bindings/>
+          </mc-result>
+        </result-table>
+      </formula>
+    </formulas>
+  </measures>
+  <resource-list>
+    <document-log uuid="06338988-e999-4f3d-8cc0-cbbef08632f3">rO0ABXNyABRqYXZhLnV0aWwuTGlua2VkTGlzdAwpU11KYIgiAwAAeHB3BAAAAKd0ALAbWzBtRVhFQzogIi9BcHBsaWNhdGlvbnMvR3JlYXRTUE4uYXBwL0NvbnRlbnRzL2FwcC9wb3J0YWJsZV9ncmVhdHNwbi9iaW4vRFNQTi1Ub29sIiAtbG9hZCAiL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzIDEuc29sdXRpb24vcm9ib3QgY29sbGVjdG9yIiAtcGJhc2lzIC1kZXRlY3QtZXhwIC1wc2ZsIC1ibmQgCnQAZRtbMW0bWzRtTE9BRElORyBQRVRSSSBORVQgL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzIDEuc29sdXRpb24vcm9ib3QgY29sbGVjdG9yIChuZXQvZGVmKS4uLhtbMjJtG1syNG0KdAAPTUFSS0lORyBQQVI6IDAKdAAQUExBQ0VTOiAgICAgIDQwCnQAD1JBVEUgUEFSOiAgICAwCnQAEFRSQU5TSVRJT05TOiAzOQp0AA9NRUFTVVJFUzogICAgMAp0AChMT0FESU5HIFRJTUU6IFtVc2VyIDAuMDAwcywgU3lzIDAuMDAwc10KdAABCnQAAQp0AB5DT01QVVRJTkcgUExBQ0UgRkxPVyBCQVNJUy4uLgp0ABJNPTM5LCBOPTQwLCBOMD00MAp0ADlDb21wdXRhdGlvbiBvZiBGbG93IGJhc2lzOiBzdGVwIDEvMzksIHxLfD0zOCwgcHJvZHVjdHM9MQp0AFMbWzFBICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCnQAVBtbMUFDb21wdXRhdGlvbiBvZiBGbG93IGJhc2lzOiBjb21wbGV0ZWQgaW4gMjAgc3RlcHMsIHxLfD0yMC4gICAgICAgICAgICAgICAgICAgICAgCnQAQkZPVU5EIDIwIFZFQ1RPUlMgSU4gVEhFIFBMQUNFIEZMT1cgQkFTSVMgKDE0IHNlbWlmbG93cywgNiBmbG93cykuCnQAAQp0AAEKdAAnQWxsIHBsYWNlcyBhcmUgY292ZXJlZCBieSBzb21lIFAtZmxvdy4KdAABCnQAJlRPVEFMIFRJTUU6IFtVc2VyIDAuMDAwcywgU3lzIDAuMDAwc10KdAAnQVZPSUQgRVhQT05FTlRJQUwgR1JPV1RIIE9GIFNFTUlGTE9XUy4KdAAdQ09NUFVUSU5HIFBMQUNFIFNFTUlGTE9XUy4uLgp0ABJNPTM5LCBOPTQwLCBOMD00MAp0ACtHZW5lcmF0aW9uIG9mIFNlbWlmbG93czogc3RlcCAxLzM5LCB8S3w9MzgKdABTG1sxQSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp0AFIbWzFBR2VuZXJhdGlvbiBvZiBTZW1pZmxvd3M6IGNvbXBsZXRlZCBpbiAyMCBzdGVwcywgfEt8PTIwLiAgICAgICAgICAgICAgICAgICAgICAKdAAaRk9VTkQgMjAgUExBQ0UgU0VNSUZMT1dTLgp0AAEKdAABCnQAK0FsbCBwbGFjZXMgYXJlIGNvdmVyZWQgYnkgc29tZSBQLXNlbWlmbG93Lgp0AAEKdAAmVE9UQUwgVElNRTogW1VzZXIgMC4wMDBzLCBTeXMgMC4wMDBzXQp0ACxDT01QVVRJTkcgUExBQ0UgQk9VTkRTIEZST00gUC1TRU1JRkxPV1MgLi4uCnQAJxtbMFgbWzMybSBQUk9DRVNTIEVYSVRFRCBOT1JNQUxMWS4bWzBtCnQArxtbMG1FWEVDOiAiL0FwcGxpY2F0aW9ucy9HcmVhdFNQTi5hcHAvQ29udGVudHMvYXBwL3BvcnRhYmxlX2dyZWF0c3BuL2Jpbi9EU1BOLVRvb2wiIC1sb2FkICIvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMgMS5zb2x1dGlvbi9yb2JvdCBjb2xsZWN0b3IiIC1sb2FkLWJuZCAtdGltZW91dCA1IC1pbHAtYm5kIAp0AGUbWzFtG1s0bUxPQURJTkcgUEVUUkkgTkVUIC9Vc2Vycy9wZWRyby9UUi1NZWFzdXJlcyAxLnNvbHV0aW9uL3JvYm90IGNvbGxlY3RvciAobmV0L2RlZikuLi4bWzIybRtbMjRtCnQAD01BUktJTkcgUEFSOiAwCnQAEFBMQUNFUzogICAgICA0MAp0AA9SQVRFIFBBUjogICAgMAp0ABBUUkFOU0lUSU9OUzogMzkKdAAPTUVBU1VSRVM6ICAgIDAKdAAoTE9BRElORyBUSU1FOiBbVXNlciAwLjAwMHMsIFN5cyAwLjAwMHNdCnQAAQp0AAEKdAAVTE9BRElORyBCTkQgRklMRSAuLi4KdAAgU2NoZWR1bGVkIHRpbWVvdXQgb2YgNSBzZWNvbmRzLgp0ACVDT01QVVRJTkcgUExBQ0UgQk9VTkRTIFVTSU5HIElMUCAuLi4KdAAiSW5oaWJpdG9yIGFyY3MgaGF2ZSBiZWVuIGlnbm9yZWQuCnQAGEFsbCBwbGFjZXMgYXJlIGJvdW5kZWQuCnEAfgAkdACbG1swbUVYRUM6ICIvQXBwbGljYXRpb25zL0dyZWF0U1BOLmFwcC9Db250ZW50cy9hcHAvcG9ydGFibGVfZ3JlYXRzcG4vYmluL1JHTUVERDUiICIvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMgMS5zb2x1dGlvbi9yb2JvdCBjb2xsZWN0b3IiIC1NRVRBIC1zYXRzZXRzIC1DIAp0AE4bWzFtG1szMW1XQVJOSU5HOiAbWzIybRtbMG1QRVRSSSBORVQgSEFTIElOSElCSVRPUiBBUkNTIFRIQVQgV0lMTCBCRSBJR05PUkVELgp0AE4bWzFtG1szMW1XQVJOSU5HOiAbWzIybRtbMG1QRVRSSSBORVQgSEFTIElOSElCSVRPUiBBUkNTIFRIQVQgV0lMTCBCRSBJR05PUkVELgp0ACBSYW5kb20gc2VlZHM6IDE3MzMxMjM4OTEgMTA2MjIzCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAARR3JlYXRTUE4vTWVkZGx5Lgp0ADggIENvcHlyaWdodCAoQykgMTk4Ny0yMDIyLCBVbml2ZXJzaXR5IG9mIFRvcmlubywgSXRhbHkuCnQALyAgd2Vic2l0ZTogaHR0cHM6Ly9naXRodWIuY29tL2dyZWF0c3BuL1NPVVJDRVMKdAAxICBTZW5kIGZpbGVzIG5ldG5hbWUubmV0LCAuZGVmIHRvIGUtbWFpbCBhZGRyZXNzCnQALyAgYW1wYXJvcmUoYXQpZGkudW5pdG8uaXQgaWYgeW91IGZpbmQgYW55IGJ1Zy4KdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0AB9CYXNlZCBvbiBNRURETFkgdmVyc2lvbiAwLjE3LjEKdABGICBDb3B5cmlnaHQgKEMpIDIwMDksIElvd2EgU3RhdGUgVW5pdmVyc2l0eSBSZXNlYXJjaCBGb3VuZGF0aW9uLCBJbmMuCnQALSAgd2Vic2l0ZTogaHR0cHM6Ly9hc21pbmVyLmdpdGh1Yi5pby9tZWRkbHkvCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAApVXNpbmcgcGVyLWV2ZW50IHNhdHVyYXRpb24gKHNhdC1wcmVnZW4pLgp0ABJQcm9jZXNzIElEOiAxNzkwMQp0AEBNT0RFTCBOQU1FOiAvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMgMS5zb2x1dGlvbi9yb2JvdCBjb2xsZWN0b3IKdAAdICA0MCBwbGFjZXMsIDM5IHRyYW5zaXRpb25zLgp0AChVc2VkIE1lbW9yeSBmb3IgZW5jb2RpbmcgbmV0OiAyMTQ2MzA0S0IKdABKT3BlbmluZyBmaWxlOiAvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMgMS5zb2x1dGlvbi9yb2JvdCBjb2xsZWN0b3IuYm5kIE9LLgp0AE1PcGVuaW5nIGZpbGU6IC9Vc2Vycy9wZWRyby9UUi1NZWFzdXJlcyAxLnNvbHV0aW9uL3JvYm90IGNvbGxlY3Rvci5pbHBibmQgT0suCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSBNT0RFTCBTVEFUSVNUSUNTID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAAXUExBQ0VTOiAgICAgICAgICAgICA0MAp0ABdUUkFOU0lUSU9OUzogICAgICAgIDM5CnQAF0lOUFVUIEFSQ1M6ICAgICAgICAgNzUKdAAXT1VUUFVUIEFSQ1M6ICAgICAgICA2MAp0ABdJTkhJQiBBUkNTOiAgICAgICAgIDE1CnQAF1RFU1QgQVJDUzogICAgICAgICAgMTYKdAAXTlVNIE0wIFRPS0VOUzogICAgICAxNAp0ABdJTlZBUklBTlRTOiAgICAgICAgIDIwCnQAF1AtU0VNSUZMT1dTOiAgICAgICAgMjAKdAAWTUFYIElOVkFSSUFOVCBDQVJEOiAxCnQAFklTIFVORk9MRElORzogICAgICAgMAp0ABdCT1VOREVEIFBMQUNFUzogICAgIDQwCnQAFlVOQk9VTkRFRCBQTEFDRVM6ICAgMAp0ABZNQVggUExBQ0UgQk9VTkQ6ICAgIDYKdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0gVkFSSUFCTEUgT1JERVIgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAA8VmFyaWFibGUgb3JkZXIgbWV0aG9kOiBNZXRhLWhldXJpc3RpYyB1c2luZyB3ZWlnaHRlZCBzY29yZS4KdAAYTnVtYmVyIG9mIGNvbXBvbmVudHM6IDkKdAA2TWV0YS1oZXVyaXN0aWM6IHNlbGVjdGluZyBtZXRob2QgVE9WMiB3aXRoIHNjb3JlOiA0MzUKdAApVGltZSB0byBjb21wdXRlIHZhcmlhYmxlIG9yZGVyOiAwLjAyMjEzNwp0AAEKdABQPT09PT09PT09PT09PT09PT09PT09PT09PSBTVEFSVCBGSVJJTkcgUlVMRVMgRU5DT0RJTkcgPT09PT09PT09PT09PT09PT09PT09PT09PQp0ABpDcmVhdGluZyBhbGwgZXZlbnQgTlNGcy4uCnQALEVuY29kZWQgMzkgdHJhbnNpdGlvbiBpbiAzIHByaW9yaXR5IGdyb3Vwcy4KdAAhVGltZSB0byBidWlsZCBhbGwgTlNGczogMC4wMzQ5NTYKdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT0gUkVBQ0hBQklMSVRZIFNFVCBHRU5FUkFUSU9OID09PT09PT09PT09PT09PT09PT09PT09PT0KdAAVU3BsaXQ6IFNwbGl0U3VidHJhY3QKdAAXU3RhcnQgUlMgY29uc3RydWN0aW9uLgp0AB1SUyBnZW5lcmF0aW9uIHRpbWU6IDAuMDA2NDQ0CnQAHUNvbXB1dGluZyB2YXJpYWJsZSBib3VuZHMuLi4KdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IE1FTU9SWSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAAqIENhcmRpbmFsaXR5KFJTKTogICAgICAgICA5MjAgICAgICAgICAgICAKdAAqIE1heCB0b2tlbnMgeCBtYXJraW5nOiAgICAyNSAgICAgICAgICAgICAKdAAqIE1heCB0b2tlbnMgaW4gcGxhY2U6ICAgICAyICAgICAgICAgICAgICAKdAAqIE1heCB0b2tlbnMgaW4gbGV2ZWxzOiAgICAyICAgICAgICAgICAgICAKdAAqIFRvdGFsIE1lbW9yeSBVc2VkOiAgICAgICA2OTE0MDQ4IEtCeXRlcy4KdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0gTU9ERUwgQ0hFQ0tJTkcgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAAoTUVBU1VSRTA6CSBFRigjYWN0aXZlX3J1bGUxX29yX3VwcGVyPjEpCnQAG0J1aWxkaW5nIG1vbm9saXRoaWMgTlNGLi4uCnQAOlByb2Nlc3Npbmc6IChFIChGIChhY3RpdmVfcnVsZTFfb3JfdXBwZXIgPiAxKSkpICAtPiAgYm9vbAp0ADZFdmFsOiAoRSAoRiAoYWN0aXZlX3J1bGUxX29yX3VwcGVyID4gMSkpKSAgVE9QICBTVEFURQp0ABxFdmFsOiBhY3RpdmVfcnVsZTFfb3JfdXBwZXIKdAAUICAgICAgMC4wMDAwMTQgc2VjLgp0ACZFdmFsOiAoYWN0aXZlX3J1bGUxX29yX3VwcGVyID4gMSkgIEFQCnQAKiAgICAgIDAuMDAwMTIxIHNlYy4gIHBvdGVudGlhbCBjYXJkID0gMjAwCnQAIkVGOiBzdGVwPTEsICBTQVQgc2l6ZT0xMDQwLjAwMDAwMAp0ACJFRjogc3RlcD0yLCAgU0FUIHNpemU9Mjg2OC4wMDAwMDAKdAAiRUY6IHN0ZXA9MywgIFNBVCBzaXplPTYzMTIuMDAwMDAwCnQAI0VGOiBzdGVwPTQsICBTQVQgc2l6ZT0xMTg3OC4wMDAwMDAKdAAjRUY6IHN0ZXA9NSwgIFNBVCBzaXplPTE5OTA1LjAwMDAwMAp0ACNFRjogc3RlcD02LCAgU0FUIHNpemU9MzAwMDguMDAwMDAwCnQAI0VGOiBzdGVwPTcsICBTQVQgc2l6ZT00MTU0Mi4wMDAwMDAKdAAjRUY6IHN0ZXA9OCwgIFNBVCBzaXplPTUzOTMxLjAwMDAwMAp0ACNFRjogc3RlcD05LCAgU0FUIHNpemU9NjcwMzEuMDAwMDAwCnQAJEVGOiBzdGVwPTEwLCAgU0FUIHNpemU9ODA4NjguMDAwMDAwCnQAJEVGOiBzdGVwPTExLCAgU0FUIHNpemU9OTUyMjYuMDAwMDAwCnQAJUVGOiBzdGVwPTEyLCAgU0FUIHNpemU9MTA5MTk3LjAwMDAwMAp0ACVFRjogc3RlcD0xMywgIFNBVCBzaXplPTEyMTMxNy4wMDAwMDAKdAAlRUY6IHN0ZXA9MTQsICBTQVQgc2l6ZT0xMzAzMDkuMDAwMDAwCnQAJUVGOiBzdGVwPTE1LCAgU0FUIHNpemU9MTM1ODQzLjAwMDAwMAp0ACVFRjogc3RlcD0xNiwgIFNBVCBzaXplPTEzODU4Mi4wMDAwMDAKdAAlRUY6IHN0ZXA9MTcsICBTQVQgc2l6ZT0xMzk2MjkuMDAwMDAwCnQAJUVGOiBzdGVwPTE4LCAgU0FUIHNpemU9MTM5OTE2LjAwMDAwMAp0ACVFRjogc3RlcD0xOSwgIFNBVCBzaXplPTEzOTk2NS4wMDAwMDAKdAAlRUY6IHN0ZXA9MjAsICBTQVQgc2l6ZT0xMzk5NjguMDAwMDAwCnQAJUVGOiBzdGVwPTIxLCAgU0FUIHNpemU9MTM5OTY4LjAwMDAwMAp0AC0gICAgICAwLjA2MTY0MSBzZWMuICBwb3RlbnRpYWwgY2FyZCA9IDEzOTk2OAp0AAEKdABQLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQp0ABJGb3JtdWxhOiBNRUFTVVJFMAp0ACYgIChFIChGIChhY3RpdmVfcnVsZTFfb3JfdXBwZXIgPiAxKSkpCnQAEkxhbmd1YWdlOiBDVExTVEFSCnQAFUV2YWx1YXRpb246IHRydWUgICAgCnQACFNBVD05MjAKdAAbRXZhbHVhdGlvbiB0aW1lOiAwLjA2MiBzZWMKdABQLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQp0AAEKdAAWRm9ybXVsYSBjYWNoZSBzaXplOiAwCnQABE9rLgp0AAEKdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IFRJTUUgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0ACUgVmFyaWFibGUgb3JkZXIgVGltZTogICAwLjAyNCAgIHNlYy4KdAAlIE5TRiBnZW4uIFRpbWU6ICAgICAgICAgMC4wMzUgICBzZWMuCnQAJSBSUyBHZW5lcmF0aW9uIFRpbWU6ICAgIDAuMDA2ICAgc2VjLgp0ACUgVG90YWwgUlMgVGltZTogICAgICAgICAwLjA0MiAgIHNlYy4KdAAlIFN0YXRpc3RpY3MgVGltZTogICAgICAgMC4wMDAgICBzZWMuCnQAJSBNb2RlbCBDaGVja2luZyBUaW1lOiAgIDAuMDY1ICAgc2VjLgp0ACUgVG90YWwgVGltZTogICAgICAgICAgICAwLjEzMCAgIHNlYy4KdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpxAH4AJHhzcQB+AAB3BAAAAKdzcgARamF2YS5sYW5nLkJvb2xlYW7NIHKA1Zz67gIAAVoABXZhbHVleHABcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKlxAH4AqXEAfgCpcQB+AKl4</document-log>
+    <document-log uuid="fa4430bd-b19c-4b60-9815-0a185733e6fe">rO0ABXNyABRqYXZhLnV0aWwuTGlua2VkTGlzdAwpU11KYIgiAwAAeHB3BAAAAJp0AKwbWzBtRVhFQzogIi9BcHBsaWNhdGlvbnMvR3JlYXRTUE4uYXBwL0NvbnRlbnRzL2FwcC9wb3J0YWJsZV9ncmVhdHNwbi9iaW4vRFNQTi1Ub29sIiAtbG9hZCAiL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzIDMuc29sdXRpb24vTXVsdGlOZXQgdjMiIC1wYmFzaXMgLWRldGVjdC1leHAgLXBzZmwgLWJuZCAKdABhG1sxbRtbNG1MT0FESU5HIFBFVFJJIE5FVCAvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMgMy5zb2x1dGlvbi9NdWx0aU5ldCB2MyAobmV0L2RlZikuLi4bWzIybRtbMjRtCnQAD01BUktJTkcgUEFSOiAwCnQAD1BMQUNFUzogICAgICA4CnQAD1JBVEUgUEFSOiAgICAwCnQAD1RSQU5TSVRJT05TOiA4CnQAD01FQVNVUkVTOiAgICAwCnQAKExPQURJTkcgVElNRTogW1VzZXIgMC4wMDBzLCBTeXMgMC4wMDBzXQp0AAEKdAABCnQAHkNPTVBVVElORyBQTEFDRSBGTE9XIEJBU0lTLi4uCnQAD009OCwgTj04LCBOMD04CnQAN0NvbXB1dGF0aW9uIG9mIEZsb3cgYmFzaXM6IHN0ZXAgMS84LCB8S3w9NiwgcHJvZHVjdHM9MQp0AFMbWzFBICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgCnQAUhtbMUFDb21wdXRhdGlvbiBvZiBGbG93IGJhc2lzOiBjb21wbGV0ZWQgaW4gMyBzdGVwcywgfEt8PTUuICAgICAgICAgICAgICAgICAgICAgIAp0AEBGT1VORCA1IFZFQ1RPUlMgSU4gVEhFIFBMQUNFIEZMT1cgQkFTSVMgKDMgc2VtaWZsb3dzLCAyIGZsb3dzKS4KdAABCnQAThtbMW0bWzMxbVdBUk5JTkc6IBtbMjJtG1swbVBFVFJJIE5FVCBIQVMgSU5ISUJJVE9SIEFSQ1MgVEhBVCBXSUxMIEJFIElHTk9SRUQuCnQAAQp0ACdBbGwgcGxhY2VzIGFyZSBjb3ZlcmVkIGJ5IHNvbWUgUC1mbG93Lgp0AAEKdAAmVE9UQUwgVElNRTogW1VzZXIgMC4wMDBzLCBTeXMgMC4wMDBzXQp0ACdBVk9JRCBFWFBPTkVOVElBTCBHUk9XVEggT0YgU0VNSUZMT1dTLgp0AB1DT01QVVRJTkcgUExBQ0UgU0VNSUZMT1dTLi4uCnQAD009OCwgTj04LCBOMD04CnQAKUdlbmVyYXRpb24gb2YgU2VtaWZsb3dzOiBzdGVwIDEvOCwgfEt8PTYKdABTG1sxQSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIAp0AFAbWzFBR2VuZXJhdGlvbiBvZiBTZW1pZmxvd3M6IGNvbXBsZXRlZCBpbiAzIHN0ZXBzLCB8S3w9NS4gICAgICAgICAgICAgICAgICAgICAgCnQAGUZPVU5EIDUgUExBQ0UgU0VNSUZMT1dTLgp0AAEKdABOG1sxbRtbMzFtV0FSTklORzogG1syMm0bWzBtUEVUUkkgTkVUIEhBUyBJTkhJQklUT1IgQVJDUyBUSEFUIFdJTEwgQkUgSUdOT1JFRC4KdAABCnQAK0FsbCBwbGFjZXMgYXJlIGNvdmVyZWQgYnkgc29tZSBQLXNlbWlmbG93Lgp0AAEKdAAmVE9UQUwgVElNRTogW1VzZXIgMC4wMDBzLCBTeXMgMC4wMDBzXQp0ACxDT01QVVRJTkcgUExBQ0UgQk9VTkRTIEZST00gUC1TRU1JRkxPV1MgLi4uCnQAJxtbMFgbWzMybSBQUk9DRVNTIEVYSVRFRCBOT1JNQUxMWS4bWzBtCnQAqxtbMG1FWEVDOiAiL0FwcGxpY2F0aW9ucy9HcmVhdFNQTi5hcHAvQ29udGVudHMvYXBwL3BvcnRhYmxlX2dyZWF0c3BuL2Jpbi9EU1BOLVRvb2wiIC1sb2FkICIvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMgMy5zb2x1dGlvbi9NdWx0aU5ldCB2MyIgLWxvYWQtYm5kIC10aW1lb3V0IDUgLWlscC1ibmQgCnQAYRtbMW0bWzRtTE9BRElORyBQRVRSSSBORVQgL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzIDMuc29sdXRpb24vTXVsdGlOZXQgdjMgKG5ldC9kZWYpLi4uG1syMm0bWzI0bQp0AA9NQVJLSU5HIFBBUjogMAp0AA9QTEFDRVM6ICAgICAgOAp0AA9SQVRFIFBBUjogICAgMAp0AA9UUkFOU0lUSU9OUzogOAp0AA9NRUFTVVJFUzogICAgMAp0AChMT0FESU5HIFRJTUU6IFtVc2VyIDAuMDAwcywgU3lzIDAuMDAwc10KdAABCnQAAQp0ABVMT0FESU5HIEJORCBGSUxFIC4uLgp0ACBTY2hlZHVsZWQgdGltZW91dCBvZiA1IHNlY29uZHMuCnQAJUNPTVBVVElORyBQTEFDRSBCT1VORFMgVVNJTkcgSUxQIC4uLgp0ACJJbmhpYml0b3IgYXJjcyBoYXZlIGJlZW4gaWdub3JlZC4KdAAYQWxsIHBsYWNlcyBhcmUgYm91bmRlZC4KcQB+ACZ0AJcbWzBtRVhFQzogIi9BcHBsaWNhdGlvbnMvR3JlYXRTUE4uYXBwL0NvbnRlbnRzL2FwcC9wb3J0YWJsZV9ncmVhdHNwbi9iaW4vUkdNRURENSIgIi9Vc2Vycy9wZWRyby9UUi1NZWFzdXJlcyAzLnNvbHV0aW9uL011bHRpTmV0IHYzIiAtTUVUQSAtc2F0c2V0cyAtQyAKdAAgUmFuZG9tIHNlZWRzOiAxNzM0MDI0Mjk3IDI3MjE3Ngp0AFA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CnQAEUdyZWF0U1BOL01lZGRseS4KdAA4ICBDb3B5cmlnaHQgKEMpIDE5ODctMjAyMiwgVW5pdmVyc2l0eSBvZiBUb3Jpbm8sIEl0YWx5Lgp0AC8gIHdlYnNpdGU6IGh0dHBzOi8vZ2l0aHViLmNvbS9ncmVhdHNwbi9TT1VSQ0VTCnQAMSAgU2VuZCBmaWxlcyBuZXRuYW1lLm5ldCwgLmRlZiB0byBlLW1haWwgYWRkcmVzcwp0AC8gIGFtcGFyb3JlKGF0KWRpLnVuaXRvLml0IGlmIHlvdSBmaW5kIGFueSBidWcuCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAAfQmFzZWQgb24gTUVERExZIHZlcnNpb24gMC4xNy4xCnQARiAgQ29weXJpZ2h0IChDKSAyMDA5LCBJb3dhIFN0YXRlIFVuaXZlcnNpdHkgUmVzZWFyY2ggRm91bmRhdGlvbiwgSW5jLgp0AC0gIHdlYnNpdGU6IGh0dHBzOi8vYXNtaW5lci5naXRodWIuaW8vbWVkZGx5Lwp0AFA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CnQAKVVzaW5nIHBlci1ldmVudCBzYXR1cmF0aW9uIChzYXQtcHJlZ2VuKS4KdAASUHJvY2VzcyBJRDogNTA5MTQKdAA8TU9ERUwgTkFNRTogL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzIDMuc29sdXRpb24vTXVsdGlOZXQgdjMKdAAbICA4IHBsYWNlcywgOCB0cmFuc2l0aW9ucy4KdAAoVXNlZCBNZW1vcnkgZm9yIGVuY29kaW5nIG5ldDogMjEwMTI0OEtCCnQARk9wZW5pbmcgZmlsZTogL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzIDMuc29sdXRpb24vTXVsdGlOZXQgdjMuYm5kIE9LLgp0AElPcGVuaW5nIGZpbGU6IC9Vc2Vycy9wZWRyby9UUi1NZWFzdXJlcyAzLnNvbHV0aW9uL011bHRpTmV0IHYzLmlscGJuZCBPSy4KdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IE1PREVMIFNUQVRJU1RJQ1MgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0ABZQTEFDRVM6ICAgICAgICAgICAgIDgKdAAWVFJBTlNJVElPTlM6ICAgICAgICA4CnQAF0lOUFVUIEFSQ1M6ICAgICAgICAgMTIKdAAXT1VUUFVUIEFSQ1M6ICAgICAgICAxMQp0ABZJTkhJQiBBUkNTOiAgICAgICAgIDIKdAAWVEVTVCBBUkNTOiAgICAgICAgICAyCnQAFk5VTSBNMCBUT0tFTlM6ICAgICAgMwp0ABZJTlZBUklBTlRTOiAgICAgICAgIDUKdAAWUC1TRU1JRkxPV1M6ICAgICAgICA1CnQAFk1BWCBJTlZBUklBTlQgQ0FSRDogMQp0ABZJUyBVTkZPTERJTkc6ICAgICAgIDAKdAAWQk9VTkRFRCBQTEFDRVM6ICAgICA4CnQAFlVOQk9VTkRFRCBQTEFDRVM6ICAgMAp0ABZNQVggUExBQ0UgQk9VTkQ6ICAgIDIKdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0gVkFSSUFCTEUgT1JERVIgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAA8VmFyaWFibGUgb3JkZXIgbWV0aG9kOiBNZXRhLWhldXJpc3RpYyB1c2luZyB3ZWlnaHRlZCBzY29yZS4KdAAYTnVtYmVyIG9mIGNvbXBvbmVudHM6IDIKdAA3TWV0YS1oZXVyaXN0aWM6IHNlbGVjdGluZyBtZXRob2QgTk9BQ0syIHdpdGggc2NvcmU6IDIzCnQAKVRpbWUgdG8gY29tcHV0ZSB2YXJpYWJsZSBvcmRlcjogMC4wMDMwNTYKdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT0gU1RBUlQgRklSSU5HIFJVTEVTIEVOQ09ESU5HID09PT09PT09PT09PT09PT09PT09PT09PT0KdAAaQ3JlYXRpbmcgYWxsIGV2ZW50IE5TRnMuLgp0ACtFbmNvZGVkIDggdHJhbnNpdGlvbiBpbiAyIHByaW9yaXR5IGdyb3Vwcy4KdAAhVGltZSB0byBidWlsZCBhbGwgTlNGczogMC4wMDA1MzUKdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT0gUkVBQ0hBQklMSVRZIFNFVCBHRU5FUkFUSU9OID09PT09PT09PT09PT09PT09PT09PT09PT0KdAAVU3BsaXQ6IFNwbGl0U3VidHJhY3QKdAAXU3RhcnQgUlMgY29uc3RydWN0aW9uLgp0AB1SUyBnZW5lcmF0aW9uIHRpbWU6IDAuMDAwMTg0CnQAHUNvbXB1dGluZyB2YXJpYWJsZSBib3VuZHMuLi4KdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IE1FTU9SWSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAAqIENhcmRpbmFsaXR5KFJTKTogICAgICAgICA3ICAgICAgICAgICAgICAKdAAqIE1heCB0b2tlbnMgeCBtYXJraW5nOiAgICA2ICAgICAgICAgICAgICAKdAAqIE1heCB0b2tlbnMgaW4gcGxhY2U6ICAgICAyICAgICAgICAgICAgICAKdAAqIE1heCB0b2tlbnMgaW4gbGV2ZWxzOiAgICAyICAgICAgICAgICAgICAKdAAqIFRvdGFsIE1lbW9yeSBVc2VkOiAgICAgICAzODU0MzM2IEtCeXRlcy4KdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0gTU9ERUwgQ0hFQ0tJTkcgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KdAA5TUVBU1VSRTA6CSBpbnZhcmlhbnRseSgjcnVsZTBfb24rI3J1bGUxX29uKyNydWxlMl9vbj09MSkKdAAbQnVpbGRpbmcgbW9ub2xpdGhpYyBOU0YuLi4KdABBUHJvY2Vzc2luZzogSSAoKChydWxlMF9vbiArIHJ1bGUxX29uKSArIHJ1bGUyX29uKSA9IDEpICAtPiAgYm9vbAp0AA9FdmFsOiBydWxlMF9vbgp0ABQgICAgICAwLjAwMDAyMSBzZWMuCnQAD0V2YWw6IHJ1bGUxX29uCnQAFCAgICAgIDAuMDAwMDA0IHNlYy4KdAAcRXZhbDogKHJ1bGUwX29uICsgcnVsZTFfb24pCnQAFCAgICAgIDAuMDAwMDE0IHNlYy4KdAAPRXZhbDogcnVsZTJfb24KdAAUICAgICAgMC4wMDAwMDMgc2VjLgp0AClFdmFsOiAoKHJ1bGUwX29uICsgcnVsZTFfb24pICsgcnVsZTJfb24pCnQAFCAgICAgIDAuMDAwMDA1IHNlYy4KdAAzRXZhbDogKCgocnVsZTBfb24gKyBydWxlMV9vbikgKyBydWxlMl9vbikgPSAxKSAgQVAKdAAoICAgICAgMC4wMDAwNjAgc2VjLiAgcG90ZW50aWFsIGNhcmQgPSAzCnQAOkV2YWw6IEkgKCgocnVsZTBfb24gKyBydWxlMV9vbikgKyBydWxlMl9vbikgPSAxKSAgVE9QICBBUAp0ACggICAgICAwLjAwMDAwOSBzZWMuICBwb3RlbnRpYWwgY2FyZCA9IDAKdAABCnQAUC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KdAASRm9ybXVsYTogTUVBU1VSRTAKdAAtICBJICgoKHJ1bGUwX29uICsgcnVsZTFfb24pICsgcnVsZTJfb24pID0gMSkKdAASTGFuZ3VhZ2U6IENUTFNUQVIKdAAVRXZhbHVhdGlvbjogZmFsc2UgICAKdAAGU0FUPTAKdAAbRXZhbHVhdGlvbiB0aW1lOiAwLjAwMSBzZWMKdABQLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQp0AAEKdAAWRm9ybXVsYSBjYWNoZSBzaXplOiAwCnQABE9rLgp0AAEKdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IFRJTUUgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0ACUgVmFyaWFibGUgb3JkZXIgVGltZTogICAwLjAwNCAgIHNlYy4KdAAlIE5TRiBnZW4uIFRpbWU6ICAgICAgICAgMC4wMDEgICBzZWMuCnQAJSBSUyBHZW5lcmF0aW9uIFRpbWU6ICAgIDAuMDAwICAgc2VjLgp0ACUgVG90YWwgUlMgVGltZTogICAgICAgICAwLjAwMSAgIHNlYy4KdAAlIFN0YXRpc3RpY3MgVGltZTogICAgICAgMC4wMDAgICBzZWMuCnQAJSBNb2RlbCBDaGVja2luZyBUaW1lOiAgIDAuMDAxICAgc2VjLgp0ACUgVG90YWwgVGltZTogICAgICAgICAgICAwLjAwNyAgIHNlYy4KdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpxAH4AJnhzcQB+AAB3BAAAAJpzcgARamF2YS5sYW5nLkJvb2xlYW7NIHKA1Zz67gIAAVoABXZhbHVleHABcQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCceA</document-log>
+    <document-log uuid="e77fd03c-8bd8-4011-a6ac-9cf260461abb">rO0ABXNyABRqYXZhLnV0aWwuTGlua2VkTGlzdAwpU11KYIgiAwAAeHB3BAAAAJp0AKEbWzBtRVhFQzogIi9BcHBsaWNhdGlvbnMvR3JlYXRTUE4uYXBwL0NvbnRlbnRzL2FwcC9wb3J0YWJsZV9ncmVhdHNwbi9iaW4vRFNQTi1Ub29sIiAtbG9hZCAiL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzLnNvbHV0aW9uL1BUIiAtcGJhc2lzIC1kZXRlY3QtZXhwIC1wc2ZsIC1ibmQgCnQAVhtbMW0bWzRtTE9BRElORyBQRVRSSSBORVQgL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzLnNvbHV0aW9uL1BUIChuZXQvZGVmKS4uLhtbMjJtG1syNG0KdAAPTUFSS0lORyBQQVI6IDAKdAAQUExBQ0VTOiAgICAgIDExCnQAD1JBVEUgUEFSOiAgICAwCnQAEFRSQU5TSVRJT05TOiAxMQp0AA9NRUFTVVJFUzogICAgMAp0AChMT0FESU5HIFRJTUU6IFtVc2VyIDAuMDAwcywgU3lzIDAuMDAwc10KdAABCnQAAQp0AB5DT01QVVRJTkcgUExBQ0UgRkxPVyBCQVNJUy4uLgp0ABJNPTExLCBOPTExLCBOMD0xMQp0ADhDb21wdXRhdGlvbiBvZiBGbG93IGJhc2lzOiBzdGVwIDEvMTEsIHxLfD05LCBwcm9kdWN0cz0xCnQAUxtbMUEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKdABSG1sxQUNvbXB1dGF0aW9uIG9mIEZsb3cgYmFzaXM6IGNvbXBsZXRlZCBpbiA3IHN0ZXBzLCB8S3w9NC4gICAgICAgICAgICAgICAgICAgICAgCnQAQEZPVU5EIDQgVkVDVE9SUyBJTiBUSEUgUExBQ0UgRkxPVyBCQVNJUyAoMyBzZW1pZmxvd3MsIDEgZmxvd3MpLgp0AAEKdAABCnQALlRoZXJlIGFyZSAxIHBsYWNlcyBub3QgY292ZXJlZCBieSBhbnkgUC1mbG93Ogp0AAEKdAAmVE9UQUwgVElNRTogW1VzZXIgMC4wMDBzLCBTeXMgMC4wMDBzXQp0ACdBVk9JRCBFWFBPTkVOVElBTCBHUk9XVEggT0YgU0VNSUZMT1dTLgp0AB1DT01QVVRJTkcgUExBQ0UgU0VNSUZMT1dTLi4uCnQAEk09MTEsIE49MTEsIE4wPTExCnQAKkdlbmVyYXRpb24gb2YgU2VtaWZsb3dzOiBzdGVwIDEvMTEsIHxLfD05CnQAUxtbMUEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKdABQG1sxQUdlbmVyYXRpb24gb2YgU2VtaWZsb3dzOiBjb21wbGV0ZWQgaW4gNyBzdGVwcywgfEt8PTQuICAgICAgICAgICAgICAgICAgICAgIAp0ABlGT1VORCA0IFBMQUNFIFNFTUlGTE9XUy4KdAABCnQAThtbMW0bWzMxbVdBUk5JTkc6IBtbMjJtG1swbVBFVFJJIE5FVCBIQVMgSU5ISUJJVE9SIEFSQ1MgVEhBVCBXSUxMIEJFIElHTk9SRUQuCnQAThtbMW0bWzMxbVdBUk5JTkc6IBtbMjJtG1swbVBFVFJJIE5FVCBIQVMgSU5ISUJJVE9SIEFSQ1MgVEhBVCBXSUxMIEJFIElHTk9SRUQuCnQAAQp0ADJUaGVyZSBhcmUgMSBwbGFjZXMgbm90IGNvdmVyZWQgYnkgYW55IFAtc2VtaWZsb3c6CnQAAQp0ACZUT1RBTCBUSU1FOiBbVXNlciAwLjAwMHMsIFN5cyAwLjAwMHNdCnQALENPTVBVVElORyBQTEFDRSBCT1VORFMgRlJPTSBQLVNFTUlGTE9XUyAuLi4KdAAnG1swWBtbMzJtIFBST0NFU1MgRVhJVEVEIE5PUk1BTExZLhtbMG0KdACgG1swbUVYRUM6ICIvQXBwbGljYXRpb25zL0dyZWF0U1BOLmFwcC9Db250ZW50cy9hcHAvcG9ydGFibGVfZ3JlYXRzcG4vYmluL0RTUE4tVG9vbCIgLWxvYWQgIi9Vc2Vycy9wZWRyby9UUi1NZWFzdXJlcy5zb2x1dGlvbi9QVCIgLWxvYWQtYm5kIC10aW1lb3V0IDUgLWlscC1ibmQgCnQAVhtbMW0bWzRtTE9BRElORyBQRVRSSSBORVQgL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzLnNvbHV0aW9uL1BUIChuZXQvZGVmKS4uLhtbMjJtG1syNG0KdAAPTUFSS0lORyBQQVI6IDAKdAAQUExBQ0VTOiAgICAgIDExCnQAD1JBVEUgUEFSOiAgICAwCnQAEFRSQU5TSVRJT05TOiAxMQp0AA9NRUFTVVJFUzogICAgMAp0AChMT0FESU5HIFRJTUU6IFtVc2VyIDAuMDAwcywgU3lzIDAuMDAwc10KdAABCnQAAQp0ABVMT0FESU5HIEJORCBGSUxFIC4uLgp0ACBTY2hlZHVsZWQgdGltZW91dCBvZiA1IHNlY29uZHMuCnQAJUNPTVBVVElORyBQTEFDRSBCT1VORFMgVVNJTkcgSUxQIC4uLgp0ACJJbmhpYml0b3IgYXJjcyBoYXZlIGJlZW4gaWdub3JlZC4KdAAeVGhlcmUgYXJlIDEgdW5ib3VuZGVkIHBsYWNlcy4KcQB+ACZ0AIwbWzBtRVhFQzogIi9BcHBsaWNhdGlvbnMvR3JlYXRTUE4uYXBwL0NvbnRlbnRzL2FwcC9wb3J0YWJsZV9ncmVhdHNwbi9iaW4vUkdNRURENSIgIi9Vc2Vycy9wZWRyby9UUi1NZWFzdXJlcy5zb2x1dGlvbi9QVCIgLU1FVEEgLXNhdHNldHMgLUMgCnQAIFJhbmRvbSBzZWVkczogMTczMjcwNTA5NyA3MzQ3NjkKdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0ABFHcmVhdFNQTi9NZWRkbHkuCnQAOCAgQ29weXJpZ2h0IChDKSAxOTg3LTIwMjIsIFVuaXZlcnNpdHkgb2YgVG9yaW5vLCBJdGFseS4KdAAvICB3ZWJzaXRlOiBodHRwczovL2dpdGh1Yi5jb20vZ3JlYXRzcG4vU09VUkNFUwp0ADEgIFNlbmQgZmlsZXMgbmV0bmFtZS5uZXQsIC5kZWYgdG8gZS1tYWlsIGFkZHJlc3MKdAAvICBhbXBhcm9yZShhdClkaS51bml0by5pdCBpZiB5b3UgZmluZCBhbnkgYnVnLgp0AFA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09CnQAH0Jhc2VkIG9uIE1FRERMWSB2ZXJzaW9uIDAuMTcuMQp0AEYgIENvcHlyaWdodCAoQykgMjAwOSwgSW93YSBTdGF0ZSBVbml2ZXJzaXR5IFJlc2VhcmNoIEZvdW5kYXRpb24sIEluYy4KdAAtICB3ZWJzaXRlOiBodHRwczovL2FzbWluZXIuZ2l0aHViLmlvL21lZGRseS8KdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0AClVc2luZyBwZXItZXZlbnQgc2F0dXJhdGlvbiAoc2F0LXByZWdlbikuCnQAEVByb2Nlc3MgSUQ6IDYxNTMKdAAxTU9ERUwgTkFNRTogL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzLnNvbHV0aW9uL1BUCnQAHSAgMTEgcGxhY2VzLCAxMSB0cmFuc2l0aW9ucy4KdAAoVXNlZCBNZW1vcnkgZm9yIGVuY29kaW5nIG5ldDogMjEwNTM0NEtCCnQAO09wZW5pbmcgZmlsZTogL1VzZXJzL3BlZHJvL1RSLU1lYXN1cmVzLnNvbHV0aW9uL1BULmJuZCBPSy4KdAA+T3BlbmluZyBmaWxlOiAvVXNlcnMvcGVkcm8vVFItTWVhc3VyZXMuc29sdXRpb24vUFQuaWxwYm5kIE9LLgp0ABxFbmFibGluZyBjb3ZlcmFiaWxpdHkgdGVzdC4KdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09IE1PREVMIFNUQVRJU1RJQ1MgPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0ABdQTEFDRVM6ICAgICAgICAgICAgIDExCnQAF1RSQU5TSVRJT05TOiAgICAgICAgMTEKdAAXSU5QVVQgQVJDUzogICAgICAgICAxNAp0ABdPVVRQVVQgQVJDUzogICAgICAgIDE0CnQAFklOSElCIEFSQ1M6ICAgICAgICAgMgp0ABZURVNUIEFSQ1M6ICAgICAgICAgIDIKdAAWTlVNIE0wIFRPS0VOUzogICAgICAzCnQAFklOVkFSSUFOVFM6ICAgICAgICAgNAp0ABZQLVNFTUlGTE9XUzogICAgICAgIDQKdAAWTUFYIElOVkFSSUFOVCBDQVJEOiAxCnQAFklTIFVORk9MRElORzogICAgICAgMAp0ABdCT1VOREVEIFBMQUNFUzogICAgIDEwCnQAGlBMQUNFUyBCT1VOREVEIEJZICtJTkY6IDEKdAAWVU5CT1VOREVEIFBMQUNFUzogICAwCnQAFk1BWCBQTEFDRSBCT1VORDogICAgMQp0AAEKdABQPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSBWQVJJQUJMRSBPUkRFUiA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQp0ADxWYXJpYWJsZSBvcmRlciBtZXRob2Q6IE1ldGEtaGV1cmlzdGljIHVzaW5nIHdlaWdodGVkIHNjb3JlLgp0ABhOdW1iZXIgb2YgY29tcG9uZW50czogMgp0ADpNZXRhLWhldXJpc3RpYzogc2VsZWN0aW5nIG1ldGhvZCBDTTIrRm9yY2Ugd2l0aCBzY29yZTogMzEKdAApVGltZSB0byBjb21wdXRlIHZhcmlhYmxlIG9yZGVyOiAwLjAwMjYwMwp0AAEKdABQPT09PT09PT09PT09PT09PT09PT09PT09PSBTVEFSVCBGSVJJTkcgUlVMRVMgRU5DT0RJTkcgPT09PT09PT09PT09PT09PT09PT09PT09PQp0ABpDcmVhdGluZyBhbGwgZXZlbnQgTlNGcy4uCnQAG0J1aWxkaW5nIG1vbm9saXRoaWMgTlNGLi4uCnQALEVuY29kZWQgMTEgdHJhbnNpdGlvbiBpbiAyIHByaW9yaXR5IGdyb3Vwcy4KdAAhVGltZSB0byBidWlsZCBhbGwgTlNGczogMC4wMDA3MTgKdAABCnQAUD09PT09PT09PT09PT09PT09PT09PT09PT0gUkVBQ0hBQklMSVRZIFNFVCBHRU5FUkFUSU9OID09PT09PT09PT09PT09PT09PT09PT09PT0KdAAXU3RhcnQgUlMgY29uc3RydWN0aW9uLgp0ACAxIEMgMiAzIENvbnZlcmdlbmNlIGluIDMgc3RlcHMuCnQAHVJTIGdlbmVyYXRpb24gdGltZTogMC4wMDAxODcKdAAdQ29tcHV0aW5nIHZhcmlhYmxl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AH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJxxAH4AnHEAfgCccQB+AJx4</document-log>
+  </resource-list>
+</project>

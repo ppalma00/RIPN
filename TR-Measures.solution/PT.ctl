@@ -1,0 +1,4 @@
+FORMULA: MEASURE0
+LANGUAGE: CTL
+EF (#rule1_off == 1)
+

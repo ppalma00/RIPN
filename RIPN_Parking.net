@@ -1,0 +1,41 @@
+NET RIPN_Parking
+PLACE
+P_Wait 1 0
+P_ToEV 0 0
+P_ToGen 0 0
+P_ParkEV 0 0
+P_ParkGen 0 0
+P_Exit 0 0
+P_FreeEV 1 0
+P_FreeGen 1 0
+P_InterUpdate 0 0
+ENDPLACE
+
+TRANSITION
+T_AssignEV
+T_AssignGen
+T_ParkDoneEV
+T_ParkDoneGen
+T_ExitDone
+T_UpdateSlots
+ENDTRANSITION
+
+ARC
+P_Wait T_AssignEV
+P_Wait T_AssignGen
+T_AssignEV P_ToEV
+P_FreeEV T_AssignEV
+T_AssignGen P_ToGen
+P_FreeGen T_AssignGen
+P_ToEV T_ParkDoneEV
+P_ToGen T_ParkDoneGen
+T_ParkDoneEV P_ParkEV
+T_ParkDoneGen P_ParkGen
+P_ParkEV T_ExitDone
+P_ParkGen T_ExitDone
+T_ExitDone P_InterUpdate
+P_InterUpdate T_UpdateSlots
+T_UpdateSlots P_FreeEV
+T_UpdateSlots P_FreeGen
+ENDARCS
+

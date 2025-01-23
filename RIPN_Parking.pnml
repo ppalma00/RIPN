@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pnml>
+  <net id="RIPN_Parking" type="P/T net">
+    <page id="page1">
+      <!-- Places -->
+      <place id="P_Wait">
+        <name>Waiting Queue</name>
+        <initialMarking>1</initialMarking>
+      </place>
+      <place id="P_ToEV">
+        <name>Driving to EV Slot</name>
+        <initialMarking>0</initialMarking>
+      </place>
+      <place id="P_ToGen">
+        <name>Driving to Generic Slot</name>
+        <initialMarking>0</initialMarking>
+      </place>
+      <place id="P_ParkEV">
+        <name>Parked in EV Slot</name>
+        <initialMarking>0</initialMarking>
+      </place>
+      <place id="P_ParkGen">
+        <name>Parked in Generic Slot</name>
+        <initialMarking>0</initialMarking>
+      </place>
+      <place id="P_Exit">
+        <name>Exiting Parking</name>
+        <initialMarking>0</initialMarking>
+      </place>
+      <place id="P_FreeEV">
+        <name>Free EV Slots</name>
+        <initialMarking>1</initialMarking>
+      </place>
+      <place id="P_FreeGen">
+        <name>Free Generic Slots</name>
+        <initialMarking>1</initialMarking>
+      </place>
+      <place id="P_InterUpdate">
+        <name>Intermediate Update</name>
+        <initialMarking>0</initialMarking>
+      </place>
+
+      <!-- Transitions -->
+      <transition id="T_AssignEV">
+        <name>Assign EV Slot</name>
+      </transition>
+      <transition id="T_AssignGen">
+        <name>Assign Generic Slot</name>
+      </transition>
+      <transition id="T_ParkDoneEV">
+        <name>Complete EV Parking</name>
+      </transition>
+      <transition id="T_ParkDoneGen">
+        <name>Complete Generic Parking</name>
+      </transition>
+      <transition id="T_ExitDone">
+        <name>Complete Exit</name>
+      </transition>
+      <transition id="T_UpdateSlots">
+        <name>Update Slot Availability</name>
+      </transition>
+
+      <!-- Arcs -->
+      <!-- From Waiting Queue -->
+      <arc id="P_Wait_to_T_AssignEV" source="P_Wait" target="T_AssignEV" />
+      <arc id="P_Wait_to_T_AssignGen" source="P_Wait" target="T_AssignGen" />
+
+      <!-- Assign EV Slot -->
+      <arc id="T_AssignEV_to_P_ToEV" source="T_AssignEV" target="P_ToEV" />
+      <arc id="P_FreeEV_to_T_AssignEV" source="P_FreeEV" target="T_AssignEV" />
+
+      <!-- Assign Generic Slot -->
+      <arc id="T_AssignGen_to_P_ToGen" source="T_AssignGen" target="P_ToGen" />
+      <arc id="P_FreeGen_to_T_AssignGen" source="P_FreeGen" target="T_AssignGen" />
+
+      <!-- Parking Completion -->
+      <arc id="P_ToEV_to_T_ParkDoneEV" source="P_ToEV" target="T_ParkDoneEV" />
+      <arc id="P_ToGen_to_T_ParkDoneGen" source="P_ToGen" target="T_ParkDoneGen" />
+      <arc id="T_ParkDoneEV_to_P_ParkEV" source="T_ParkDoneEV" target="P_ParkEV" />
+      <arc id="T_ParkDoneGen_to_P_ParkGen" source="T_ParkDoneGen" target="P_ParkGen" />
+
+      <!-- Exiting Parking -->
+      <arc id="P_ParkEV_to_T_ExitDone" source="P_ParkEV" target="T_ExitDone" />
+      <arc id="P_ParkGen_to_T_ExitDone" source="P_ParkGen" target="T_ExitDone" />
+      <arc id="T_ExitDone_to_P_InterUpdate" source="T_ExitDone" target="P_InterUpdate" />
+
+      <!-- Update Slot Availability -->
+      <arc id="P_InterUpdate_to_T_UpdateSlots" source="P_InterUpdate" target="T_UpdateSlots" />
+      <arc id="T_UpdateSlots_to_P_FreeEV" source="T_UpdateSlots" target="P_FreeEV" />
+      <arc id="T_UpdateSlots_to_P_FreeGen" source="T_UpdateSlots" target="P_FreeGen" />
+    </page>
+  </net>
+</pnml>
