@@ -1,0 +1,13 @@
+FACTS: high_demand; free_place(INT); assigned(INT)
+VARSINT: id
+VARSREAL: 
+INIT: id:=88
+DISCRETE:
+DURATIVE: park(INT); exiting_zone()
+TIMERS: t1
+
+<TR>
+assigned(slot) -> park(slot)
+free_place(slot) && t1.end -> park(slot)
+high_demand && !free_place(_) -> exiting_zone()
+true -> _to_ENV(new_car, id); t1.start(10*60)

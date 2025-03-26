@@ -1,0 +1,17 @@
+FACTS: dos; uno(INT); tres(INT, INT)
+VARSINT: x; y
+VARSREAL: 
+INIT: y:=1
+DISCRETE: act1()
+DURATIVE: act2(INT)
+
+PLACES: p1; p2; p3
+TRANSITIONS: t1; t2
+ARCS: p1->t1; t1->p2; p2->t2; t2->p1; p3-o>t1
+INITMARKING: (1,0,0)
+
+<PN>
+p1: [x:=1; remember(dos); remember(uno(88)); remember(tres(5,6))] 
+p2: [x:=2;act1()] if(uno(88))
+t1: [y:=4; forget(dos); forget(tres(5,_))] if(dos)
+t2: [y:=10] if (true)
