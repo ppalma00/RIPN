@@ -9,9 +9,7 @@ import java.util.Map;
 
 /*
  * Versión que considera condiciones en lugares y transiciones con '_' en hechos con parámetros, 
- * y funcionan acciones discretas.
- * Este es una copia de PN3 porque PN4 me ha salido rana y debo volver atrás y meter de nuevo acciones durativas y prioridad de las inmediatas. 
- * Voy a aprovechar el control de errores que se hacen en Petrinetloader de PN4 que eso sí funcionaba.
+ * y funcionan acciones discretas y durativas con y sin parámetros.
  */
 public class Main implements Observer {
     public static void main(String[] args) {
@@ -23,7 +21,7 @@ public class Main implements Observer {
             Map<String, List<String>> placeVariableUpdates = new HashMap<>();
 
             // 3️⃣ Nombre del archivo de configuración
-            String filename = "RIPN_PN.txt";
+            String filename = "tr_programPN.txt";
 
             // 4️⃣ Cargar datos en la BeliefStore (variables, hechos, acciones)
             BeliefStoreLoader.loadFromFile(filename, beliefStore);
@@ -48,12 +46,19 @@ public class Main implements Observer {
             net.setTransitionConditions(transitionConditions);
             net.setPlaceDiscreteActions(placeDiscreteActions);
             
-         // 9️⃣ Aplicar cambios de variables en los lugares inicialmente marcados
+            Map<String, Boolean> emptyMarking = new HashMap<>(); // todo falso
+
             for (String placeName : net.getPlaces().keySet()) {
-                if (net.getPlaces().get(placeName).hasToken()) {
-                    net.executePlaceActions(placeName);
+                Place place = net.getPlaces().get(placeName);
+                if (place.hasToken()) {
+                    net.executePlaceActions(placeName);          
                 }
             }
+
+            // 💡 Notificar también acciones durativas
+            net.updateDurativeActions(emptyMarking); // simula paso de 0 → 1      
+            net.printState();
+
          // 🔟 Iniciar la simulación automática con un intervalo de 1000ms
             PetriNetAnimator animator = new PetriNetAnimator(net, 500);
             new Thread(animator).start();

@@ -11,6 +11,8 @@ import java.util.Set;
 public class PetriNetLoader {
 	public static PetriNet loadFromFile(String filename, BeliefStore beliefStore) throws IOException {
 	    PetriNet net = new PetriNet(beliefStore);
+	    Map<String, Integer> discreteActions = new HashMap<>();
+	    net.setDiscreteActionArity(discreteActions);
 	    BufferedReader reader = new BufferedReader(new FileReader(filename));
 	    String line;
 
@@ -24,6 +26,20 @@ public class PetriNetLoader {
 	        line = line.trim();
 	        if (line.isEmpty()) continue;
 	        if (line.startsWith("#")) continue;
+	        if (line.startsWith("DISCRETE:")) {
+	            String actionsLine = line.substring("DISCRETE:".length()).trim();
+	            String[] actions = actionsLine.split(";");
+	            for (String act : actions) {
+	                act = act.trim();
+	                if (act.isEmpty()) continue;
+
+	                String name = act.substring(0, act.indexOf("(")).trim();
+	                String params = act.substring(act.indexOf("(") + 1, act.lastIndexOf(")")).trim();
+	                int arity = params.isEmpty() ? 0 : params.split(",").length;
+
+	                discreteActions.put(name, arity);
+	            }
+	        }
 	        if (line.startsWith("PLACES:")) {
 	            String[] parts = line.substring(7).split(";");
 	            for (String place : parts) {

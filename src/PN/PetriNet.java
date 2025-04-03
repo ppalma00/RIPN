@@ -17,6 +17,13 @@ public class PetriNet {
     private Map<String, List<String>> transitionVariableUpdates = new HashMap<>();
     private Map<String, String> placeDiscreteActions = new HashMap<>();
     private Observer observer;
+    private List<String> pendingDiscreteActions = new ArrayList<>();
+    private Map<String, Integer> discreteActionArity = new HashMap<>();
+
+    public void setDiscreteActionArity(Map<String, Integer> arityMap) {
+        this.discreteActionArity = arityMap;
+    }
+
 
     public PetriNet() {
         this.beliefStore = new BeliefStore();
@@ -90,17 +97,25 @@ public class PetriNet {
         }
         return true;
     }
+    public void notifyDiscreteActions(List<String> actions) {
+        if (observer != null) {
+            for (String actionName : actions) {
+                observer.onDiscreteActionExecuted(actionName, new double[0]);
+            }
+        }
+    }
+    public List<String> fire(String transitionName) {
+        List<String> pendingDiscreteNotifications = new ArrayList<>();
 
-    public void fire(String transitionName) {
         if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
             if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore)) {
                 System.out.println("🚫 Skipped firing transition " + transitionName + " (Condition not met: " + condition + ")");
-                return;
+                return pendingDiscreteNotifications; // devuelvo vacío si no se cumple
             }
         }
 
-        if (!canFire(transitionName)) return;
+        if (!canFire(transitionName)) return pendingDiscreteNotifications;
 
         Transition transition = transitions.get(transitionName);
         List<Place> inputPlaces = new ArrayList<>();
@@ -116,28 +131,45 @@ public class PetriNet {
             }
         }
 
-        // 🔹 Marcar lugares de salida y activar acciones discretas si aplican
+        // 🔁 Marcar lugares de salida y acumular acciones discretas
         for (Place p : outputPlaces) {
-            boolean wasEmpty = !p.hasToken(); // Estaba vacío antes de la transición
+            boolean wasEmpty = !p.hasToken();
             p.setToken(true);
-            
-            // 🔹 Activar acción discreta si el lugar tiene una asociada
-            if (wasEmpty && placeDiscreteActions.containsKey(p.getName()) && observer != null) {
-                String actionName = placeDiscreteActions.get(p.getName());
-            //    System.out.println("🎬 Executing discrete action: " + actionName);
-                observer.onDiscreteActionExecuted(actionName, new double[0]); // Notificar al observador
+
+            if (wasEmpty) {
+                executePlaceActions(p.getName());
+
+         //       if (placeDiscreteActions.containsKey(p.getName())) {
+           //         String actionName = placeDiscreteActions.get(p.getName());
+           //         System.out.println("⚙️ Acción discreta acumulada: " + actionName + " en lugar " + p.getName());
+             //       pendingDiscreteNotifications.add(actionName); // ← esta es la que se devuelve
+              //  }
             }
-            
-            executePlaceActions(p.getName());
         }
 
-        // 🔹 Vaciar tokens de los lugares de entrada
+        // 🔁 Vaciar lugares de entrada
         for (Place p : inputPlaces) {
+        //    System.out.println("💥 Vaciando " + p.getName());
             p.setToken(false);
         }
 
         executeTransitionActions(transitionName);
+
         System.out.println("🔥 Transition fired: " + transitionName);
+   //     System.out.println("📤 Se devuelven acciones desde fire: " + pendingDiscreteNotifications);
+        return pendingDiscreteNotifications;
+    }
+
+    public void notifyPendingDiscreteActions() {
+        if (observer != null) {
+            for (String actionName : pendingDiscreteActions) {
+                observer.onDiscreteActionExecuted(actionName, new double[0]);
+            }
+        }
+        pendingDiscreteActions.clear();
+    }
+    public Observer getObserver() {
+        return observer;
     }
 
 
@@ -187,6 +219,10 @@ public class PetriNet {
             }
         }
     }
+    public Map<String, String> getPlaceDiscreteActions() {
+        return placeDiscreteActions;
+    }
+
     private void processForgetFact(String fact) {
         if (fact.contains("(") && fact.endsWith(")")) {
             String factName = fact.substring(0, fact.indexOf("(")).trim();
@@ -251,10 +287,8 @@ public class PetriNet {
         }
     }
 
-
-
     public void executePlaceActions(String placeName) {
-    	// 🔹 Verificar si hay una condición para este lugar
+        // 🔹 Verificar si hay una condición para este lugar
         if (placeConditions.containsKey(placeName)) {
             String condition = placeConditions.get(placeName);
             boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore);
@@ -264,18 +298,22 @@ public class PetriNet {
                 return; // 🔹 Si la condición no se cumple, NO ejecutamos las acciones
             }
         }
+
         if (placeVariableUpdates.containsKey(placeName)) {
             for (String update : placeVariableUpdates.get(placeName)) {
                 update = update.trim();
-                
+
+                // 🔹 Procesar hechos
                 if (update.startsWith("remember(") && update.endsWith(")")) {
                     String fact = update.substring(9, update.length() - 1).trim();
                     processRememberFact(fact);
+
                 } else if (update.startsWith("forget(") && update.endsWith(")")) {
                     String fact = update.substring(7, update.length() - 1).trim();
                     processForgetFact(fact);
-                } else {
-                    // Procesar asignación de variables como antes
+
+                } else if (update.contains(":=")) {
+                    // 🔹 Procesar asignación de variables
                     String[] parts = update.split(":=");
                     if (parts.length == 2) {
                         String varName = parts[0].trim();
@@ -284,10 +322,8 @@ public class PetriNet {
                             Object result = evaluateExpression(expression);
                             if (result instanceof Integer && beliefStore.isIntVar(varName)) {
                                 beliefStore.setIntVar(varName, (Integer) result);
-                               // System.out.println("🔄 Updated INT variable: " + varName + " = " + result);
                             } else if (result instanceof Double && beliefStore.isRealVar(varName)) {
                                 beliefStore.setRealVar(varName, (Double) result);
-                    //            System.out.println("🔄 Updated REAL variable: " + varName + " = " + result);
                             } else {
                                 System.err.println("❌ Invalid type for variable: " + varName);
                             }
@@ -295,6 +331,29 @@ public class PetriNet {
                             System.err.println("❌ Error evaluating expression: " + expression);
                         }
                     }
+
+                } else if (update.matches("\\w+\\(.*\\)")) {
+                    // 🔹 Acción con parámetros: act1(), act3(5,6.7)
+                    String name = update.substring(0, update.indexOf("("));
+                    String argsRaw = update.substring(update.indexOf("(") + 1, update.lastIndexOf(")")).trim();
+
+                    double[] args;
+                    if (argsRaw.isEmpty()) {
+                        args = new double[0];
+                    } else {
+                        args = Arrays.stream(argsRaw.split(","))
+                                     .map(String::trim)
+                                     .mapToDouble(Double::parseDouble)
+                                     .toArray();
+                    }
+
+                    // Ejecutar solo si es una acción discreta declarada
+                    if (discreteActionArity.containsKey(name)) {
+                        if (observer != null) {
+                            observer.onDiscreteActionExecuted(name, args);
+                        }
+                    }
+                    // (Acciones durativas se manejan en updateDurativeActions)
                 }
             }
         }
@@ -330,6 +389,113 @@ public class PetriNet {
 
     public void setTransitionConditions(Map<String, String> conditions) {
         this.transitionConditions = conditions;
+    }
+ // 📌 Método auxiliar para saber si una transición está en la sección <PN>
+    public boolean hasPNDefinition(String transitionName) {
+        return transitionVariableUpdates.containsKey(transitionName) || transitionConditions.containsKey(transitionName);
+    }
+
+    // 📌 Captura el marcado actual como un Map simple
+    public Map<String, Boolean> captureCurrentMarking() {
+        Map<String, Boolean> marking = new HashMap<>();
+        for (Map.Entry<String, Place> entry : places.entrySet()) {
+            marking.put(entry.getKey(), entry.getValue().hasToken());
+        }
+        return marking;
+    }
+
+    // 📌 Lógica de parada e inicio de acciones durativas
+    public void updateDurativeActions(Map<String, Boolean> previousMarking) {
+        // 🛑 PRIMERO: Parar acciones durativas
+        for (String placeName : places.keySet()) {
+            Place place = places.get(placeName);
+            boolean currentlyMarked = place.hasToken();
+            boolean previouslyMarked = previousMarking.getOrDefault(placeName, false);
+
+         //   System.out.println("🔍 Durativa [" + placeName + "]: prev=" + previouslyMarked + ", now=" + currentlyMarked);
+
+            if (!currentlyMarked && previouslyMarked) {
+                if (placeVariableUpdates.containsKey(placeName)) {
+                    for (String update : placeVariableUpdates.get(placeName)) {
+                        if (isDurativeAction(update)) {
+                            String actionName = extractActionName(update);
+                      //      System.out.println("🛑 Parando acción durativa: " + actionName);
+                            if (observer != null) {
+                                observer.onDurativeActionStopped(actionName);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // 🟢 DESPUÉS: Iniciar acciones durativas
+        for (String placeName : places.keySet()) {
+            Place place = places.get(placeName);
+            boolean currentlyMarked = place.hasToken();
+            boolean previouslyMarked = previousMarking.getOrDefault(placeName, false);
+
+            if (currentlyMarked && !previouslyMarked) {
+                if (placeVariableUpdates.containsKey(placeName)) {
+                    for (String update : placeVariableUpdates.get(placeName)) {
+                        if (isDurativeAction(update)) {
+                            String actionName = extractActionName(update);
+                            double[] params = extractActionParameters(update);
+                    //        System.out.println("🟢 Iniciando acción durativa: " + actionName + Arrays.toString(params));
+                            if (observer != null) {
+                                observer.onDurativeActionStarted(actionName, params);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    private boolean isDurativeAction(String update) {
+        String base = extractActionName(update);
+        return beliefStore.getDeclaredDurativeActions().stream()
+                .anyMatch(declared -> declared.startsWith(base));
+    }
+
+    private String extractActionName(String update) {
+        int parenIndex = update.indexOf('(');
+        return parenIndex > 0 ? update.substring(0, parenIndex).trim() : update.trim();
+    }
+
+    private double[] extractActionParameters(String update) {
+        int start = update.indexOf('(');
+        int end = update.lastIndexOf(')');
+        if (start >= 0 && end > start) {
+            String paramStr = update.substring(start + 1, end).trim();
+            if (!paramStr.isEmpty()) {
+                String[] parts = paramStr.split(",");
+                double[] result = new double[parts.length];
+                for (int i = 0; i < parts.length; i++) {
+                    try {
+                        result[i] = Double.parseDouble(parts[i].trim());
+                    } catch (NumberFormatException e) {
+                        result[i] = 0; // por defecto si hay error
+                    }
+                }
+                return result;
+            }
+        }
+        return new double[0];
+    }
+
+    private int extractParameter(String actionCall) {
+        int start = actionCall.indexOf("(") + 1;
+        int end = actionCall.indexOf(")");
+        if (start >= 0 && end > start) {
+            try {
+                return Integer.parseInt(actionCall.substring(start, end).trim());
+            } catch (NumberFormatException e) {
+                System.err.println("⚠️ Error extracting parameter from: " + actionCall);
+            }
+        }
+        return 0;
     }
 
 }
