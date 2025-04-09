@@ -2,6 +2,26 @@
 import java.util.Arrays;
 
 import core.BeliefStore;
+/*
+ * 
+FACTS: uno(INT), dos
+VARSINT: x, y
+VARSREAL: z
+DISCRETE: abrir(INT), cerrar(REAL)
+DURATIVE: alarma()
+TIMERS: t1
+INIT: x:=0, y:=88, z:=4.56
+
+<TR>
+y==2 -> alarma() ++ x:=0, y:=0, forget(dos)
+x==4 -> cerrar(1.3) ++ y:=2
+x==3 -> abrir(2) ++ x:=4, forget(uno(3))
+t1.end -> ++forget(t1.end), x:=3
+x==2 -> t1.continue()
+uno(3)-> t1.stop()++x:=2
+True -> alarma(), t1.start(1) ++x:=1, remember(uno(4)), remember(dos)
+
+*/
 
 public class Main implements Observer {
     public static void main(String[] args) {

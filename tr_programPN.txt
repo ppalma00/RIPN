@@ -1,17 +1,20 @@
-FACTS: dos
+FACTS: 
 VARSINT: x; y
 VARSREAL: 
 INIT: x:=1; y:=1
-DISCRETE: act1(); act3(INT, REAL)
-DURATIVE: act2(INT); act4(INT)
+DISCRETE: act1(); 
+DURATIVE: 
+TIMERS: temp
 # hola 
 
-PLACES: p1; p2
-TRANSITIONS: t1; t2
-ARCS: p1->t1; t1->p2; p2->t2; t2->p1
-INITMARKING: (1,0)
+PLACES: p0; p1; p2; p3; p4
+TRANSITIONS: t0; t1; t2; t3
+ARCS: p1->t1; t1->p2; p2->t2; t2->p1; p1->t3; t3->p4; p0->t0; t0->p1; p3->t3
+INITMARKING: (1,0,0,1,0)
 
 <PN>
-p1: [x:=5; act1(); act3(5,6.7); act4(5); remember(dos)] if (y>=1)
-p2: [x:=x+1; act2(8)] 
-t2: [x:=1]
+p0: [temp.start(30)] 
+t1: [] if(!temp.end)
+p1: [act1(); temp.pause()] if(x<5)
+p2: [x:=x+1] 
+t3: [y:=2] if (temp.end)

@@ -26,6 +26,17 @@ public class PetriNetLoader {
 	        line = line.trim();
 	        if (line.isEmpty()) continue;
 	        if (line.startsWith("#")) continue;
+	        if (line.startsWith("TIMERS:")) {
+	            String timersLine = line.substring("TIMERS:".length()).trim();
+	            String[] timers = timersLine.split(";");
+	            for (String timer : timers) {
+	                String timerName = timer.trim();
+	                if (!timerName.isEmpty()) {
+	                    beliefStore.declareTimer(timerName);
+	                }
+	            }
+	        }
+
 	        if (line.startsWith("DISCRETE:")) {
 	            String actionsLine = line.substring("DISCRETE:".length()).trim();
 	            String[] actions = actionsLine.split(";");

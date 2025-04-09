@@ -6,10 +6,30 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+/*
+ * FACTS: dos
+VARSINT: x; y
+VARSREAL: 
+INIT: x:=1; y:=1
+DISCRETE: act1(); act3(INT, REAL)
+DURATIVE: act2(INT); act4(INT)
+# hola 
 
+PLACES: p1; p2
+TRANSITIONS: t1; t2
+ARCS: p1->t1; t1->p2; p2->t2; t2->p1
+INITMARKING: (1,0)
+
+<PN>
+p1: [x:=5; act1(); act3(5,6.7); act4(5); remember(dos)] if (y>=1)
+p2: [x:=x+1; act2(8)] 
+t2: [x:=1]
+ */
 /*
  * Versión que considera condiciones en lugares y transiciones con '_' en hechos con parámetros, 
  * y funcionan acciones discretas y durativas con y sin parámetros.
+ * incluye temporizadores
+ * arcos inhibidores 
  */
 public class Main implements Observer {
     public static void main(String[] args) {
@@ -60,7 +80,7 @@ public class Main implements Observer {
             net.printState();
 
          // 🔟 Iniciar la simulación automática con un intervalo de 1000ms
-            PetriNetAnimator animator = new PetriNetAnimator(net, 500);
+            PetriNetAnimator animator = new PetriNetAnimator(net, 2000);
             new Thread(animator).start();
 
         } catch (IOException e) {

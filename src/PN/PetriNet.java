@@ -152,11 +152,7 @@ public class PetriNet {
         //    System.out.println("💥 Vaciando " + p.getName());
             p.setToken(false);
         }
-
         executeTransitionActions(transitionName);
-
-        System.out.println("🔥 Transition fired: " + transitionName);
-   //     System.out.println("📤 Se devuelven acciones desde fire: " + pendingDiscreteNotifications);
         return pendingDiscreteNotifications;
     }
 
@@ -288,14 +284,12 @@ public class PetriNet {
     }
 
     public void executePlaceActions(String placeName) {
-        // 🔹 Verificar si hay una condición para este lugar
         if (placeConditions.containsKey(placeName)) {
             String condition = placeConditions.get(placeName);
             boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore);
-
             if (!conditionMet) {
                 System.out.println("🚫 Skipped actions in place " + placeName + " (Condition not met: " + condition + ")");
-                return; // 🔹 Si la condición no se cumple, NO ejecutamos las acciones
+                return;
             }
         }
 
@@ -303,7 +297,6 @@ public class PetriNet {
             for (String update : placeVariableUpdates.get(placeName)) {
                 update = update.trim();
 
-                // 🔹 Procesar hechos
                 if (update.startsWith("remember(") && update.endsWith(")")) {
                     String fact = update.substring(9, update.length() - 1).trim();
                     processRememberFact(fact);
@@ -313,7 +306,6 @@ public class PetriNet {
                     processForgetFact(fact);
 
                 } else if (update.contains(":=")) {
-                    // 🔹 Procesar asignación de variables
                     String[] parts = update.split(":=");
                     if (parts.length == 2) {
                         String varName = parts[0].trim();
@@ -332,8 +324,7 @@ public class PetriNet {
                         }
                     }
 
-                } else if (update.matches("\\w+\\(.*\\)")) {
-                    // 🔹 Acción con parámetros: act1(), act3(5,6.7)
+                } else if (update.matches("\\w+(\\.\\w+)?\\(.*\\)")) {
                     String name = update.substring(0, update.indexOf("("));
                     String argsRaw = update.substring(update.indexOf("(") + 1, update.lastIndexOf(")")).trim();
 
@@ -347,15 +338,59 @@ public class PetriNet {
                                      .toArray();
                     }
 
-                    // Ejecutar solo si es una acción discreta declarada
+                    // Soporte temporizador: t1.start(...)
+                    if (name.endsWith(".start")) {
+                        String timerName = name.substring(0, name.indexOf(".start"));
+                        if (beliefStore.getDeclaredTimers().contains(timerName)) {
+                            if (args.length == 1) {
+                                int duration = (int) args[0];
+                                beliefStore.startTimer(timerName, duration);
+                                System.out.println("🕒 Timer " + timerName + " started for " + duration + " seconds");
+                            } else {
+                                System.err.println("❌ Timer start requires 1 argument: " + update);
+                            }
+                            continue; // no notificar como acción discreta
+                        }
+                    }
+                 // Soporte para temp.stop()
+                    if (name.contains(".stop")) {
+                        String timerName = name.substring(0, name.indexOf(".stop"));
+                        if (beliefStore.getDeclaredTimers().contains(timerName)) {
+                            beliefStore.stopTimer(timerName);
+                            System.out.println("⏹️ Timer " + timerName + " stopped manually → t.end() activated");
+                            continue; // no notificar como acción discreta normal
+                        }
+                    }
+                    if (name.endsWith(".pause")) {
+                        String timerName = name.substring(0, name.indexOf(".pause"));
+                        if (beliefStore.getDeclaredTimers().contains(timerName)) {
+                            beliefStore.pauseTimer(timerName);
+                            continue;
+                        }
+                    }
+
+                    if (name.endsWith(".continue")) {
+                        String timerName = name.substring(0, name.indexOf(".continue"));
+                        if (beliefStore.getDeclaredTimers().contains(timerName)) {
+                            beliefStore.continueTimer(timerName);
+                            continue;
+                        }
+                    }
+
+                    // Acciones discretas normales
                     if (discreteActionArity.containsKey(name)) {
                         if (observer != null) {
                             observer.onDiscreteActionExecuted(name, args);
                         }
                     }
-                    // (Acciones durativas se manejan en updateDurativeActions)
                 }
             }
+        }
+    }
+
+    public void checkExpiredTimers() {
+        for (String timerId : beliefStore.getDeclaredTimers()) {
+            beliefStore.isTimerExpired(timerId); // este método añade el hecho t1.end() si expira
         }
     }
 

@@ -126,7 +126,7 @@ public class BeliefStore {
         }
 
         if (!factPattern.contains("(") || !factPattern.contains(")")) {
-            System.err.println("⚠️ Wildcard removal is only supported for facts with parameters. Ignoring: " + factPattern);
+        	//System.out.println("ℹ️ Skipped removal: " + factPattern + " is a fact without parameters.");
             return;
         }
 

@@ -33,6 +33,7 @@ public class PetriNetAnimator implements Runnable {
                 Map<String, Boolean> beforeFire = net.captureCurrentMarking();
                 List<String> discreteActions = net.fire(t);
                 net.updateDurativeActions(beforeFire);
+                net.checkExpiredTimers(); 
                 Observer observer = net.getObserver();
                 for (String action : discreteActions) {
                  //   System.out.println("🔔 Notificando acción discreta: " + action);
@@ -42,7 +43,11 @@ public class PetriNetAnimator implements Runnable {
                 }
 
                 net.printState();
-
+                try {
+                    Thread.sleep(refreshRate); // 💤 dormir tras cada transición
+                } catch (InterruptedException e) {
+                    return;
+                }
                 // Recalcular transiciones habilitadas tras disparo
                 enabledTransitions = net.getTransitions().keySet().stream()
                         .filter(net::canFire)
@@ -79,7 +84,7 @@ public class PetriNetAnimator implements Runnable {
                     observer.onDiscreteActionExecuted(action, new double[0]);
                 }
             }
-
+            net.checkExpiredTimers();
             net.printState();
 
 
