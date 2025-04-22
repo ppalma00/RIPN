@@ -1,28 +1,20 @@
-FACTS: high_demand; waiting(INT); free(INT); assigned(INT,INT); low_temp(INT)
-VARSINT: NWaiting; limit; c
+FACTS: 
+VARSINT: x; y
 VARSREAL: 
-INIT: limit:=100
-DISCRETE: open_entrance_barrier(); open_exit_barrier()
-DURATIVE: keep_open_illuminated()
-TIMERS: t2
+INIT: x:=1; y:=1
+DISCRETE: act1(); 
+DURATIVE: 
+TIMERS: temp
+# hola 
 
-PLACES: p0; p1; p2; p3; p4; p5
-TRANSITIONS: t1; t2; t3; t4; t5; t6; t7; t8; t9
-ARCS: t0->p4; p4->t8; t8->p0; p0->t1; p0->t2; t1->p1; t2->p2; p1->t4; p1->t3; p1->t5; t5->p5; t4->p2; t6->p1; t3->p3; p3->t0; p2->t6; p2->t7; p5->t9; t7->p3; t9->p3
-INITMARKING: (0,0,0,1,0,0)
-EVENTS: new_car(INT); parked(INT,INT); exit_zone(INT)
+PLACES: p0; p1; p2; p3; p4
+TRANSITIONS: t0; t1; t2; t3
+ARCS: p1->t1; t1->p2; p2->t2; t2->p1; p1->t3; t3->p4; p0->t0; t0->p1; p3->t3
+INITMARKING: (1,0,0,1,0)
 
-<PN>
-p4: [open_entrance_barrier()]
-p0: [NWaiting:=NWaiting+1]
-p1: [remember(waiting(c))
-p2: [keep_open_illuminated(); forget(free(s)); remember(assigned(c,s)); t2.start(300)
-p5: [open_exit_barrier()]
-t0: [c:=_c] when new_car(_c)
-t1: [remember(high_demand)] if (NWaiting >= limit) when e
-t2: [forget(high_demand)] if (NWaiting < limit) when e
-t3: [forget(waiting(c)); forget(free(s))] when parked(c,s)
-t4: [forget(waiting(c))] if (free(s) && low_temp(s)) when e
-t5: [NWaiting:=NWaiting-1; forget(waiting(c))] when exitzone(c)
-t6: [remember(free(s); forget(assigned(c,s))] if (t2.end)
-t7: [NWaiting:=NWaiting-1; forget(assigned(c,s); remember(parked(c,s))] when parked(c,s)
+<pn>
+p0: [temp.start(30)] 
+t1: [] if(!temp.end)
+p1: [act1(); temp.pause()] if(x<5)
+p2: [x:=x+1] 
+t3: [y:=2] if (temp.end)

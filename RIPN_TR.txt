@@ -1,13 +1,18 @@
-FACTS: high_demand; free_place(INT); assigned(INT)
-VARSINT: id
-VARSREAL: 
-INIT: id:=88
-DISCRETE:
-DURATIVE: park(INT); exiting_zone()
+FACTS: uno(INT); dos
+VARSINT: x; y
+VARSREAL: z
+DISCRETE: abrir(INT); cerrar(REAL)
+DURATIVE: alarma()
 TIMERS: t1
+INIT: x:=0; y:=88; z:=4.56
 
-<TR>
-assigned(slot) -> park(slot)
-free_place(slot) && t1.end -> park(slot)
-high_demand && !free_place(_) -> exiting_zone()
-true -> _to_ENV(new_car, id); t1.start(10*60)
+<tr>
+
+y==2 -> alarma() ++ x:=0; y:=0; forget(dos)
+x==4 -> cerrar(1.3) ++ y:=2
+x==3 -> abrir(2) ++ x:=4; forget(uno(3))
+t1.end -> ++forget(t1.end); x:=3
+x==2 -> t1.continue()
+uno(3)-> t1.stop()++x:=2
+True -> alarma(); t1.start(1) ++x:=1; remember(uno(4)); remember(dos)
+
