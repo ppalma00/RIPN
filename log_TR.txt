@@ -1,0 +1,22 @@
+Initiating TR program...
+🔄 Executing rule with condition: True
+⏩ Executing discrete action: act1 with parameters: []
+⏩ Executing discrete action: act1 with parameters: []
+🔄 Executing rule with condition: x==2
+⏩ Executing discrete action: act2 with parameters: []
+⏩ Executing discrete action: act2 with parameters: []
+🔄 Executing rule with condition: True
+⏩ Executing discrete action: act1 with parameters: []
+⏩ Executing discrete action: act1 with parameters: []
+🔄 Executing rule with condition: x==2
+⏩ Executing discrete action: act2 with parameters: []
+⏩ Executing discrete action: act2 with parameters: []
+🔄 Executing rule with condition: True
+⏩ Executing discrete action: act1 with parameters: []
+⏩ Executing discrete action: act1 with parameters: []
+🔄 Executing rule with condition: x==2
+⏩ Executing discrete action: act2 with parameters: []
+⏩ Executing discrete action: act2 with parameters: []
+🔄 Executing rule with condition: True
+⏩ Executing discrete action: act1 with parameters: []
+⏩ Executing discrete action: act1 with parameters: []

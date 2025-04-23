@@ -23,7 +23,7 @@ public class TRParser {
 	        while ((line = reader.readLine()) != null) {
 	            line = line.trim();
 	            if (line.isEmpty()) continue;
-
+	            if (line.startsWith("#")) continue;
 	            if (line.startsWith("FACTS:")) {
 	                parseFacts(line, beliefStore);
 	            } else if (line.startsWith("VARSINT:")) {
@@ -38,7 +38,7 @@ public class TRParser {
 	                parseTimers(line, beliefStore);
 	            } else if (line.startsWith("INIT:")) {
 	                parseInit(line, beliefStore);
-	            } else if (line.startsWith("<tr>")) {
+	            } else if (line.startsWith("<TR>")) {
 	                insideTRSection = true;
 	            } else if (insideTRSection) {
 	                ruleConditions.add(line.split("->")[0].trim()); // 🚀 Almacena la condición de la regla
@@ -594,10 +594,12 @@ public class TRParser {
      * ✅ Evitar que un hecho y una variable tengan el mismo nombre.
      */
     private static void parseIntVars(String line, BeliefStore beliefStore) {
-        String[] vars = line.substring(8).trim().split(";");
+    	String rest = line.substring(8).trim();
+        if (rest.isEmpty()) return;
+        String[] vars = rest.split(";");
         for (String var : vars) {
             var = var.trim();
-            
+            if (var.isEmpty()) continue;
             if (beliefStore.isRealVar(var)) {
             	logger.logTR("❌ Error #28: Variable '" + var + "' is already declared as REAL and cannot be redeclared as INT.");
                 System.exit(1);
@@ -612,10 +614,13 @@ public class TRParser {
     }
 
     private static void parseRealVars(String line, BeliefStore beliefStore) {
-        String[] vars = line.substring(9).trim().split(";");
+    	String rest = line.substring(9).trim();
+        if (rest.isEmpty()) return;
+
+        String[] vars = rest.split(";");
         for (String var : vars) {
             var = var.trim();
-            
+            if (var.isEmpty()) continue;
             if (beliefStore.isIntVar(var)) {
             	logger.logTR("❌ Error #28: Variable '" + var + "' is already declared as INT and cannot be redeclared as REAL.");
                 System.exit(1);
@@ -630,12 +635,16 @@ public class TRParser {
     }
 
     private static void parseFacts(String line, BeliefStore beliefStore) {
-        String[] facts = line.substring(6).trim().split(";");
+        String rest = line.substring(6).trim();
+        if (rest.isEmpty()) return;
+
+        String[] facts = rest.split(";");
         for (String fact : facts) {
             fact = fact.trim();
-            
+            if (fact.isEmpty()) continue;
+
             if (beliefStore.isIntVar(fact) || beliefStore.isRealVar(fact)) {
-            	logger.logTR("❌ Error #30: Fact '" + fact + "' cannot be declared as it conflicts with a variable declaration.");
+                logger.logTR("❌ Error #30: Fact '" + fact + "' cannot be declared as it conflicts with a variable declaration.");
                 System.exit(1);
             }
 
@@ -644,28 +653,40 @@ public class TRParser {
     }
 
 
+
     private static void parseDiscreteActions(String line, BeliefStore beliefStore) {
-        String[] actions = line.substring(9).trim().split(";");
-        for (String action : actions) {
-            action = action.trim();
-            if (!action.isEmpty()) {
-                beliefStore.declareDiscreteAction(action); // 🔹 Registrar la acción en BeliefStore
+    	 String rest = line.substring(9).trim();
+    	    if (rest.isEmpty()) return;
+    	    String[] parts = rest.split(";");
+    	    for (String part : parts) {
+    	        part = part.trim();  	      
+            if (!part.isEmpty()) {
+                beliefStore.declareDiscreteAction(part); // 🔹 Registrar la acción en BeliefStore
             }
         }
     }
 
 
     private static void parseDurativeActions(String line, BeliefStore beliefStore) {
-        String[] actions = line.substring(9).trim().split(";");
-        for (String action : actions) {
-            beliefStore.declareDurativeAction(action.trim());
+    	String rest = line.substring(9).trim();
+        if (rest.isEmpty()) return;
+        String[] parts = rest.split(";");
+        for (String part : parts) {
+            part = part.trim();
+            if (part.isEmpty()) continue;
+            beliefStore.declareDurativeAction(part.trim());
         }
     }
 
     private static void parseTimers(String line, BeliefStore beliefStore) {
-        String[] timers = line.substring(7).trim().split(";");
+    	String rest = line.substring(7).trim();
+        if (rest.isEmpty()) return;
+
+        String[] timers = rest.split(";");
         for (String timer : timers) {
-            beliefStore.declareTimer(timer.trim());
+        	timer = timer.trim();
+            if (timer.isEmpty()) continue;
+            beliefStore.declareTimer(timer);
         }
     }
 }

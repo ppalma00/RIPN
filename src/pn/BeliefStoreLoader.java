@@ -1,3 +1,4 @@
+// v.7
 package pn;
 import java.io.*;
 import java.util.Arrays;
@@ -134,7 +135,7 @@ public class BeliefStoreLoader {
     		}
 
     		// Detectar la sección <pn>
-    		if (line.equals("<pn>")) {
+    		if (line.equalsIgnoreCase("<PN>")) {
     			inPNSection = true;
     			continue;
     		}

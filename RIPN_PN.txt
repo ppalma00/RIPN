@@ -1,20 +1,17 @@
 FACTS: 
 VARSINT: x; y
 VARSREAL: 
-INIT: x:=1; y:=1
-DISCRETE: act1(); 
+INIT: 
+DISCRETE: 
 DURATIVE: 
-TIMERS: temp
-# hola 
+TIMERS: 
 
-PLACES: p0; p1; p2; p3; p4
-TRANSITIONS: t0; t1; t2; t3
-ARCS: p1->t1; t1->p2; p2->t2; t2->p1; p1->t3; t3->p4; p0->t0; t0->p1; p3->t3
-INITMARKING: (1,0,0,1,0)
+PLACES: p0; p1
+TRANSITIONS: t0; t1
+ARCS: p0->t0; t0->p1; p1->t1; t1->p0
+INITMARKING: (1,0)
 
-<pn>
-p0: [temp.start(30)] 
-t1: [] if(!temp.end)
-p1: [act1(); temp.pause()] if(x<5)
-p2: [x:=x+1] 
-t3: [y:=2] if (temp.end)
+<PN>
+p0: [x:=1] 
+t0: [] if(y==2)
+p1: [x:=2]

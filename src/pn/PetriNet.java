@@ -32,6 +32,7 @@ public class PetriNet {
 
     public PetriNet() {
         this.beliefStore = new BeliefStore();
+        beliefStore.setLogger(logger);
     }
     public void setObserver(Observer observer) {
         this.observer = observer;

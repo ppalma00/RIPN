@@ -13,6 +13,7 @@ public class MainTR implements Observer {
             String trFilePath = "RIPN_TR.txt"; 
             int cycleDelayMs = 100;
             LoggerManager logger = new LoggerManager(false);
+            beliefStore.setLogger(logger);
             TRProgram program = TRParser.parse(trFilePath, beliefStore, cycleDelayMs, logger); // ✅
 
 

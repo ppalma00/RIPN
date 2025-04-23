@@ -31,7 +31,6 @@ t2: [x:=1]
  * Versión que considera condiciones en lugares y transiciones con '_' en hechos con parámetros, 
  * y funcionan acciones discretas y durativas con y sin parámetros.
  * incluye temporizadores arcos inhibidores 
- * voy a trabajar los evento externos
  */
 public class MainPN implements Observer {
     public static void main(String[] args) {
@@ -39,6 +38,7 @@ public class MainPN implements Observer {
         try {
             // 1️⃣ Crear o recibir una instancia de BeliefStore
             BeliefStore beliefStore = new BeliefStore();
+            beliefStore.setLogger(logger);
 
             // 2️⃣ Crear estructura para almacenar las actualizaciones de variables en los lugares
             Map<String, List<String>> placeVariableUpdates = new HashMap<>();
@@ -51,6 +51,7 @@ public class MainPN implements Observer {
  
             // 6️⃣ Cargar la red de Petri desde el mismo archivo
             PetriNet net = PetriNetLoader.loadFromFile(filename, beliefStore);
+            net.setLogger(logger);
             MainPN observer = new MainPN();
             net.setObserver(observer);
             // 7️⃣ Asociar las reglas de modificación de variables en los lugares

@@ -6,17 +6,16 @@ import java.util.stream.Collectors;
 import both.LoggerManager;
 
 public class BeliefStore {
-    private final Map<String, Integer> intVars = new HashMap<>();
-    private final Map<String, Double> realVars = new HashMap<>();
-    private final Map<String, List<List<Integer>>> activeFacts = new HashMap<>();
-    private final Set<String> activeFactsNoParams = new HashSet<>();
-    private final Map<String, Integer> declaredFacts = new HashMap<>();
-
-    private final Set<String> declaredTimers = new HashSet<>();
-    private final Set<String> declaredDurativeActions = new HashSet<>();
-    private final Map<String, Long> timers = new HashMap<>();
-    private final Map<String, Long> pausedTimers = new HashMap<>();
-    private final Set<String> declaredDiscreteActions = new HashSet<>();
+	private final Map<String, Integer> intVars = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, Double> realVars = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<List<Integer>>> activeFacts = Collections.synchronizedMap(new HashMap<>());
+	private final Set<String> activeFactsNoParams = Collections.synchronizedSet(new HashSet<>());
+	private final Set<String> declaredTimers = Collections.synchronizedSet(new HashSet<>());
+	private final Map<String, Long> timers = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, Long> pausedTimers = Collections.synchronizedMap(new HashMap<>());
+    private final Set<String> declaredDurativeActions = Collections.synchronizedSet(new HashSet<>());
+    private final Set<String> declaredDiscreteActions = Collections.synchronizedSet(new HashSet<>());
+    private final Map<String, Integer> declaredFacts = Collections.synchronizedMap(new HashMap<>());
     private LoggerManager logger;
 
     public void setLogger(LoggerManager logger) {
@@ -79,7 +78,7 @@ public class BeliefStore {
         return new HashSet<>(declaredDiscreteActions);
     }
 
-    public void removeFact(String factPattern) {
+    public synchronized void removeFact(String factPattern) {
     	factPattern = factPattern.replace(".end", "_end");
         if (factPattern.equals("t1_end")) {
             // ✅ Si el hecho es `t1_end`, eliminarlo directamente sin pasar por wildcard
@@ -114,7 +113,7 @@ public class BeliefStore {
     }
 
 
-    public void removeFactWithWildcard(String factPattern) {
+    public synchronized void removeFactWithWildcard(String factPattern) {
         logger.logPN("🔍 Calling removeFactWithWildcard with: " + factPattern);
 
         if (!factPattern.contains("_")) {
@@ -161,11 +160,11 @@ public class BeliefStore {
 
 
     // ------------------------ Manejo de Variables ------------------------
-    public void addIntVar(String varName, int initialValue) {
+    public synchronized void addIntVar(String varName, int initialValue) {
         intVars.put(varName, initialValue);
     }
 
-    public void setIntVar(String varName, int value) {
+    public synchronized void setIntVar(String varName, int value) {
         if (intVars.containsKey(varName)) {
             intVars.put(varName, value);
         }
@@ -183,7 +182,7 @@ public class BeliefStore {
         realVars.put(varName, initialValue);
     }
 
-    public void setRealVar(String varName, double value) {
+    public synchronized void setRealVar(String varName, double value) {
         if (realVars.containsKey(varName)) {
             realVars.put(varName, value);
         }
@@ -227,7 +226,7 @@ public class BeliefStore {
         return -1; // Retorna -1 si el hecho no está declarado
     }
 
-    public void addFact(String factWithParams) {
+    public synchronized void addFact(String factWithParams) {
         factWithParams = factWithParams.trim();
 
         // ✅ **Extraer el nombre base del hecho (sin parámetros)**
@@ -273,7 +272,7 @@ public class BeliefStore {
         }
     }
 
-    public boolean isFactActive(String factPattern) {
+    public synchronized boolean isFactActive(String factPattern) {
         if (factPattern.contains("(")) {
             String factBase = factPattern.split("\\(")[0];
             Pattern pattern = Pattern.compile(factPattern.replace("_", "\\\\d+"));
@@ -311,7 +310,7 @@ public class BeliefStore {
     }
 
     // ------------------------ Manejo de Temporizadores ------------------------
-    public void declareTimer(String timer) {
+    public synchronized void declareTimer(String timer) {
         declaredTimers.add(timer);
         declaredFacts.put(timer + "_end", 0); // 🔹 Agregarlo con 0 parámetros
 // Registrar `t1_end` como hecho en lugar de `t1.end`
@@ -327,7 +326,7 @@ public class BeliefStore {
         logger.logPN("⏳ Timer started: " + timerId + " for " + durationSeconds + " seconds");
     }
 
-    public void stopTimer(String timerId) {
+    public synchronized void stopTimer(String timerId) {
         if (!timers.containsKey(timerId) && !pausedTimers.containsKey(timerId)) {
         	logger.logPN("⚠️ Attempt to stop an undeclared or already removed timer: " + timerId);
             return;
@@ -338,7 +337,7 @@ public class BeliefStore {
         logger.logPN("🛑 Timer stopped: " + timerId);
     }
 
-    public void pauseTimer(String timerId) {
+    public synchronized void pauseTimer(String timerId) {
         if (!timers.containsKey(timerId)) {
         	logger.logPN("⚠️ Attempt to pause an undeclared timer: " + timerId);
             return;
@@ -352,7 +351,7 @@ public class BeliefStore {
         }
     }
 
-    public void continueTimer(String timerId) {
+    public synchronized void continueTimer(String timerId) {
         if (pausedTimers.containsKey(timerId)) {
             long remainingTime = pausedTimers.remove(timerId);
             long resumeTime = System.currentTimeMillis() + remainingTime;
@@ -364,7 +363,7 @@ public class BeliefStore {
         }
     }
 
-    public boolean isTimerExpired(String timerId) {
+    public synchronized boolean isTimerExpired(String timerId) {
         if (!timers.containsKey(timerId)) {
             return false;
         }

@@ -1,3 +1,15 @@
+/*
+ * Developed by Pedro Sánchez Palma. Universidad Politécnica de Cartagena, Spain (pedro.sanchez@upct.es). April 2025.
+ * Specify the Petri net and the Teleo-Reactive (TR) program in separate files. 
+ * The system considers a BeliefStore shared by the Petri net and the TR programme. 
+ * It is possible that one of them is not implemented and the system is only the specification given by the Petri 
+ * net or by the TR program. You can either activate the output of the execution trace in both files or have 
+ * it output in the execution console (but both traces overlapping).
+ * The only outputs displayed by default are those relating to the observer by which the start or stop of a durative action 
+ * and the execution of a discrete action are notified. In the implementation provided, main is the observer. 
+ * If you need it to be another class you would have to delegate this behaviour to that other class.
+ * 
+ */
 package both;
 
 import bs.BeliefStore;
@@ -14,7 +26,7 @@ public class MainUnified implements Observer {
 
     private static final int PN_REFRESH_RATE_MS = 2000;   // Delay between Petri Net transitions
     private static final int TR_CYCLE_DELAY_MS = 1000;    // Delay between TR evaluation cycles
-    private final LoggerManager logger = new LoggerManager(false); // true => logging into files; false => screen
+    private final LoggerManager logger = new LoggerManager(true); // true => logging into files; false => screen
     public static void main(String[] args) {
         MainUnified main = new MainUnified();
         main.startAll();
