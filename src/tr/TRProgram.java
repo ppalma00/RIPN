@@ -49,7 +49,6 @@ public class TRProgram {
         }
     }
     public TRRule findHighestPriorityRule() {
-        beliefStore.dumpState();
         for (TRRule rule : rules) {
             if (rule.evaluateCondition(beliefStore)) {
                 return rule;
@@ -58,7 +57,8 @@ public class TRProgram {
         return null;
     }
     public void run() {
-        while (running) {
+        while (running) {      	
+        	beliefStore.dumpState();
             TRRule activeRule = findHighestPriorityRule();
 
             if (lastExecutedRule != null && lastExecutedRule != activeRule) {
@@ -79,16 +79,16 @@ public class TRProgram {
             try {
                 Thread.sleep(cycleDelayMs); // Control del ciclo de ejecución
             } catch (InterruptedException e) {
-                logger.logTR("⚠️ TR execution interrupted.");
+                logger.log("⚠️ TR execution interrupted.", true, true);
                 return;
             } catch (Exception e) {
-                logger.logTR("❌ Exception in TR execution: " + e.getMessage());
+                logger.log("❌ Exception in TR execution: " + e.getMessage(), true, true);
                 e.printStackTrace();
             }
         }
     }
     private void executeRule(TRRule rule) {
-    	logger.logTR("🔄 Executing rule with condition: " + rule.getConditionText());
+    	logger.log("🔄 Executing rule with condition: " + rule.getConditionText(), true, true);
 
         boolean isFirstActivation = (lastExecutedRule == null || lastExecutedRule != rule);
         boolean hasActions = !rule.getDiscreteActions().isEmpty() || !rule.getDurativeActions().isEmpty();
@@ -99,14 +99,14 @@ public class TRProgram {
 
                 // ** Verificar que la acción tenga paréntesis bien formateados **
                 if (!action.matches(".*\\(.*\\)$")) {  // Acción debe terminar en `)`
-                	logger.logTR("⚠️ Malformed action detected: " + action);
+                	logger.log("⚠️ Malformed action detected: " + action, true, false);
                     continue;
                 }
 
                 String actionName = action.substring(0, action.indexOf("(")).trim(); // Extraer nombre de la acción
                 Double[] parameters = extractParameters(action);
 
-                logger.logTR("⏩ Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters));
+                logger.log("⏩ Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters), true, true);
 
                 if (isTimerCommand(action)) {
                     executeTimerCommand(action, parameters);
@@ -138,7 +138,7 @@ public class TRProgram {
     private void executeTimerCommand(String action, Double[] parameters) {
         String[] parts = action.split("\\.");
         if (parts.length < 2) {
-        	logger.logTR("⚠️ Malformed timer command: " + action);
+        	logger.log("⚠️ Malformed timer command: " + action, true, false);
             return;
         }
 
@@ -147,11 +147,11 @@ public class TRProgram {
         String command = commandWithParams.split("\\(")[0];  // Extracts command without parameters
 
         // Debugging: Show correct extracted command
-        logger.logTR("🛠 Extracted timer command: " + command + " for timer: " + timerId);
+        logger.log("🛠 Extracted timer command: " + command + " for timer: " + timerId, true, true);
 
         // Validate if timer is declared
         if (!beliefStore.getDeclaredTimers().contains(timerId)) {
-        	logger.logTR("⚠️ Attempted to use an undeclared timer: " + timerId);
+        	logger.log("⚠️ Attempted to use an undeclared timer: " + timerId, true, false);
             return;
         }
 
@@ -160,7 +160,7 @@ public class TRProgram {
                 if (parameters.length > 0) {
                     beliefStore.startTimer(timerId, parameters[0].intValue());
                 } else {
-                	logger.logTR("⚠️ `start` requires a duration (seconds).");
+                	logger.log("⚠️ `start` requires a duration (seconds).", true, false);
                 }
                 break;
             case "stop":
@@ -173,7 +173,7 @@ public class TRProgram {
                 beliefStore.continueTimer(timerId);
                 break;
             default:
-            	logger.logTR("⚠️ Unknown timer action: " + command);
+            	logger.log("⚠️ Unknown timer action: " + command, true, false);
         }
     }
 
@@ -184,11 +184,11 @@ public class TRProgram {
                action.matches(".*\\.continue\\(\\)");
     }
     private void executeDiscreteAction(String actionName, Double[] parameters) {
-    	logger.logTR("⏩ Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters));
+    	logger.log("⏩ Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters), true, true);
     }
 
     private void startDurativeAction(String action) {
-    	logger.logTR("⏳ Acción durativa INICIADA: " + action);
+    	logger.log("⏳ Starting durative action: " + action, true, true);
     }
 
     private void stopDurativeActionsOfRule(TRRule rule) {
@@ -197,7 +197,7 @@ public class TRProgram {
         for (String action : rule.getDurativeActions()) {
             if (activeDurativeActions.containsKey(action)) {
                 activeDurativeActions.remove(action);
-                logger.logTR("✅ Acción durativa FINALIZADA: " + action);
+                logger.log("✅ Stopping durative action: " + action, true, true);
                 notifyDurativeActionStopped(action);
             }
         }
@@ -208,7 +208,7 @@ public class TRProgram {
         int endIndex = action.lastIndexOf(")");
 
         if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
-        	logger.logTR("⚠️ Error extracting parameters from: " + action);
+        	logger.log("⚠️ Error extracting parameters from: " + action, true, false);
             return new Double[0];
         }
 
@@ -224,7 +224,7 @@ public class TRProgram {
             try {
                 paramList.add(Double.parseDouble(param.trim()));
             } catch (NumberFormatException e) {
-            	logger.logTR("⚠️ Invalid parameter: " + param);
+            	logger.log("⚠️ Invalid parameter: " + param, true, true);
             }
         }
 
@@ -234,12 +234,12 @@ public class TRProgram {
     public void shutdown() {
         running = false;
         stopAllDurativeActions();
-        logger.logTR("🚨 TRProgram detenido.");
+        logger.log("🚨 TRProgram stopped.", true, true);
     }
 
     private void stopAllDurativeActions() {
         for (String action : activeDurativeActions.keySet()) {
-        	logger.logTR("✅ Acción durativa FINALIZADA: " + action);
+        	logger.log("✅ Stopping durative action: " + action, true, true);
             notifyDurativeActionStopped(action);
         }
         activeDurativeActions.clear();

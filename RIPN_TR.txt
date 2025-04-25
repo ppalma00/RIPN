@@ -1,5 +1,5 @@
 FACTS:
-VARSINT: x; y
+VARSINT: x; y; z
 VARSREAL:
 DISCRETE: act1(); act2()
 DURATIVE:
@@ -8,5 +8,5 @@ INIT: x=0
 
 <TR>
 x==2 -> act2()
-True -> act1() ++y:=2
+True -> act1() [y:=2; z:=55]
 

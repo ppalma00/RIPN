@@ -81,7 +81,7 @@ public class ExpressionEvaluatorPN {
 	        Object result = MVEL.eval(condition, context);
 	        return result instanceof Boolean && (Boolean) result;
 	    } catch (Exception e) {
-	    	logger.logPN("❌ Error evaluating logical expression: " + condition);
+	    	logger.log("❌ Error evaluating logical expression: " + condition, true, false);
 	        e.printStackTrace();
 	        return false;
 	    }

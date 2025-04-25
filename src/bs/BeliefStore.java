@@ -17,11 +17,11 @@ public class BeliefStore {
     private final Set<String> declaredDiscreteActions = Collections.synchronizedSet(new HashSet<>());
     private final Map<String, Integer> declaredFacts = Collections.synchronizedMap(new HashMap<>());
     private LoggerManager logger;
-
+    
     public void setLogger(LoggerManager logger) {
         this.logger = logger;
     }
-
+    
     public int getActionParameterCount(String actionName) {
         int paramCount = countParameters(actionName, declaredDiscreteActions);
         if (paramCount != -1) return paramCount;
@@ -107,14 +107,14 @@ public class BeliefStore {
             }
         } else {
             if (activeFactsNoParams.remove(factPattern)) {
-               // logger.logPN("🗑️ Fact removed: " + factPattern);
+               logger.log("🗑️ Fact removed: " + factPattern, true, false);
             }
         }
     }
 
 
     public synchronized void removeFactWithWildcard(String factPattern) {
-        logger.logPN("🔍 Calling removeFactWithWildcard with: " + factPattern);
+        logger.log("🔍 Calling removeFactWithWildcard with: " + factPattern, true, true);
 
         if (!factPattern.contains("_")) {
             removeFact(factPattern);
@@ -130,7 +130,7 @@ public class BeliefStore {
 
         // ❌ Excluir `t1_end` y hechos sin parámetros
         if (baseFactName.endsWith("_end") || !activeFacts.containsKey(baseFactName)) {
-        	logger.logPN("⚠️ Ignoring wildcard removal for: " + factPattern);
+        	logger.log("⚠️ Ignoring wildcard removal for: " + factPattern, true, false);
             return;
         }
 
@@ -150,7 +150,7 @@ public class BeliefStore {
         });
 
         if (removed) {
-        	logger.logPN("🗑️ Removed facts matching wildcard pattern: " + factPattern);
+        	logger.log("🗑️ Removed facts matching wildcard pattern: " + factPattern, true, true);
         }
 
         if (instances.isEmpty()) {
@@ -248,7 +248,7 @@ public class BeliefStore {
 
         // ✅ **Verificar que el hecho base está en `declaredFacts`**
         if (!declaredFacts.containsKey(baseFactName)) {
-        	logger.logPN("⚠️ Attempt to activate an undeclared fact: " + factWithParams);
+        	logger.log("⚠️ Attempt to activate an undeclared fact: " + factWithParams, true, false);
             return;
         }
 
@@ -300,11 +300,6 @@ public class BeliefStore {
     public void declareDurativeAction(String action) {
         declaredDurativeActions.add(action);
     }
-/*
-    public boolean isDurativeAction(String action) {
-        return declaredDurativeActions.contains(action);
-    }
-*/
     public Set<String> getDeclaredDurativeActions() {
         return new HashSet<>(declaredDurativeActions);
     }
@@ -318,28 +313,28 @@ public class BeliefStore {
 
     public void startTimer(String timerId, int durationSeconds) {
         if (!declaredTimers.contains(timerId)) {
-        	logger.logPN("⚠️ Attempt to start an undeclared timer: " + timerId);
+        	logger.log("⚠️ Attempt to start an undeclared timer: " + timerId, true, false);
             return;
         }
         timers.put(timerId, System.currentTimeMillis() + (durationSeconds * 1000));
         removeFact(timerId + "_end");
-        logger.logPN("⏳ Timer started: " + timerId + " for " + durationSeconds + " seconds");
+        logger.log("⏳ Timer started: " + timerId + " for " + durationSeconds + " seconds", true, true);
     }
 
     public synchronized void stopTimer(String timerId) {
         if (!timers.containsKey(timerId) && !pausedTimers.containsKey(timerId)) {
-        	logger.logPN("⚠️ Attempt to stop an undeclared or already removed timer: " + timerId);
+        	logger.log("⚠️ Attempt to stop an undeclared or already removed timer: " + timerId, true, true);
             return;
         }
         timers.remove(timerId);
         pausedTimers.remove(timerId);
         addFact(timerId + "_end");
-        logger.logPN("🛑 Timer stopped: " + timerId);
+        logger.log("🛑 Timer stopped: " + timerId, true, true);
     }
 
     public synchronized void pauseTimer(String timerId) {
         if (!timers.containsKey(timerId)) {
-        	logger.logPN("⚠️ Attempt to pause an undeclared timer: " + timerId);
+        	logger.log("⚠️ Attempt to pause an undeclared timer: " + timerId, true, true);
             return;
         }
 
@@ -347,7 +342,7 @@ public class BeliefStore {
         if (remainingTime > 0) {
             pausedTimers.put(timerId, remainingTime);
             timers.remove(timerId);
-            logger.logPN("⏸️ Timer paused: " + timerId + ", remaining time: " + remainingTime + " ms");
+            logger.log("⏸️ Timer paused: " + timerId + ", remaining time: " + remainingTime + " ms", true, true);
         }
     }
 
@@ -357,9 +352,9 @@ public class BeliefStore {
             long resumeTime = System.currentTimeMillis() + remainingTime;
 
             timers.put(timerId, resumeTime);
-            logger.logPN("▶️ Timer resumed: " + timerId + ", new expiration in " + remainingTime + " ms.");
+            logger.log("▶️ Timer resumed: " + timerId + ", new expiration in " + remainingTime + " ms.", true, true);
         } else {
-        	logger.logPN("⚠️ Attempted to resume a non-paused timer: " + timerId);
+        	logger.log("⚠️ Attempted to resume a non-paused timer: " + timerId, true, true);
         }
     }
 
@@ -374,10 +369,10 @@ public class BeliefStore {
         if (expired) {
             if (!isFactActive(timerEndFact)) {
                 addFact(timerEndFact);
-                logger.logPN("✅ Timer expired: " + timerEndFact + " activated");
+                logger.log("✅ Timer expired: " + timerEndFact + " activated", true, true);
             }
             timers.remove(timerId);
-            logger.logPN("🛑 Timer fully removed: " + timerId);
+            logger.log("🛑 Timer fully removed: " + timerId, true, true);
         }
 
         return expired;
@@ -402,23 +397,22 @@ public class BeliefStore {
         return declaredFacts.containsKey(factName);
     }
 
-    public void dumpState() {
-    	logger.logPN("\n🔹 Current BeliefStore state:");
-    	logger.logPN("   Active facts without parameters: " + activeFactsNoParams);
+    public synchronized void dumpState() {
+    	logger.log("\n🔹 Current BeliefStore state:", true, true);
+    	logger.log("   Active facts without parameters: " + activeFactsNoParams, true, false);
         
-    	logger.logPN2("   Active facts with parameters: {");
+    	logger.log("   Active facts with parameters: {", false, false);
         for (Map.Entry<String, List<List<Integer>>> entry : activeFacts.entrySet()) {
-        	logger.logPN2(entry.getKey() + "=" + entry.getValue() + ", ");
+        	logger.log(entry.getKey() + "=" + entry.getValue() + ", ", false, false);
         }
-        logger.logPN("}");
+        logger.log("}", true, false);
 
-        logger.logPN("   Integer variables: " + intVars);
-        logger.logPN2("   Real variables: {");
+        logger.log("   Integer variables: " + intVars, true, false);
+        logger.log("   Real variables: {", false, false);
         for (Map.Entry<String, Double> entry : realVars.entrySet()) {
-        	logger.logPN2(entry.getKey() + "=" + entry.getValue() + ", ");
+        	logger.log(entry.getKey() + "=" + entry.getValue() + ", ", false, false);
         }
-        logger.logPN("}\n");
+        logger.log("}\n", true, false);
     }
-
 
 }

@@ -15,14 +15,14 @@ public class DurativeAction extends Action {
     public void start() {
         if (!active) {
             active = true;
-            logger.logTR("⏳ Acción durativa INICIADA: " + name);
+            logger.log("⏳ Acción durativa INICIADA: " + name, true, true);
         }
     }
 
     public void stop() {
         if (active) {
             active = false;
-            logger.logTR("✅ Acción durativa FINALIZADA: " + name);
+            logger.log("✅ Acción durativa FINALIZADA: " + name, true, true);
         }
     }
 

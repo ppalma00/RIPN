@@ -71,7 +71,7 @@ public class PetriNetAnimator implements Runnable {
                     .collect(Collectors.toList());
 
             if (nonImmediate.isEmpty()) {
-            	logger.logPN("No more transitions can fire. Stopping simulation.");
+            	logger.log("No more transitions can fire. Stopping simulation.", true, true);
                 break;
             }
 
@@ -94,7 +94,7 @@ public class PetriNetAnimator implements Runnable {
             try {
                 Thread.sleep(refreshRate);
             } catch (InterruptedException e) {
-            	logger.logPN("Simulation interrupted.");
+            	logger.log("Simulation interrupted.", true, true);
                 break;
             }
 
@@ -112,7 +112,7 @@ public class PetriNetAnimator implements Runnable {
                     .collect(Collectors.toList());
 
             if (enabledTransitions.isEmpty()) {
-            	logger.logPN("No more transitions can fire. Stopping simulation.");
+            	logger.log("No more transitions can fire. Stopping simulation.", true, true);
                 break;
             }
 
@@ -121,7 +121,7 @@ public class PetriNetAnimator implements Runnable {
             try {
                 Thread.sleep(refreshRate);
             } catch (InterruptedException e) {
-            	logger.logPN("Simulation interrupted.");
+            	logger.log("Simulation interrupted.", true, true);
                 break;
             }
         }

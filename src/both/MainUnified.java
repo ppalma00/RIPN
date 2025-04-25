@@ -26,7 +26,9 @@ public class MainUnified implements Observer {
 
     private static final int PN_REFRESH_RATE_MS = 2000;   // Delay between Petri Net transitions
     private static final int TR_CYCLE_DELAY_MS = 1000;    // Delay between TR evaluation cycles
-    private final LoggerManager logger = new LoggerManager(true); // true => logging into files; false => screen
+    private final LoggerManager loggerPN = new LoggerManager(true, "log_PN.txt"); // true => logging into files; false => screen
+    private final LoggerManager loggerTR = new LoggerManager(true, "log_TR.txt"); // true => logging into files; false => screen
+    private final LoggerManager loggerBS = new LoggerManager(true, "log_BS.txt"); // true => logging into files; false => screen
     public static void main(String[] args) {
         MainUnified main = new MainUnified();
         main.startAll();
@@ -34,7 +36,7 @@ public class MainUnified implements Observer {
     
     public void startAll() {
         BeliefStore sharedBeliefStore = new BeliefStore();
-        sharedBeliefStore.setLogger(logger);
+        sharedBeliefStore.setLogger(loggerBS);
         if (ENABLE_PN) {
             runPetriNet(sharedBeliefStore, this);
         }
@@ -54,16 +56,16 @@ public class MainUnified implements Observer {
                 Map<String, String> transitionConds = new HashMap<>();
                 Map<String, String> placeDiscreteActions = new HashMap<>();
 
-                BeliefStoreLoader.loadFromFile(filename, bs, logger);
+                BeliefStoreLoader.loadFromFile(filename, bs, loggerPN);
                 PetriNet net = PetriNetLoader.loadFromFile(filename, bs);
-                net.setLogger(main.logger); 
+                net.setLogger(main.loggerPN); 
                 net.setObserver(main);
 
                 BeliefStoreLoader.loadPNVariableUpdates(
                         filename, net,
                         placeVarUpdates, placeConds,
                         transitionVarUpdates, transitionConds,
-                        placeDiscreteActions, logger
+                        placeDiscreteActions, loggerPN
                 );
 
                 net.setPlaceVariableUpdates(placeVarUpdates);
@@ -82,11 +84,11 @@ public class MainUnified implements Observer {
                 net.updateDurativeActions(emptyMarking);
                 net.printState();
 
-                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS, logger);
+                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS, loggerPN);
                 new Thread(animator).start();
 
             } catch (Exception e) {
-            	logger.logTR("❌ Petri Net execution error: " + e.getMessage());
+            	loggerTR.log("❌ Petri Net execution error: " + e.getMessage(),true, false);
                 e.printStackTrace();
             }
         }).start();
@@ -97,12 +99,12 @@ public class MainUnified implements Observer {
         new Thread(() -> {
             try {
                 String trFile = "RIPN_TR.txt";
-                TRProgram program = TRParser.parse(trFile, bs, TR_CYCLE_DELAY_MS, main.logger);
+                TRProgram program = TRParser.parse(trFile, bs, TR_CYCLE_DELAY_MS, main.loggerTR);
                 program.addObserver(main);
-                main.logger.logTR("Initiating TR program...");
+                main.loggerTR.log("Initiating TR program...", true, true);
                 program.run(); // internally loops
             } catch (Exception e) {
-            	main.logger.logTR("❌ TR Program execution error: " + e.getMessage());
+            	main.loggerTR.log("❌ TR Program execution error: " + e.getMessage(), true, false);
                 e.printStackTrace();
             }
         }).start();

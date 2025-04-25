@@ -34,7 +34,7 @@ t2: [x:=1]
  */
 public class MainPN implements Observer {
     public static void main(String[] args) {
-    	LoggerManager logger = new LoggerManager(false);
+    	LoggerManager logger = new LoggerManager(false, "log_PN.txt");
         try {
             // 1️⃣ Crear o recibir una instancia de BeliefStore
             BeliefStore beliefStore = new BeliefStore();
@@ -88,7 +88,7 @@ public class MainPN implements Observer {
             new Thread(animator).start();
 
         } catch (IOException e) {
-        	logger.logPN("❌ Error loading files: " + e.getMessage());
+        	logger.log("❌ Error loading files: " + e.getMessage(), true, false);
         }
     }
     @Override

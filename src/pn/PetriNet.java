@@ -116,7 +116,7 @@ public class PetriNet {
         if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
             if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger)) {
-            	logger.logPN("🚫 Skipped firing transition " + transitionName + " (Condition not met: " + condition + ")");
+            	logger.log("🚫 Skipped firing transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
                 return pendingDiscreteNotifications; // devuelvo vacío si no se cumple
             }
         }
@@ -175,7 +175,7 @@ public class PetriNet {
             boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger);
 
             if (!conditionMet) {
-            	logger.logPN("🚫 Skipped actions in transition " + transitionName + " (Condition not met: " + condition + ")");
+            	logger.log("🚫 Skipped actions in transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
                 return; // 🔹 Si la condición no se cumple, NO ejecutamos las acciones
             }
         }
@@ -202,10 +202,10 @@ public class PetriNet {
                             } else if (result instanceof Double && beliefStore.isRealVar(varName)) {
                                 beliefStore.setRealVar(varName, (Double) result);
                             } else {
-                            	logger.logPN("❌ Invalid type for variable: " + varName);
+                            	logger.log("❌ Invalid type for variable: " + varName, true, false);
                             }
                         } catch (Exception e) {
-                        	logger.logPN("❌ Error evaluating expression: " + expression);
+                        	logger.log("❌ Error evaluating expression: " + expression, true, false);
                         }
                     }
                 }
@@ -266,7 +266,7 @@ public class PetriNet {
                         .collect(Collectors.toList()); // 🔹 Corrección aquí
                 beliefStore.addFact(factName + "(" + paramStr + ")"); // Guardar hecho con parámetros      
             } catch (NumberFormatException e) {
-            	logger.logPN("❌ Error parsing parameters for fact: " + fact);
+            	logger.log("❌ Error parsing parameters for fact: " + fact, true, false);
             }
         } else {
             beliefStore.addFact(fact); // Hecho sin parámetros
@@ -278,7 +278,7 @@ public class PetriNet {
             String condition = placeConditions.get(placeName);
             boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger);
             if (!conditionMet) {
-            	logger.logPN("🚫 Skipped actions in place " + placeName + " (Condition not met: " + condition + ")");
+            	logger.log("🚫 Skipped actions in place " + placeName + " (Condition not met: " + condition + ")", true, true);
                 return;
             }
         }
@@ -307,10 +307,10 @@ public class PetriNet {
                             } else if (result instanceof Double && beliefStore.isRealVar(varName)) {
                                 beliefStore.setRealVar(varName, (Double) result);
                             } else {
-                            	logger.logPN("❌ Invalid type for variable: " + varName);
+                            	logger.log("❌ Invalid type for variable: " + varName, true, false);
                             }
                         } catch (Exception e) {
-                        	logger.logPN("❌ Error evaluating expression: " + expression);
+                        	logger.log("❌ Error evaluating expression: " + expression, true, false);
                         }
                     }
 
@@ -335,9 +335,9 @@ public class PetriNet {
                             if (args.length == 1) {
                                 int duration = (int) args[0];
                                 beliefStore.startTimer(timerName, duration);
-                                logger.logPN("🕒 Timer " + timerName + " started for " + duration + " seconds");
+                                logger.log("🕒 Timer " + timerName + " started for " + duration + " seconds", true, true);
                             } else {
-                            	logger.logPN("❌ Timer start requires 1 argument: " + update);
+                            	logger.log("❌ Timer start requires 1 argument: " + update, true, false);
                             }
                             continue; // no notificar como acción discreta
                         }
@@ -347,7 +347,7 @@ public class PetriNet {
                         String timerName = name.substring(0, name.indexOf(".stop"));
                         if (beliefStore.getDeclaredTimers().contains(timerName)) {
                             beliefStore.stopTimer(timerName);
-                            logger.logPN("⏹️ Timer " + timerName + " stopped manually → t.end() activated");
+                            logger.log("⏹️ Timer " + timerName + " stopped manually → t.end() activated", true, true);
                             continue; // no notificar como acción discreta normal
                         }
                     }
@@ -396,9 +396,9 @@ public class PetriNet {
     }
 
     public void printState() {
-    	logger.logPN("Current state of the Petri Net:");
+    	logger.log("Current state of the Petri Net:", true, true);
         for (Place p : places.values()) {
-        	logger.logPN(p.getName() + ": " + (p.hasToken() ? "●" : "○"));
+        	logger.log(p.getName() + ": " + (p.hasToken() ? "●" : "○"), true, false);
         }
         beliefStore.dumpState(); // Mostrar estado actualizado del BeliefStore
     }

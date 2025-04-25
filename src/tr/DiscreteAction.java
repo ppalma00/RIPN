@@ -12,7 +12,7 @@ public class DiscreteAction extends Action {
 
 	@Override
 	public void execute() {
-	    logger.logTR("⏩ Ejecutando acción discreta: " + name);
+	    logger.log("⏩ Ejecutando acción discreta: " + name, true, true);
 	}
 
 }

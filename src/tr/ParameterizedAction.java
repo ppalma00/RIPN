@@ -16,7 +16,7 @@ public class ParameterizedAction extends Action {
 
     @Override
     public void execute() {
-        logger.logTR("Executing action: " + name + " with parameters: " + Arrays.toString(parameters));
+        logger.log("Executing action: " + name + " with parameters: " + Arrays.toString(parameters), true, true);
     }
 
 }

@@ -1,0 +1,85 @@
+⚠️ Attempt to activate an undeclared fact: x=0
+[2025-04-25 09:03:06.770] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=0, z=0}
+   Real variables: {}
+
+[2025-04-25 09:03:06.770] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=0, z=0}
+   Real variables: {}
+
+[2025-04-25 09:03:06.781] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=0, z=0}
+   Real variables: {}
+
+[2025-04-25 09:03:07.783] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:08.784] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:08.785] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=2, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:09.786] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=2, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:10.790] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=2, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:10.790] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:11.796] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:12.797] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=2, y=2, z=55}
+   Real variables: {}
+
+[2025-04-25 09:03:12.797] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=2, y=2, z=55}
+   Real variables: {}
+

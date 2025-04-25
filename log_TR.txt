@@ -1,22 +1,13 @@
-Initiating TR program...
-🔄 Executing rule with condition: True
-⏩ Executing discrete action: act1 with parameters: []
-⏩ Executing discrete action: act1 with parameters: []
-🔄 Executing rule with condition: x==2
-⏩ Executing discrete action: act2 with parameters: []
-⏩ Executing discrete action: act2 with parameters: []
-🔄 Executing rule with condition: True
-⏩ Executing discrete action: act1 with parameters: []
-⏩ Executing discrete action: act1 with parameters: []
-🔄 Executing rule with condition: x==2
-⏩ Executing discrete action: act2 with parameters: []
-⏩ Executing discrete action: act2 with parameters: []
-🔄 Executing rule with condition: True
-⏩ Executing discrete action: act1 with parameters: []
-⏩ Executing discrete action: act1 with parameters: []
-🔄 Executing rule with condition: x==2
-⏩ Executing discrete action: act2 with parameters: []
-⏩ Executing discrete action: act2 with parameters: []
-🔄 Executing rule with condition: True
-⏩ Executing discrete action: act1 with parameters: []
-⏩ Executing discrete action: act1 with parameters: []
+[2025-04-25 09:03:06.767] Initiating TR program...
+[2025-04-25 09:03:06.776] 🔄 Executing rule with condition: True
+[2025-04-25 09:03:06.776] ⏩ Executing discrete action: act1 with parameters: []
+[2025-04-25 09:03:06.776] ⏩ Executing discrete action: act1 with parameters: []
+[2025-04-25 09:03:09.786] 🔄 Executing rule with condition: x==2
+[2025-04-25 09:03:09.787] ⏩ Executing discrete action: act2 with parameters: []
+[2025-04-25 09:03:09.787] ⏩ Executing discrete action: act2 with parameters: []
+[2025-04-25 09:03:10.791] 🔄 Executing rule with condition: True
+[2025-04-25 09:03:10.791] ⏩ Executing discrete action: act1 with parameters: []
+[2025-04-25 09:03:10.791] ⏩ Executing discrete action: act1 with parameters: []
+[2025-04-25 09:03:12.798] 🔄 Executing rule with condition: x==2
+[2025-04-25 09:03:12.798] ⏩ Executing discrete action: act2 with parameters: []
+[2025-04-25 09:03:12.798] ⏩ Executing discrete action: act2 with parameters: []

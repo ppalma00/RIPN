@@ -86,7 +86,7 @@ public class BeliefStoreLoader {
                         beliefStore.setRealVar(varName, value);
                     }
                 } catch (NumberFormatException e) {
-                	logger.logPN("⚠️ Error parsing initial value for variable: " + assignment);
+                	logger.log("⚠️ Error parsing initial value for variable: " + assignment, true, false);
                 }
             }
         }
@@ -171,7 +171,7 @@ public class BeliefStoreLoader {
     				        condition = actions.substring(openParen + 1, closeParen).trim(); // Extraer contenido dentro de `if(...)`
     				        actions = actions.substring(0, ifIndex).trim(); // Eliminar `if(...)` de la línea de acciones
     				    } else {
-    				    	logger.logPN("⚠️ Syntax error: Unmatched parentheses in if-condition -> " + actions);
+    				    	logger.log("⚠️ Syntax error: Unmatched parentheses in if-condition -> " + actions, true, false);
     				    }
     				}
 
@@ -202,10 +202,10 @@ public class BeliefStoreLoader {
     						transitionConditions.put(elementName, condition);
     					}
     				} else {
-    					logger.logPN("⚠️ Warning: Element '" + elementName + "' not found in places or transitions.");
+    					logger.log("⚠️ Warning: Element '" + elementName + "' not found in places or transitions.", true, false);
     				}
     			} else {
-    				logger.logPN("⚠️ Malformed line in <pn>: " + line);
+    				logger.log("⚠️ Malformed line in <pn>: " + line, true, false);
     			}
     		}
     	}
