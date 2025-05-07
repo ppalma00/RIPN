@@ -16,7 +16,12 @@ import bs.BeliefStore;
 import bs.Observer;
 import pn.*;
 import tr.*;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import javax.swing.SwingUtilities;
+import guiEvents.GUIEvents;
 
 public class MainUnified implements Observer {
 
@@ -29,6 +34,7 @@ public class MainUnified implements Observer {
     private final LoggerManager loggerPN = new LoggerManager(true, "log_PN.txt"); // true => logging into files; false => screen
     private final LoggerManager loggerTR = new LoggerManager(true, "log_TR.txt"); // true => logging into files; false => screen
     private final LoggerManager loggerBS = new LoggerManager(true, "log_BS.txt"); // true => logging into files; false => screen
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     public static void main(String[] args) {
         MainUnified main = new MainUnified();
         main.startAll();
@@ -58,6 +64,7 @@ public class MainUnified implements Observer {
 
                 BeliefStoreLoader.loadFromFile(filename, bs, loggerPN);
                 PetriNet net = PetriNetLoader.loadFromFile(filename, bs);
+                net.setBeliefStore(bs);
                 net.setLogger(main.loggerPN); 
                 net.setObserver(main);
 
@@ -83,8 +90,8 @@ public class MainUnified implements Observer {
 
                 net.updateDurativeActions(emptyMarking);
                 net.printState();
-
-                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS, loggerPN);
+                SwingUtilities.invokeLater(() -> new GUIEvents());
+                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS);             
                 new Thread(animator).start();
 
             } catch (Exception e) {
@@ -114,16 +121,19 @@ public class MainUnified implements Observer {
 
     @Override
     public void onDiscreteActionExecuted(String actionName, double[] parameters) {
-        System.out.println("Observer: Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters));
+    	String timestamp = LocalDateTime.now().format(formatter);
+        System.out.println("[" + timestamp + "] " + "Observer: Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters));
     }
 
     @Override
     public void onDurativeActionStarted(String actionName, double[] parameters) {
-        System.out.println("Observer: Starting durative action: " + actionName + " with parameters: " + Arrays.toString(parameters));
+    	String timestamp = LocalDateTime.now().format(formatter);
+        System.out.println("[" + timestamp + "] " + "Observer: Starting durative action: " + actionName + " with parameters: " + Arrays.toString(parameters));
     }
 
     @Override
     public void onDurativeActionStopped(String actionName) {
-        System.out.println("Observer: Stopping durative action: " + actionName);
+    	String timestamp = LocalDateTime.now().format(formatter);
+        System.out.println("[" + timestamp + "] " + "Observer: Stopping durative action: " + actionName);
     }
 }

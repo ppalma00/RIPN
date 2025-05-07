@@ -22,32 +22,47 @@ public class LoggerManager {
     }
 
     public synchronized void log(String message, boolean ln, boolean ts) {
-    	if(file_or_screen) {
-        if (Writer != null) {
             if(ln) {
             	if(ts) {
             	String timestamp = LocalDateTime.now().format(formatter);
+            	if(file_or_screen) {
                 Writer.println("[" + timestamp + "] " + message);
             	}
             	else {
-            	Writer.println(message);	
+            	System.out.println("[" + timestamp + "] " + message);
+            	}
+            	}
+            	else {
+            		if(file_or_screen) {
+                        Writer.println(message);
+                    	}
+                    	else {
+                    	System.out.println(message);
+                    	}
             	}
             }
             else {           
             	if(ts) {
                 	String timestamp = LocalDateTime.now().format(formatter);
+                	if(file_or_screen) {
                     Writer.print("[" + timestamp + "] " + message);
                 	}
                 	else {
-                	Writer.print(message);	
+                    	System.out.println("[" + timestamp + "] " + message);
+                    	}
+                	}
+                	else {
+                		if(file_or_screen) {
+                            Writer.print(message);
+                        	}
+                        	else {
+                        	System.out.print(message);
+                        	}
                 	}
             	}
+        	if(file_or_screen) {
             Writer.flush();
-        }
-    	}
-    	else {
-    		System.out.println(message);
-    	}
+        	}
     }
     
     public void close() {

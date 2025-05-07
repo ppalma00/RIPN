@@ -65,13 +65,11 @@ public class TRProgram {
                 stopDurativeActionsOfRule(lastExecutedRule);
             }
 
-            // Ejecutar acciones ANTES de evaluar la expiración del temporizador
             if (lastExecutedRule == null || lastExecutedRule != activeRule) {
                 executeRule(activeRule);
                 lastExecutedRule = activeRule;
             }
 
-            // Verificar expiración de temporizadores después de ejecutar acciones
             for (String timerId : beliefStore.getDeclaredTimers()) {
                 beliefStore.isTimerExpired(timerId);
             }
@@ -97,13 +95,12 @@ public class TRProgram {
             for (String action : rule.getDiscreteActions()) {
                 action = action.trim();
 
-                // ** Verificar que la acción tenga paréntesis bien formateados **
-                if (!action.matches(".*\\(.*\\)$")) {  // Acción debe terminar en `)`
+                if (!action.matches(".*\\(.*\\)$")) { 
                 	logger.log("⚠️ Malformed action detected: " + action, true, false);
                     continue;
                 }
 
-                String actionName = action.substring(0, action.indexOf("(")).trim(); // Extraer nombre de la acción
+                String actionName = action.substring(0, action.indexOf("(")).trim(); 
                 Double[] parameters = extractParameters(action);
 
                 logger.log("⏩ Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters), true, true);
@@ -142,14 +139,12 @@ public class TRProgram {
             return;
         }
 
-        String timerId = parts[0];  // Extracts `t1`
-        String commandWithParams = parts[1];  // Extracts `start(1)`, `pause()`, etc.
-        String command = commandWithParams.split("\\(")[0];  // Extracts command without parameters
+        String timerId = parts[0];  
+        String commandWithParams = parts[1];  
+        String command = commandWithParams.split("\\(")[0];  
 
-        // Debugging: Show correct extracted command
         logger.log("🛠 Extracted timer command: " + command + " for timer: " + timerId, true, true);
 
-        // Validate if timer is declared
         if (!beliefStore.getDeclaredTimers().contains(timerId)) {
         	logger.log("⚠️ Attempted to use an undeclared timer: " + timerId, true, false);
             return;
@@ -178,7 +173,7 @@ public class TRProgram {
     }
 
     private boolean isTimerCommand(String action) {
-        return action.matches(".*\\.start\\(\\d+(\\.\\d+)?\\)") ||  // Matches `t1.start(1)`, `t1.start(1.5)`
+        return action.matches(".*\\.start\\(\\d+(\\.\\d+)?\\)") ||  
                action.matches(".*\\.stop\\(\\)") || 
                action.matches(".*\\.pause\\(\\)") || 
                action.matches(".*\\.continue\\(\\)");

@@ -1,0 +1,20 @@
+FACTS: hecho
+VARSINT: x; y
+VARSREAL: varreal
+INIT: x:=4; 
+DISCRETE: acdis(INT, REAL); acdis2()
+DURATIVE: acdur(INT)
+TIMERS: t1
+
+PLACES: p0; p1; p2; p3
+TRANSITIONS: t0; t1; t2
+ARCS: p0->t0; t0->p1; p1->t1; t1->p0; p0->t2; p2->t2; t2->p3
+INITMARKING: (1,0,1,0)
+EVENTS: ev1(0, INT); ev2(4), ev3(3, INT, REAL) 
+
+<PN>
+p0: [x:=1; acdur(35)] 
+t0: [] if(x==1)
+p1: [x:=2] 
+t2: [] if(veo(_)) 
+t1: [x:=2] if(x==2)

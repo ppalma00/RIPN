@@ -1,85 +1,151 @@
 ⚠️ Attempt to activate an undeclared fact: x=0
-[2025-04-25 09:03:06.770] 
+[2025-05-06 13:12:03.798] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=0, z=0}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:06.770] 
+[2025-05-06 13:12:03.799] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=0, z=0}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:06.781] 
+[2025-05-06 13:12:04.833] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=0, z=0}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:07.783] 
+[2025-05-06 13:12:05.835] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:08.784] 
+[2025-05-06 13:12:06.838] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:08.785] 
+[2025-05-06 13:12:07.841] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=2, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:09.786] 
+[2025-05-06 13:12:08.844] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=2, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:10.790] 
+[2025-05-06 13:12:09.850] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=2, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:10.790] 
+[2025-05-06 13:12:10.855] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:11.796] 
+[2025-05-06 13:12:11.856] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=1, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:12.797] 
+[2025-05-06 13:12:12.857] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=2, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
    Real variables: {}
 
-[2025-04-25 09:03:12.797] 
+[2025-05-06 13:12:13.861] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {x=2, y=2, z=55}
+   Integer variables: {p1=0, p2=0, x=2, y=0, z=0}
+   Real variables: {}
+
+[2025-05-06 13:12:14.122] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100]], }
+   Integer variables: {p1=100, p2=0, x=100, y=0, z=0}
+   Real variables: {}
+
+[2025-05-06 13:12:14.864] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100]], }
+   Integer variables: {p1=100, p2=0, x=100, y=0, z=0}
+   Real variables: {}
+
+[2025-05-06 13:12:14.868] ⏳ Timer started: t1 for 5 seconds
+[2025-05-06 13:12:15.869] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=100, y=2, z=55}
+   Real variables: {}
+
+[2025-05-06 13:12:16.125] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=102, y=2, z=55}
+   Real variables: {}
+
+[2025-05-06 13:12:16.871] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=102, y=2, z=55}
+   Real variables: {}
+
+[2025-05-06 13:12:17.873] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=102, y=2, z=55}
+   Real variables: {}
+
+[2025-05-06 13:12:18.877] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=102, y=2, z=55}
+   Real variables: {}
+
+[2025-05-06 13:12:19.883] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=102, y=2, z=55}
+   Real variables: {}
+
+[2025-05-06 13:12:19.884] ✅ Timer expired: t1_end activated
+[2025-05-06 13:12:19.884] 🛑 Timer fully removed: t1
+[2025-05-06 13:12:20.888] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [t1_end]
+   Active facts with parameters: {veo=[[100], [8]], }
+   Integer variables: {p1=100, p2=0, x=102, y=2, z=55}
    Real variables: {}
 

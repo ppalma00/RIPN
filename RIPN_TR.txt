@@ -1,12 +1,13 @@
-FACTS:
+FACTS: veo(INT); touch
 VARSINT: x; y; z
 VARSREAL:
 DISCRETE: act1(); act2()
-DURATIVE:
-TIMERS:
-INIT: x=0
+DURATIVE: actFIN()
+TIMERS: t1
+INIT: x:=0
 
 <TR>
-x==2 -> act2()
-True -> act1() [y:=2; z:=55]
+t1.end -> actFIN()
+x==2 -> act2() [remember(touch)]
+True -> act1(); t1.start(5) [y:=2; z:=55; x:=2; remember(veo(8))]
 

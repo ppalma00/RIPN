@@ -1,16 +1,19 @@
-[2025-04-25 09:03:06.767] Current state of the Petri Net:
+[2025-05-06 13:12:03.795] Current state of the Petri Net:
 p0: ●
 p1: ○
-[2025-04-25 09:03:06.781] 🚫 Skipped firing transition t0 (Condition not met: y==2)
-[2025-04-25 09:03:06.781] Current state of the Petri Net:
-p0: ●
-p1: ○
-[2025-04-25 09:03:08.785] Current state of the Petri Net:
+p2: ○
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+[2025-05-06 13:12:14.121] Current state of the Petri Net:
 p0: ○
 p1: ●
-[2025-04-25 09:03:10.790] Current state of the Petri Net:
+p2: ○
+[2025-05-06 13:12:16.125] Current state of the Petri Net:
 p0: ●
 p1: ○
-[2025-04-25 09:03:12.797] Current state of the Petri Net:
-p0: ○
-p1: ●
+p2: ○
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+⏸️ No non-immediate transitions enabled at this time. Waiting...

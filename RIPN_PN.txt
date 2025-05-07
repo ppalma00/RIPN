@@ -1,17 +1,19 @@
-FACTS: 
-VARSINT: x; y
+FACTS: see(INT)
+VARSINT: x; y; p1; p2
 VARSREAL: 
-INIT: 
-DISCRETE: 
-DURATIVE: 
-TIMERS: 
+INIT: x:=3; p1:=5
+DISCRETE: act2(INT)
+DURATIVE: act1(INT)
+TIMERS: t1
 
-PLACES: p0; p1
-TRANSITIONS: t0; t1
-ARCS: p0->t0; t0->p1; p1->t1; t1->p0
-INITMARKING: (1,0)
+PLACES: p0; p1; p2
+TRANSITIONS: t0; t1; t2; t3
+ARCS: p0->t0; t0->p1; p1->t1; t1->p0; p1->t2; t2->p2; p2->t3; t3->p0 
+INITMARKING: (1,0,0)
+EVENTS: ev1(0, INT); ev2(2, INT, INT)
 
 <PN>
-p0: [x:=1] 
-t0: [] if(y==2)
-p1: [x:=2]
+p0: [y:=6; act2(p1)]
+t0: [x:=p1; remember(see(y+p1))] if (p1>100) when(ev1(p1))
+t2: [y:=33] when (ev2(p1, p2))
+p1: [x:=x+1]

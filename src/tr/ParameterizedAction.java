@@ -1,5 +1,5 @@
 package tr;
-import java.util.Arrays; // Import necesario para usar Arrays
+import java.util.Arrays; 
 
 import both.LoggerManager;
 

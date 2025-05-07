@@ -1,8 +1,6 @@
 package bs;
 import java.util.*;
 import java.util.regex.*;
-import java.util.stream.Collectors;
-
 import both.LoggerManager;
 
 public class BeliefStore {
@@ -17,6 +15,7 @@ public class BeliefStore {
     private final Set<String> declaredDiscreteActions = Collections.synchronizedSet(new HashSet<>());
     private final Map<String, Integer> declaredFacts = Collections.synchronizedMap(new HashMap<>());
     private LoggerManager logger;
+    private String lastDump = "";
     
     public void setLogger(LoggerManager logger) {
         this.logger = logger;
@@ -29,12 +28,8 @@ public class BeliefStore {
         paramCount = countParameters(actionName, declaredDurativeActions);
         if (paramCount != -1) return paramCount;
 
-        return -1; // Si la acción no está en `DISCRETE:` ni `DURATIVE:`, devolver -1 (acción no declarada)
+        return -1; 
     }
-
-    /**
-     * ✅ Método auxiliar para contar los parámetros de una acción en su declaración.
-     */
     private int countParameters(String actionName, Set<String> declaredActions) {
         for (String declaredAction : declaredActions) {
             if (declaredAction.startsWith(actionName + "(") && declaredAction.endsWith(")")) { // Buscar la acción con `()`
@@ -47,57 +42,46 @@ public class BeliefStore {
         }
         return -1; // ✅ Si la acción no tiene `()`, no está correctamente declarada
     }
-
-
     public Set<String> getDeclaredActions() {
         Set<String> allActions = new HashSet<>();
         allActions.addAll(declaredDiscreteActions);
         allActions.addAll(declaredDurativeActions);
         return allActions;
     }
-
     public boolean isDurativeAction(String action) {
         String baseAction = action.contains("(") ? action.substring(0, action.indexOf("(")) : action;
         
         // Comprobamos si la acción base coincide con alguna de las acciones declaradas (sin paréntesis ni parámetros)
         return declaredDurativeActions.stream().map(a -> a.contains("(") ? a.substring(0, a.indexOf("(")) : a).anyMatch(a -> a.equals(baseAction));
     }
-
     public boolean isDiscreteAction(String action) {
         String baseAction = action.contains("(") ? action.substring(0, action.indexOf("(")) : action;
         
         // Comprobamos si la acción base coincide con alguna de las acciones declaradas (sin paréntesis ni parámetros)
         return declaredDiscreteActions.stream().map(a -> a.contains("(") ? a.substring(0, a.indexOf("(")) : a).anyMatch(a -> a.equals(baseAction));
     }
-
     public void declareDiscreteAction(String action) {
         declaredDiscreteActions.add(action);
     }
-
     public Set<String> getDeclaredDiscreteActions() {
         return new HashSet<>(declaredDiscreteActions);
     }
-
     public synchronized void removeFact(String factPattern) {
     	factPattern = factPattern.replace(".end", "_end");
         if (factPattern.equals("t1_end")) {
-            // ✅ Si el hecho es `t1_end`, eliminarlo directamente sin pasar por wildcard
+           
             if (activeFactsNoParams.remove(factPattern)) {
-              //  logger.logPN("🗑️ Fact removed: " + factPattern);
+               logger.log("🗑️ Fact removed: " + factPattern, true, false);
             }
             return;
         }
-
-        // ✅ Para hechos con `_`, usar la lógica de wildcard
         if (factPattern.contains("_")) {
             removeFactWithWildcard(factPattern);
             return;
-        }
-
-        // ✅ Manejo estándar para otros hechos
+        }     
         if (factPattern.contains("(")) {
             String baseFactName = factPattern.substring(0, factPattern.indexOf("("));
-            String paramPattern = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.indexOf(")"));
+           // String paramPattern = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.indexOf(")"));
 
             if (activeFacts.containsKey(baseFactName)) {
                 List<List<Integer>> instances = activeFacts.get(baseFactName);                      
@@ -111,8 +95,6 @@ public class BeliefStore {
             }
         }
     }
-
-
     public synchronized void removeFactWithWildcard(String factPattern) {
         logger.log("🔍 Calling removeFactWithWildcard with: " + factPattern, true, true);
 
@@ -121,14 +103,11 @@ public class BeliefStore {
             return;
         }
 
-        if (!factPattern.contains("(") || !factPattern.contains(")")) {
-        	//logger.logPN("ℹ️ Skipped removal: " + factPattern + " is a fact without parameters.");
+        if (!factPattern.contains("(") || !factPattern.contains(")")) {        	
             return;
         }
 
-        String baseFactName = factPattern.substring(0, factPattern.indexOf("("));
-
-        // ❌ Excluir `t1_end` y hechos sin parámetros
+        String baseFactName = factPattern.substring(0, factPattern.indexOf("("));       
         if (baseFactName.endsWith("_end") || !activeFacts.containsKey(baseFactName)) {
         	logger.log("⚠️ Ignoring wildcard removal for: " + factPattern, true, false);
             return;
@@ -148,18 +127,14 @@ public class BeliefStore {
             }
             return true;
         });
-
         if (removed) {
         	logger.log("🗑️ Removed facts matching wildcard pattern: " + factPattern, true, true);
         }
-
         if (instances.isEmpty()) {
             activeFacts.remove(baseFactName);
         }
     }
 
-
-    // ------------------------ Manejo de Variables ------------------------
     public synchronized void addIntVar(String varName, int initialValue) {
         intVars.put(varName, initialValue);
     }
@@ -196,26 +171,21 @@ public class BeliefStore {
         return new HashMap<>(realVars);
     }
 
-    // ------------------------ Manejo de Hechos ------------------------
     public void declareFact(String fact) {
         fact = fact.trim();
-        
-        // Extraer la parte base del hecho, sin los parámetros
+       
         String baseFact = fact.contains("(") ? fact.substring(0, fact.indexOf("(")) : fact;
-
-        // Determinar cuántos parámetros tiene el hecho
+        
         int paramCount = 0;
         if (fact.contains("(") && fact.contains(")")) {
             String paramPart = fact.substring(fact.indexOf("(") + 1, fact.indexOf(")")).trim();
             if (!paramPart.isEmpty()) {
-                paramCount = paramPart.split(",").length; // Contar parámetros
+                paramCount = paramPart.split(",").length; 
             }
         }
 
-        // Agregar solo la base del hecho con la cantidad de parámetros esperada
         if (!declaredFacts.containsKey(baseFact)) {
-            declaredFacts.put(baseFact, paramCount);
-           // logger.logPN("📌 Declared fact: " + baseFact + " (Expected Parameters: " + paramCount + ")");
+            declaredFacts.put(baseFact, paramCount);          
         }
     }
 
@@ -223,16 +193,14 @@ public class BeliefStore {
         if (declaredFacts.containsKey(factName)) {
             return declaredFacts.get(factName);
         }
-        return -1; // Retorna -1 si el hecho no está declarado
+        return -1; 
     }
 
     public synchronized void addFact(String factWithParams) {
         factWithParams = factWithParams.trim();
 
-        // ✅ **Extraer el nombre base del hecho (sin parámetros)**
         String baseFactName = factWithParams.contains("(") ? factWithParams.substring(0, factWithParams.indexOf("(")) : factWithParams;
 
-        // ✅ **Extraer parámetros (si existen)**
         Integer[] parameters = new Integer[0];
         if (factWithParams.contains("(") && factWithParams.contains(")")) {
             String paramStr = factWithParams.substring(factWithParams.indexOf("(") + 1, factWithParams.indexOf(")"));
@@ -246,28 +214,23 @@ public class BeliefStore {
             }
         }
 
-        // ✅ **Verificar que el hecho base está en `declaredFacts`**
         if (!declaredFacts.containsKey(baseFactName)) {
         	logger.log("⚠️ Attempt to activate an undeclared fact: " + factWithParams, true, false);
             return;
         }
 
-        // ✅ **Registrar hechos SIN parámetros**
         if (parameters.length == 0) {
             if (!activeFactsNoParams.contains(baseFactName)) {
                 activeFactsNoParams.add(baseFactName);
-              //  System.out.println("✅ Activated fact without parameters: " + baseFactName);
             }
         } 
-        // ✅ **Registrar hechos CON parámetros**
+
         else {
             List<Integer> paramList = Arrays.asList(parameters);
             activeFacts.computeIfAbsent(baseFactName, k -> new ArrayList<>());
 
-            // Evitar duplicados en los parámetros
             if (!activeFacts.get(baseFactName).contains(paramList)) {
                 activeFacts.get(baseFactName).add(paramList);
-            //    logger.logPN("✅ Activated fact with parameters: " + baseFactName + paramList);
             }
         }
     }
@@ -303,12 +266,9 @@ public class BeliefStore {
     public Set<String> getDeclaredDurativeActions() {
         return new HashSet<>(declaredDurativeActions);
     }
-
-    // ------------------------ Manejo de Temporizadores ------------------------
     public synchronized void declareTimer(String timer) {
         declaredTimers.add(timer);
-        declaredFacts.put(timer + "_end", 0); // 🔹 Agregarlo con 0 parámetros
-// Registrar `t1_end` como hecho en lugar de `t1.end`
+        declaredFacts.put(timer + "_end", 0); 
     }
 
     public void startTimer(String timerId, int durationSeconds) {
@@ -345,7 +305,6 @@ public class BeliefStore {
             logger.log("⏸️ Timer paused: " + timerId + ", remaining time: " + remainingTime + " ms", true, true);
         }
     }
-
     public synchronized void continueTimer(String timerId) {
         if (pausedTimers.containsKey(timerId)) {
             long remainingTime = pausedTimers.remove(timerId);
@@ -357,12 +316,10 @@ public class BeliefStore {
         	logger.log("⚠️ Attempted to resume a non-paused timer: " + timerId, true, true);
         }
     }
-
     public synchronized boolean isTimerExpired(String timerId) {
         if (!timers.containsKey(timerId)) {
             return false;
         }
-
         boolean expired = System.currentTimeMillis() >= timers.get(timerId);
         String timerEndFact = timerId + "_end";
 
@@ -374,30 +331,34 @@ public class BeliefStore {
             timers.remove(timerId);
             logger.log("🛑 Timer fully removed: " + timerId, true, true);
         }
-
         return expired;
     }
-
     public Set<String> getDeclaredTimers() {
         return new HashSet<>(declaredTimers);
     }
-
     public Map<String, Long> getAllTimers() {
         return new HashMap<>(timers);
     }
     public Set<String> getDeclaredIntVars() {
         return new HashSet<>(intVars.keySet());
     }
-
     public Set<String> getDeclaredRealVars() {
         return new HashSet<>(realVars.keySet());
     }
-
     public boolean isFactDeclared(String factName) {
         return declaredFacts.containsKey(factName);
     }
-
     public synchronized void dumpState() {
+    	StringBuilder sb = new StringBuilder();      
+        sb.append(activeFacts).append("\n");
+        sb.append(activeFactsNoParams).append("\n");
+        sb.append(intVars).append("\n");
+        sb.append(realVars).append("\n");
+        String currentDump = sb.toString();
+        if (currentDump.equals(lastDump)) {
+            return;
+        }
+        lastDump = currentDump;
     	logger.log("\n🔹 Current BeliefStore state:", true, true);
     	logger.log("   Active facts without parameters: " + activeFactsNoParams, true, false);
         
@@ -413,6 +374,21 @@ public class BeliefStore {
         	logger.log(entry.getKey() + "=" + entry.getValue() + ", ", false, false);
         }
         logger.log("}\n", true, false);
+    }
+    public synchronized int getIntVar(String varName) {
+        if (intVars.containsKey(varName)) {
+            return intVars.get(varName);
+        } else {
+            throw new IllegalArgumentException("Undefined integer variable: " + varName);
+        }
+    }
+
+    public synchronized double getRealVar(String varName) {
+        if (realVars.containsKey(varName)) {
+            return realVars.get(varName);
+        } else {
+            throw new IllegalArgumentException("Undefined real variable: " + varName);
+        }
     }
 
 }
