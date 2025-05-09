@@ -75,14 +75,16 @@ public class BeliefStore {
             }
             return;
         }
-        if (factPattern.contains("_")) {
-            removeFactWithWildcard(factPattern);
-            return;
-        }     
+        if (factPattern.contains("_") && factPattern.contains("(") && factPattern.contains("_")) {
+            String insideParens = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.indexOf(")"));
+            if (insideParens.contains("_")) {
+                removeFactWithWildcard(factPattern);
+                return;
+            }
+        }
+   
         if (factPattern.contains("(")) {
             String baseFactName = factPattern.substring(0, factPattern.indexOf("("));
-           // String paramPattern = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.indexOf(")"));
-
             if (activeFacts.containsKey(baseFactName)) {
                 List<List<Integer>> instances = activeFacts.get(baseFactName);                      
                 if (instances.isEmpty()) {
@@ -348,6 +350,7 @@ public class BeliefStore {
     public boolean isFactDeclared(String factName) {
         return declaredFacts.containsKey(factName);
     }
+    
     public synchronized void dumpState() {
     	StringBuilder sb = new StringBuilder();      
         sb.append(activeFacts).append("\n");

@@ -78,6 +78,13 @@ public class PetriNet {
     }
 
     public boolean canFire(String transitionName) {
+    	if (transitionConditions.containsKey(transitionName)) {
+            String condition = transitionConditions.get(transitionName);
+            if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger)) {
+                logger.log("🚫 Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
+                return false;
+            }
+        }
         Transition transition = transitions.get(transitionName);
         if (transition == null) return false;
 
@@ -343,7 +350,7 @@ public class PetriNet {
                             if (args.length == 1) {
                                 int duration = (int) args[0];
                                 beliefStore.startTimer(timerName, duration);
-                                logger.log("🕒 Timer " + timerName + " started for " + duration + " seconds", true, true);
+                                //logger.log("🕒 Timer " + timerName + " started for " + duration + " seconds", true, true);
                             } else {
                             	logger.log("❌ Timer start requires 1 argument: " + update, true, false);
                             }

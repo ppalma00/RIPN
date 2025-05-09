@@ -4,7 +4,7 @@ public class Arc {
     private Place place;
     private Transition transition;
     private boolean isInput;
-    private boolean isInhibitor; // New flag for inhibitor arcs
+    private boolean isInhibitor; 
 
     public Arc(Place place, Transition transition, boolean isInput, boolean isInhibitor) {
         this.place = place;

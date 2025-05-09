@@ -7,7 +7,13 @@ import java.util.Map;
 import bs.BeliefStore;
 
 public class PetriNetLoader {
+	@SuppressWarnings("resource")
 	public static PetriNet loadFromFile(String filename, BeliefStore beliefStore) throws IOException {
+		boolean hasPlaces = false;
+		boolean hasTransitions = false;
+		boolean hasArcs = false;
+		boolean hasInitMarking = false;
+
 	    PetriNet net = new PetriNet(beliefStore);
 	    Map<String, Integer> discreteActions = new HashMap<>();
 	    net.setDiscreteActionArity(discreteActions);
@@ -18,6 +24,7 @@ public class PetriNetLoader {
 	    Map<String, Place> places = new HashMap<>();
 	    Map<String, Transition> transitions = new HashMap<>();
 	    List<Arc> arcs = new ArrayList<>();
+	    List<String> placeOrder = new ArrayList<>();  
 
 	    List<String> arcLines = new ArrayList<>(); 
 	    while ((line = reader.readLine()) != null) {
@@ -25,7 +32,7 @@ public class PetriNetLoader {
 	        if (line.isEmpty()) continue;
 	        if (line.startsWith("#")) continue;
 	       
-	        if (line.startsWith("DISCRETE:")) {
+	        if (line.trim().startsWith("DISCRETE:")) {
 	            String actionsLine = line.substring("DISCRETE:".length()).trim();
 	            String[] actions = actionsLine.split(";");
 	            for (String act : actions) {
@@ -38,15 +45,20 @@ public class PetriNetLoader {
 
 	                discreteActions.put(name, arity);
 	            }
-	        }	        
-	        if (line.startsWith("PLACES:")) {
+	        }	     
+	       
+	        if (line.trim().startsWith("PLACES:")) {
+	        	 hasPlaces = true;
 	            String[] parts = line.substring(7).split(";");
 	            for (String place : parts) {
 	                String placeName = place.trim();
 	                net.addPlace(placeName, false);
-	                places.put(placeName, new Place(placeName, false)); 
+	                places.put(placeName, new Place(placeName, false));
+	                placeOrder.add(placeName);
 	            }
-	        } else if (line.startsWith("TRANSITIONS:")) {
+	        }
+	        else if (line.trim().startsWith("TRANSITIONS:")) {
+	        	 hasTransitions = true;
 	            String[] parts = line.substring(12).split(";");
 	            for (String transition : parts) {
 	                String transitionName = transition.trim();
@@ -54,10 +66,12 @@ public class PetriNetLoader {
 	                transitions.put(transitionName, new Transition(transitionName)); 
 	        
 	            }
-	        } else if (line.startsWith("ARCS:")) {
+	        } else if (line.trim().startsWith("ARCS:")) {
+	        	 hasArcs = true;
 	            arcLines.add(line.substring(6)); 
 	        }
-	        else if (line.startsWith("INITMARKING:")) {
+	        else if (line.trim().startsWith("INITMARKING:")) { 
+	        	 hasInitMarking = true;
 	            String[] tokens = line.substring(12).replace("(", "").replace(")", "").split(",");
 	            int i = 0;
 	        
@@ -65,68 +79,102 @@ public class PetriNetLoader {
 	                throw new IllegalArgumentException("❌ Error: The number of entries in INITMARKING (" + tokens.length + 
 	                                                   ") does not match the number of PLACES (" + places.size() + ").");
 	            }
-	            for (String placeName : net.getPlaces().keySet()) {
+	            for (String placeName : placeOrder) {
 	                boolean hasToken = tokens[i].trim().equals("1");
-	                net.getPlaces().get(placeName).setToken(hasToken);	               	            
+	                net.getPlaces().get(placeName).setToken(hasToken);
 	                if (hasToken) {
 	                    net.executePlaceActions(placeName);
-	               
 	                }
 	                i++;
 	            }
-	        }
+	        }   
 	    }
-
 	    for (String arcLine : arcLines) {
 	        String[] parts = arcLine.split(";");
 	        for (String arc : parts) {
 	            boolean isInhibitor = arc.contains("-o>");
 	            String[] nodes = arc.trim().split(isInhibitor ? "-o>" : "->");
 
+	            if (nodes.length != 2) {
+	                throw new IllegalArgumentException("❌ Error: Invalid arc syntax → '" + arc + "'");
+	            }
+
 	            String from = nodes[0].trim();
 	            String to = nodes[1].trim();
+
+	            boolean fromIsPlace = places.containsKey(from);
+	            boolean fromIsTransition = transitions.containsKey(from);
+	            boolean toIsPlace = places.containsKey(to);
+	            boolean toIsTransition = transitions.containsKey(to);
+
+	            // ❌ Validaciones de estructura
+	            if ((fromIsPlace && toIsPlace) || (fromIsTransition && toIsTransition)) {
+	                throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Arcs must connect a PLACE and a TRANSITION, not two PLACES or two TRANSITIONS.");
+	            }
+	            if (!fromIsPlace && !fromIsTransition) {
+	                throw new IllegalArgumentException("❌ Error: '" + from + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.");
+	            }
+	            if (!toIsPlace && !toIsTransition) {
+	                throw new IllegalArgumentException("❌ Error: '" + to + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.");
+	            }
 
 	            Place place;
 	            Transition transition;
 	            boolean isInput;
 
-	            if (places.containsKey(from) && transitions.containsKey(to)) {
+	            if (fromIsPlace && toIsTransition) {
 	                place = places.get(from);
 	                transition = transitions.get(to);
 	                isInput = true;
-	            }
-
-	            else if (transitions.containsKey(from) && places.containsKey(to)) {
+	            } else if (fromIsTransition && toIsPlace) {
 	                place = places.get(to);
 	                transition = transitions.get(from);
-	                isInput = false; 
+	                isInput = false;
+	            } else {
+	                throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.");
 	            }
 
-	            else {
-	                throw new IllegalArgumentException("❌ Error: '" + from + "' or '" + to + "' in ARCS is not declared in PLACES or TRANSITIONS.");
-	            }
-
-	             isInput = places.containsKey(from); 
-
-	            if (place == null && transition == null) {
-	                throw new IllegalArgumentException("❌ Error: '" + from + "' in ARCS is not declared in PLACES or TRANSITIONS.");
-	            }
-	            if (!places.containsKey(from) && !transitions.containsKey(from)) {
-	                throw new IllegalArgumentException("❌ Error: '" + from + "' in ARCS is not declared in PLACES or TRANSITIONS.");
-	            }
-	            if (!places.containsKey(to) && !transitions.containsKey(to)) {
-	                throw new IllegalArgumentException("❌ Error: '" + to + "' in ARCS is not declared in PLACES or TRANSITIONS.");
-	            }
-	            if (!places.containsKey(to) && !transitions.containsKey(to)) {	               
-	                throw new IllegalArgumentException("❌ Error: '" + to + "' in ARCS is not declared in PLACES or TRANSITIONS.");
-	            }
-
-	            arcs.add(new Arc(place != null ? place : places.get(to), transition != null ? transition : transitions.get(from), isInput, isInhibitor));
+	            arcs.add(new Arc(place, transition, isInput, isInhibitor));
 	            net.addArc(from, to, isInhibitor);
 	        }
 	    }
+
+	    for (String name : places.keySet()) {
+	        if (transitions.containsKey(name)) {
+	            net.getLogger().log("❌ Error: The identifier '" + name + "' is declared both as a PLACE and a TRANSITION.", true, false);
+	            System.exit(1);
+	        }
+	    }
+	    String namePattern = "^[a-zA-Z][a-zA-Z0-9_]*$";
+	    for (String name : places.keySet()) {
+	        if (!name.matches(namePattern)) {
+	            net.getLogger().log("❌ Error: Invalid PLACE name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
+	            System.exit(1);
+	        }
+	    }
+	    for (String name : transitions.keySet()) {
+	        if (!name.matches(namePattern)) {
+	            net.getLogger().log("❌ Error: Invalid TRANSITION name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
+	            System.exit(1);
+	        }
+	    }
+
+	    if (!hasPlaces || !hasTransitions || !hasArcs || !hasInitMarking ||
+	    	    net.getPlaces().isEmpty() || net.getTransitions().isEmpty() || arcLines.isEmpty()) {
+	    	    
+	    	    StringBuilder missing = new StringBuilder("❌ Error: Missing or empty required section(s): ");
+	    	    if (!hasPlaces || net.getPlaces().isEmpty()) missing.append("PLACES, ");
+	    	    if (!hasTransitions || net.getTransitions().isEmpty()) missing.append("TRANSITIONS, ");
+	    	    if (!hasArcs || arcLines.isEmpty()) missing.append("ARCS, ");
+	    	    if (!hasInitMarking) missing.append("INITMARKING, ");	    	  
+
+	    	    String msg = missing.substring(0, missing.length() - 2); // remove trailing comma
+	    	    net.getLogger().log(msg, true, false);
+	    	    System.exit(1);
+	    	}
+
+
 	    reader.close();
 	    return net;
 	}
-
 }

@@ -82,12 +82,13 @@ public class MainUnified implements Observer {
                 net.setPlaceDiscreteActions(placeDiscreteActions);
 
                 Map<String, Boolean> emptyMarking = new HashMap<>();
+                /*
                 for (String placeName : net.getPlaces().keySet()) {
                     if (net.getPlaces().get(placeName).hasToken()) {
                         net.executePlaceActions(placeName);
                     }
                 }
-
+*/
                 net.updateDurativeActions(emptyMarking);
                 net.printState();
                 SwingUtilities.invokeLater(() -> new GUIEvents());

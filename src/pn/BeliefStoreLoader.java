@@ -13,9 +13,12 @@ import both.LoggerManager;
 import bs.BeliefStore;
 import guiEvents.EventPool;
 public class BeliefStoreLoader {
-    public static void loadFromFile(String filename, BeliefStore beliefStore, LoggerManager logger) throws IOException {
+private static final Pattern VALID_NAME_PATTERN = Pattern.compile("^[a-zA-Z][a-zA-Z0-9_]*(\\(.*\\))?$");
+static LoggerManager logger;
+    public static void loadFromFile(String filename, BeliefStore beliefStore, LoggerManager mlogger) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(filename));
         String line;
+        logger=mlogger;
         while ((line = reader.readLine()) != null) {
             line = line.trim();
             if (line.isEmpty()) continue;
@@ -40,11 +43,17 @@ public class BeliefStoreLoader {
         }
         reader.close();
     }
-    
+    private static boolean isValidName(String name) {
+        return VALID_NAME_PATTERN.matcher(name).matches();
+    }
     private static void loadTimers(String line, BeliefStore beliefStore) {
         String[] timers = line.split(";");
         for (String timer : timers) {
             String timerName = timer.trim();
+            if (!isValidName(timerName)) {
+                logger.log("❌ Error: Invalid variable or timer name '" + timerName + "'", true, false);
+                System.exit(1);
+            }
             if (!timerName.isEmpty()) {
                 beliefStore.declareTimer(timerName);
             }
@@ -54,28 +63,69 @@ public class BeliefStoreLoader {
         String[] events = eventsLine.split(";");
         for (String event : events) {
             event = event.trim();
-            if (!event.isEmpty()) {             
-                String name = event.substring(0, event.indexOf("(")).trim();
-                String content = event.substring(event.indexOf("(") + 1, event.indexOf(")")).trim();
-                String[] parts = content.split(",");
-                double time = 0;
-                List<String> types = new ArrayList<>();
-                if (parts.length > 0) {
-                    time = Double.parseDouble(parts[0].trim());
-                    for (int i = 1; i < parts.length; i++) {
-                        types.add(parts[i].trim());
-                    }
-                }
-                EventPool.getInstance().registerEvent(name, time, types.toArray(new String[0]));
+            if (event.isEmpty()) continue;
+
+            if (!event.contains("(") || !event.contains(")") || !event.endsWith(")")) {
+                logger.log("❌ Error #40: Invalid event declaration. Missing or malformed parentheses in: '" + event + "'", true, false);
+                System.exit(1);
             }
+
+            String name = event.substring(0, event.indexOf("(")).trim();
+            String content = event.substring(event.indexOf("(") + 1, event.lastIndexOf(")")).trim();
+
+            if (name.isEmpty() || !name.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
+                logger.log("❌ Error #41: Invalid event name: '" + name + "'", true, false);
+                System.exit(1);
+            }
+
+            if (content.isEmpty()) {
+                logger.log("❌ Error #42: Event '" + name + "' must contain at least the duration parameter.", true, false);
+                System.exit(1);
+            }
+
+            String[] parts = content.split(",");
+            if (parts.length == 0) {
+                logger.log("❌ Error #43: Event '" + name + "' must specify duration as the first parameter.", true, false);
+                System.exit(1);
+            }
+
+            int duration=0;
+            try {
+                duration = Integer.parseInt(parts[0].trim());
+                if (duration < 0) {
+                    logger.log("❌ Error #44: Duration must be ≥ 0 in event '" + name + "'. Found: " + duration, true, false);
+                    System.exit(1);
+                }
+            } catch (NumberFormatException e) {
+                logger.log("❌ Error #45: First parameter must be a valid integer duration in event '" + name + "'", true, false);
+                System.exit(1);
+            }
+
+            List<String> types = new ArrayList<>();
+            for (int i = 1; i < parts.length; i++) {
+                String type = parts[i].trim();
+                if (!type.equals("INT") && !type.equals("REAL")) {
+                    logger.log("❌ Error #46: Invalid type '" + type + "' in event '" + name + "'. Only INT or REAL are allowed.", true, false);
+                    System.exit(1);
+                }
+                types.add(type);
+            }
+
+            EventPool.getInstance().registerEvent(name, duration, types.toArray(new String[0]));
         }
     }
+
+
 
     private static void loadFacts(String factsLine, BeliefStore beliefStore) {
         String[] facts = factsLine.split(";");
         for (String fact : facts) {
-            fact = fact.trim();
+            fact = fact.trim();       
             if (!fact.isEmpty() && !beliefStore.isFactDeclared(fact)) {
+            	if (!isValidName(fact)) {
+                    logger.log("❌ Error: Invalid FACT name '" + fact + "'", true, false);
+                    System.exit(1);
+                }
                 beliefStore.declareFact(fact);
             }
         }
@@ -84,9 +134,13 @@ public class BeliefStoreLoader {
     private static void loadIntVars(String varsLine, BeliefStore beliefStore) {
         String[] vars = varsLine.split(";");
         for (String var : vars) {
-            var = var.trim();
+            var = var.trim();          
             if (!var.isEmpty() && !beliefStore.isIntVar(var) && !beliefStore.isRealVar(var)) {
-                beliefStore.addIntVar(var, 0); // Default initialization
+            	if (!isValidName(var)) {
+                    logger.log("❌ Error: Invalid INTVAR name '" + var + "'", true, false);
+                    System.exit(1);
+                }
+                beliefStore.addIntVar(var, 0); 
             }
         }
     }
@@ -94,9 +148,13 @@ public class BeliefStoreLoader {
     private static void loadRealVars(String varsLine, BeliefStore beliefStore) {
         String[] vars = varsLine.split(";");
         for (String var : vars) {
-            var = var.trim();
+            var = var.trim();           
             if (!var.isEmpty() && !beliefStore.isIntVar(var) && !beliefStore.isRealVar(var)) {
-                beliefStore.addRealVar(var, 0.0); // Default initialization
+            	if (!isValidName(var)) {
+                    logger.log("❌ Error: Invalid REALVAR name '" + var + "'", true, false);
+                    System.exit(1);
+                }
+                beliefStore.addRealVar(var, 0.0); 
             }
         }
     }
@@ -130,6 +188,10 @@ public class BeliefStoreLoader {
         for (String action : actions) {
             action = action.trim();
             if (!action.isEmpty()) {
+            	if (!isValidName(action)) {
+                    logger.log("❌ Error: Invalid action name '" + action + "'", true, false);
+                    System.exit(1);
+                }
                 if (isDurative) {
                     if (!beliefStore.getDeclaredDurativeActions().contains(action)) {
                         beliefStore.declareDurativeAction(action);
@@ -142,7 +204,7 @@ public class BeliefStoreLoader {
             }
         }
     }
-    @SuppressWarnings("unused")
+    
 	public static void loadPNVariableUpdates(String filename, 
     		PetriNet net, 
     		Map<String, List<String>> placeVariableUpdates, 

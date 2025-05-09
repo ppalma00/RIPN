@@ -42,12 +42,14 @@ public class MainPN implements Observer {
             net.setTransitionConditions(transitionConditions);
             net.setPlaceDiscreteActions(placeDiscreteActions);           
             Map<String, Boolean> emptyMarking = new HashMap<>(); 
+            /*
             for (String placeName : net.getPlaces().keySet()) {
                 Place place = net.getPlaces().get(placeName);
                 if (place.hasToken()) {
                     net.executePlaceActions(placeName);          
                 }
             }
+            */
             net.updateDurativeActions(emptyMarking); 
             net.printState();
             PetriNetAnimator animator = new PetriNetAnimator(net, 2000);

@@ -1,4 +1,5 @@
 package pn;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,23 +23,33 @@ public class PetriNetAnimator implements Runnable {
     }
     @Override
     public void run() {
-    	@SuppressWarnings("unused")
 		BeliefStore beliefStore = net.getBeliefStore();
-        @SuppressWarnings("unused")
-		Map<String, Boolean> previousMarking = net.captureCurrentMarking();
-
+        Map<String, Boolean> previousMarking = new HashMap<>();
+        for (String placeName : net.getPlaces().keySet()) {
+            previousMarking.put(placeName, false); 
+        }
         while (true) {
+        	Map<String, Boolean> currentMarking = net.captureCurrentMarking();
+        	for (String timerId : beliefStore.getDeclaredTimers()) {
+        	    beliefStore.isTimerExpired(timerId);
+        	}
+
+        	for (String placeName : currentMarking.keySet()) {
+        	    boolean wasMarked = previousMarking.getOrDefault(placeName, false);
+        	    boolean isNowMarked = currentMarking.get(placeName);        	   
+        	    if (!wasMarked && isNowMarked) {        	   
+        	        net.executePlaceActions(placeName);
+        	    }
+        	}
             List<String> enabledTransitions = net.getTransitions().keySet().stream()
                     .filter(net::canFire)
                     .collect(Collectors.toList());
-
             List<String> immediateTransitions = enabledTransitions.stream()
             		.filter(t -> {
             		    Transition tr = net.getTransitions().get(t);
             		    return !net.hasPNDefinition(t) || (tr != null && tr.getTriggerEvents().isEmpty());
             		})
                     .collect(Collectors.toList());
-
             while (!immediateTransitions.isEmpty()) {
                 String t = immediateTransitions.get(0);
                 Map<String, Boolean> beforeFire = net.captureCurrentMarking();
@@ -51,7 +62,7 @@ public class PetriNetAnimator implements Runnable {
                         observer.onDiscreteActionExecuted(action, new double[0]);
                     }
                 }
-                net.printState();
+                net.printState();                              
                 try {
                     Thread.sleep(refreshRate); 
                 } catch (InterruptedException e) {
@@ -69,9 +80,19 @@ public class PetriNetAnimator implements Runnable {
                     .filter(net::hasPNDefinition)
                     .collect(Collectors.toList());
             if (nonImmediate.isEmpty()) {
-            	logger.log("No more transitions can fire. Stopping simulation.", true, true);
-                break;
+                logger.log("⏸️ No fireable transitions at this moment. Waiting for changes...", true, false);
+                try {
+                    Thread.sleep(refreshRate);
+                } catch (InterruptedException e) {
+                    logger.log("Simulation interrupted.", true, true);
+                    break;
+                }
+
+                // 🔁 Seguir intentando: los timers o eventos pueden activar algo más tarde
+                previousMarking = new HashMap<>(currentMarking);
+                continue;
             }
+
             String t = null;
             for (String candidate : nonImmediate) {
                 Transition tr = net.getTransitions().get(candidate);
@@ -88,6 +109,7 @@ public class PetriNetAnimator implements Runnable {
                     logger.log("Simulation interrupted.", true, true);
                     break;
                 }
+                previousMarking = new HashMap<>(currentMarking);
                 continue; 
             }
             Map<String, Boolean> beforeFire = net.captureCurrentMarking();
@@ -107,7 +129,7 @@ public class PetriNetAnimator implements Runnable {
             	logger.log("Simulation interrupted.", true, true);
                 break;
             }
-            previousMarking = net.captureCurrentMarking();
+            previousMarking = new HashMap<>(currentMarking);
         }
     }
     private boolean consumeFirstAvailableTriggerEvent(Transition tr) {
@@ -163,27 +185,5 @@ public class PetriNetAnimator implements Runnable {
             }
         }
         return false;
-    }
-    public void simulate() {
-        while (true) {
-            net.printState();
-
-            List<String> enabledTransitions = net.getTransitions().keySet().stream()
-                    .filter(net::canFire)
-                    .collect(Collectors.toList());
-
-            if (enabledTransitions.isEmpty()) {
-            	logger.log("No more transitions can fire. Stopping simulation.", true, true);
-                break;
-            }
-            String transitionToFire = enabledTransitions.get((int) (Math.random() * enabledTransitions.size()));
-            net.fire(transitionToFire);
-            try {
-                Thread.sleep(refreshRate);
-            } catch (InterruptedException e) {
-            	logger.log("Simulation interrupted.", true, true);
-                break;
-            }
-        }
     }
 }
