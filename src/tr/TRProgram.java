@@ -1,9 +1,11 @@
 package tr;
 import java.util.*;
 
+
 import both.LoggerManager;
 import bs.BeliefStore;
 import bs.Observer;
+import guiEvents.EventPool;
 public class TRProgram {
 	private int cycleDelayMs = 100;
     private final BeliefStore beliefStore;
@@ -101,16 +103,31 @@ public class TRProgram {
                 }
 
                 String actionName = action.substring(0, action.indexOf("(")).trim(); 
-                Double[] parameters = extractParameters(action);
-
-                logger.log("⏩ Executing discrete action: " + actionName + " with parameters: " + Arrays.toString(parameters), true, true);
-
+                Double[] parameters=null;
+                if (!actionName.equals("_to_ENV")) {
+                	 parameters = extractParameters(action);         
+                }
                 if (isTimerCommand(action)) {
                     executeTimerCommand(action, parameters);
-                } else {
+                } else if (actionName.equals("_to_ENV")) {
+                    Pair<String, double[]> envData = extractEnvEventNameAndParams(action);
+                    String eventName = envData.getKey();
+                    double[] eventParams = envData.getValue();
+
+                    if (eventName == null || eventName.isEmpty()) {
+                        logger.log("⚠️ Cannot send event: missing or invalid name.", true, false);
+                        continue;
+                    }
+
+                    EventPool.getInstance().addEvent(eventName, eventParams);
+                    logger.log("📤 Event sent to environment: " + eventName + Arrays.toString(eventParams), true, true);
+                    continue;
+                }
+ else {
                     executeDiscreteAction(actionName, parameters);
                     notifyObservers(actionName, parameters);
                 }
+
             }
         }
 
@@ -197,13 +214,43 @@ public class TRProgram {
             }
         }
     }
+    private Pair<String, double[]> extractEnvEventNameAndParams(String action) {
+        int startIndex = action.indexOf("(");
+        int endIndex = action.lastIndexOf(")");
+
+        if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
+            logger.log("⚠️ Error extracting parameters from: " + action, true, false);
+            return new Pair<>(null, new double[0]);
+        }
+
+        String paramString = action.substring(startIndex + 1, endIndex).trim();
+        if (paramString.isEmpty()) {
+            logger.log("⚠️ _to_ENV requires at least one parameter (event name).", true, false);
+            return new Pair<>(null, new double[0]);
+        }
+
+        String[] parts = paramString.split(",");
+        String eventName = parts[0].trim().replaceAll("^\"|\"$", ""); // quita comillas si hay
+        List<Double> paramList = new ArrayList<>();
+
+        for (int i = 1; i < parts.length; i++) {
+            String p = parts[i].trim();
+            try {
+                paramList.add(Double.parseDouble(p));
+            } catch (NumberFormatException e) {
+                logger.log("⚠️ Invalid numeric parameter in _to_ENV: " + p, true, false);
+            }
+        }
+
+        return new Pair<>(eventName, paramList.stream().mapToDouble(Double::doubleValue).toArray());
+    }
 
     private Double[] extractParameters(String action) {
         int startIndex = action.indexOf("(");
         int endIndex = action.lastIndexOf(")");
 
         if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
-        	logger.log("⚠️ Error extracting parameters from: " + action, true, false);
+            logger.log("⚠️ Error extracting parameters from: " + action, true, false);
             return new Double[0];
         }
 
@@ -214,17 +261,27 @@ public class TRProgram {
 
         String[] paramArray = paramString.split(",");
         List<Double> paramList = new ArrayList<>();
-        
+
         for (String param : paramArray) {
+            param = param.trim();
+
             try {
-                paramList.add(Double.parseDouble(param.trim()));
-            } catch (NumberFormatException e) {
-            	logger.log("⚠️ Invalid parameter: " + param, true, true);
+                if (beliefStore.isIntVar(param)) {
+                    paramList.add((double) beliefStore.getIntVar(param));
+                } else if (beliefStore.isRealVar(param)) {
+                    paramList.add(beliefStore.getRealVar(param));
+                } else {
+                    // Intenta evaluar como número directamente
+                    paramList.add(Double.parseDouble(param));
+                }
+            } catch (Exception e) {
+                logger.log("⚠️ Invalid parameter: " + param, true, true);
             }
         }
 
         return paramList.toArray(new Double[0]);
     }
+
 
     public void shutdown() {
         running = false;
@@ -239,4 +296,22 @@ public class TRProgram {
         }
         activeDurativeActions.clear();
     }
+    private static class Pair<K, V> {
+        private final K key;
+        private final V value;
+
+        public Pair(K key, V value) {
+            this.key = key;
+            this.value = value;
+        }
+
+        public K getKey() {
+            return key;
+        }
+
+        public V getValue() {
+            return value;
+        }
+    }
+
 }

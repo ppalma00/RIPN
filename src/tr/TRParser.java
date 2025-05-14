@@ -120,10 +120,13 @@ public class TRParser {
 	                } 
 	                else if (action.matches(".*\\.(start|stop|pause|continue)\\(.*\\)")) {
 	                    discreteActions.add(action);
+	                } else if (action.startsWith("_to_ENV")) {
+	                    discreteActions.add(action); // ✅ Añadirla como acción especial
 	                } else {
-	                	logger.log("❌ Error #10: Action '" + action + "' is used in a rule but not declared.\n   ❌ Rule: " + line, true, false);
+	                    logger.log("❌ Error #10: Action '" + action + "' is used in a rule but not declared.\n   ❌ Rule: " + line, true, false);
 	                    System.exit(1);
 	                }
+
 	            }
 	        }
 	    }
@@ -217,17 +220,18 @@ public class TRParser {
                 continue;
             }
 
-            if (!beliefStore.isDiscreteAction(actionName) && !beliefStore.isDurativeAction(actionName)) {
+            if (!actionName.startsWith("_to_ENV") && !beliefStore.isDiscreteAction(actionName) && !beliefStore.isDurativeAction(actionName)) {
             	logger.log("❌ Error #22: The action '" + actionName + "' is used but not declared.\n   ❌ Rule: " + fullRule, true, false);
                 System.exit(1);
             }
-
+            if (!actionName.startsWith("_to_ENV")) {
             int expectedParams = beliefStore.getActionParameterCount(actionName);
             int givenParams = paramString.isEmpty() ? 0 : paramString.split(",").length;
 
             if (givenParams != expectedParams) {
             	logger.log("❌ Error #23: Action '" + actionName + "' expects " + expectedParams + " parameters but got " + givenParams + ".\n   ❌ Rule: " + fullRule, true, false);
                 System.exit(1);
+            }
             }
         }
     }
@@ -360,10 +364,11 @@ public class TRParser {
             }
             boolean isDiscrete = declaredDiscrete.containsKey(baseAction);
             boolean isDurative = declaredDurative.containsKey(baseAction);
-            if (!isDiscrete && !isDurative) {
+            if (!isDiscrete && !isDurative && !baseAction.startsWith("_to_ENV")) {
             	logger.log("❌ Error #10: Action '" + action + "' is used in a rule but not declared.", true, false);
                 System.exit(1);
             }
+            if (!baseAction.equals("_to_ENV")) {
             int expectedParams = isDiscrete ? declaredDiscrete.get(baseAction) : declaredDurative.get(baseAction);
             if (!declaredDiscrete.containsKey(baseAction) && !declaredDurative.containsKey(baseAction)) {
                 expectedParams = 0;
@@ -371,6 +376,11 @@ public class TRParser {
             if (paramCount != expectedParams) {
             	logger.log("❌ Error #12: Action '" + action + "' expects " + expectedParams + " parameters but got " + paramCount + ".", true, false);
                 System.exit(1);
+            }
+            if (baseAction.equals("_to_ENV") && paramCount == 0) {
+                logger.log("⚠️ Warning: _to_ENV requires at least one parameter (event name).", true, false);
+            }
+
             }
         }
     }

@@ -45,7 +45,7 @@ public class EventPool {
         dumpActiveEvents("Cleared unattended events");
     }
 
-    public synchronized void addEventFromGUI(String eventName, double... parameters) {
+    public synchronized void addEvent(String eventName, double... parameters) {
         cleanExpiredEvents();
         EventSpec spec = declaredEvents.get(eventName);
         if (spec == null) {

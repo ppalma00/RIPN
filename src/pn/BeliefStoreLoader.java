@@ -47,6 +47,7 @@ static LoggerManager logger;
         return VALID_NAME_PATTERN.matcher(name).matches();
     }
     private static void loadTimers(String line, BeliefStore beliefStore) {
+    	if (line.trim().isEmpty()) return;
         String[] timers = line.split(";");
         for (String timer : timers) {
             String timerName = timer.trim();
@@ -60,6 +61,7 @@ static LoggerManager logger;
         }
     }
     private static void loadEvents(String eventsLine) {
+    	if (eventsLine.trim().isEmpty()) return;
         String[] events = eventsLine.split(";");
         for (String event : events) {
             event = event.trim();
@@ -118,6 +120,7 @@ static LoggerManager logger;
 
 
     private static void loadFacts(String factsLine, BeliefStore beliefStore) {
+    	if (factsLine.trim().isEmpty()) return;
         String[] facts = factsLine.split(";");
         for (String fact : facts) {
             fact = fact.trim();       
@@ -132,6 +135,7 @@ static LoggerManager logger;
     }
 
     private static void loadIntVars(String varsLine, BeliefStore beliefStore) {
+    	if (varsLine.trim().isEmpty()) return;
         String[] vars = varsLine.split(";");
         for (String var : vars) {
             var = var.trim();          
@@ -146,6 +150,7 @@ static LoggerManager logger;
     }
 
     private static void loadRealVars(String varsLine, BeliefStore beliefStore) {
+    	if (varsLine.trim().isEmpty()) return;
         String[] vars = varsLine.split(";");
         for (String var : vars) {
             var = var.trim();           
@@ -160,6 +165,7 @@ static LoggerManager logger;
     }
 
     private static void initializeVars(String initLine, BeliefStore beliefStore, LoggerManager logger) {
+    	if (initLine.trim().isEmpty()) return;
         String[] assignments = initLine.split(";");
         for (String assignment : assignments) {
             assignment = assignment.trim();
@@ -184,6 +190,7 @@ static LoggerManager logger;
     }
 
     private static void loadActions(String actionsLine, BeliefStore beliefStore, boolean isDurative) {
+    	if (actionsLine.trim().isEmpty()) return;
         String[] actions = actionsLine.split(";");
         for (String action : actions) {
             action = action.trim();

@@ -21,74 +21,88 @@ public class PetriNetAnimator implements Runnable {
         this.logger = net.getLogger();
         this.beliefStore = net.getBeliefStore(); 
     }
-    @Override
+ 
     public void run() {
-		BeliefStore beliefStore = net.getBeliefStore();
+        boolean waitingLogged = false;
+        BeliefStore beliefStore = net.getBeliefStore();
         Map<String, Boolean> previousMarking = new HashMap<>();
         for (String placeName : net.getPlaces().keySet()) {
-            previousMarking.put(placeName, false); 
+            previousMarking.put(placeName, false);
         }
-        while (true) {
-        	Map<String, Boolean> currentMarking = net.captureCurrentMarking();
-        	for (String timerId : beliefStore.getDeclaredTimers()) {
-        	    beliefStore.isTimerExpired(timerId);
-        	}
 
-        	for (String placeName : currentMarking.keySet()) {
-        	    boolean wasMarked = previousMarking.getOrDefault(placeName, false);
-        	    boolean isNowMarked = currentMarking.get(placeName);        	   
-        	    if (!wasMarked && isNowMarked) {        	   
-        	        net.executePlaceActions(placeName);
-        	    }
-        	}
+        while (true) {
+            Map<String, Boolean> currentMarking = net.captureCurrentMarking();
+
+            for (String timerId : beliefStore.getDeclaredTimers()) {
+                beliefStore.isTimerExpired(timerId);
+            }
+
+            for (String placeName : currentMarking.keySet()) {
+                boolean wasMarked = previousMarking.getOrDefault(placeName, false);
+                boolean isNowMarked = currentMarking.get(placeName);
+                if (!wasMarked && isNowMarked) {
+                    net.executePlaceActions(placeName);
+                }
+            }
+
+            final boolean showBlockedConditions = !waitingLogged;
+
             List<String> enabledTransitions = net.getTransitions().keySet().stream()
-                    .filter(net::canFire)
+                    .filter(trName -> net.canFire(trName, showBlockedConditions))
                     .collect(Collectors.toList());
+
             List<String> immediateTransitions = enabledTransitions.stream()
-            		.filter(t -> {
-            		    Transition tr = net.getTransitions().get(t);
-            		    return !net.hasPNDefinition(t) || (tr != null && tr.getTriggerEvents().isEmpty());
-            		})
+                    .filter(t -> {
+                        Transition tr = net.getTransitions().get(t);
+                        return !net.hasPNDefinition(t) || (tr != null && tr.getTriggerEvents().isEmpty());
+                    })
                     .collect(Collectors.toList());
+
             while (!immediateTransitions.isEmpty()) {
                 String t = immediateTransitions.get(0);
                 Map<String, Boolean> beforeFire = net.captureCurrentMarking();
                 List<String> discreteActions = net.fire(t);
+                waitingLogged = false;
                 net.updateDurativeActions(beforeFire);
-                net.checkExpiredTimers(); 
+                net.checkExpiredTimers();
                 Observer observer = net.getObserver();
-                for (String action : discreteActions) {             
+                for (String action : discreteActions) {
                     if (observer != null) {
                         observer.onDiscreteActionExecuted(action, new double[0]);
                     }
                 }
-                net.printState();                              
+                net.printState();
+
                 try {
-                    Thread.sleep(refreshRate); 
+                    Thread.sleep(refreshRate);
                 } catch (InterruptedException e) {
                     return;
                 }
 
                 enabledTransitions = net.getTransitions().keySet().stream()
-                        .filter(net::canFire)
+                        .filter(trName -> net.canFire(trName, true)) // ← logueamos condiciones tras disparo
                         .collect(Collectors.toList());
+
                 immediateTransitions = enabledTransitions.stream()
                         .filter(tr -> !net.hasPNDefinition(tr))
                         .collect(Collectors.toList());
             }
+
             List<String> nonImmediate = enabledTransitions.stream()
                     .filter(net::hasPNDefinition)
                     .collect(Collectors.toList());
+
             if (nonImmediate.isEmpty()) {
-                logger.log("⏸️ No fireable transitions at this moment. Waiting for changes...", true, false);
+                if (!waitingLogged) {
+                    logger.log("⏸️ No fireable transitions at this moment. Waiting for changes...", true, false);
+                    waitingLogged = true;
+                }
                 try {
                     Thread.sleep(refreshRate);
                 } catch (InterruptedException e) {
                     logger.log("Simulation interrupted.", true, true);
                     break;
                 }
-
-                // 🔁 Seguir intentando: los timers o eventos pueden activar algo más tarde
                 previousMarking = new HashMap<>(currentMarking);
                 continue;
             }
@@ -96,42 +110,53 @@ public class PetriNetAnimator implements Runnable {
             String t = null;
             for (String candidate : nonImmediate) {
                 Transition tr = net.getTransitions().get(candidate);
-                if (tr != null && (tr.getTriggerEvents().isEmpty() || consumeFirstAvailableTriggerEvent(tr))) {
+                if (tr != null &&
+                    net.canFire(candidate, showBlockedConditions) &&
+                    (tr.getTriggerEvents().isEmpty() || consumeFirstAvailableTriggerEvent(tr))) {
                     t = candidate;
                     break;
                 }
             }
+
             if (t == null) {
-                logger.log("⏸️ No non-immediate transitions enabled at this time. Waiting...", true, false);
+                if (!waitingLogged) {
+                    logger.log("⏸️ No non-immediate transitions enabled at this time. Waiting...", true, false);
+                    waitingLogged = true;
+                }
                 try {
-                    Thread.sleep(refreshRate); 
+                    Thread.sleep(refreshRate);
                 } catch (InterruptedException e) {
                     logger.log("Simulation interrupted.", true, true);
                     break;
                 }
                 previousMarking = new HashMap<>(currentMarking);
-                continue; 
+                continue;
             }
+
             Map<String, Boolean> beforeFire = net.captureCurrentMarking();
             List<String> discreteActions = net.fire(t);
+            waitingLogged = false;
+
             net.updateDurativeActions(beforeFire);
             Observer observer = net.getObserver();
-            for (String action : discreteActions) {       
+            for (String action : discreteActions) {
                 if (observer != null) {
                     observer.onDiscreteActionExecuted(action, new double[0]);
                 }
             }
             net.checkExpiredTimers();
             net.printState();
+
             try {
                 Thread.sleep(refreshRate);
             } catch (InterruptedException e) {
-            	logger.log("Simulation interrupted.", true, true);
+                logger.log("Simulation interrupted.", true, true);
                 break;
             }
             previousMarking = new HashMap<>(currentMarking);
         }
     }
+
     private boolean consumeFirstAvailableTriggerEvent(Transition tr) {
         BeliefStore beliefStore = net.getBeliefStore();
         LoggerManager logger = net.getLogger();

@@ -77,11 +77,13 @@ public class PetriNet {
         this.placeVariableUpdates = updates;
     }
 
-    public boolean canFire(String transitionName) {
+    public boolean canFire(String transitionName, boolean showBlockedCondition) {
     	if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
             if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger)) {
-                logger.log("🚫 Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
+                if (showBlockedCondition) {
+                    logger.log("🚫 Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
+                }
                 return false;
             }
         }
@@ -124,7 +126,7 @@ public class PetriNet {
     }
     public List<String> fire(String transitionName) {
         List<String> pendingDiscreteNotifications = new ArrayList<>();
-
+/*
         if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
             if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger)) {
@@ -132,8 +134,8 @@ public class PetriNet {
                 return pendingDiscreteNotifications; // devuelvo vacío si no se cumple
             }
         }
-
-        if (!canFire(transitionName)) return pendingDiscreteNotifications;
+*/
+        if (!canFire(transitionName, false)) return pendingDiscreteNotifications;
 
         Transition transition = transitions.get(transitionName);
         List<Place> inputPlaces = new ArrayList<>();

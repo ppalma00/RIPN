@@ -106,8 +106,6 @@ public class PetriNetLoader {
 	            boolean fromIsTransition = transitions.containsKey(from);
 	            boolean toIsPlace = places.containsKey(to);
 	            boolean toIsTransition = transitions.containsKey(to);
-
-	            // ❌ Validaciones de estructura
 	            if ((fromIsPlace && toIsPlace) || (fromIsTransition && toIsTransition)) {
 	                throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Arcs must connect a PLACE and a TRANSITION, not two PLACES or two TRANSITIONS.");
 	            }
@@ -131,7 +129,7 @@ public class PetriNetLoader {
 	                transition = transitions.get(from);
 	                isInput = false;
 	            } else {
-	                throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.");
+	            	throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.");
 	            }
 
 	            arcs.add(new Arc(place, transition, isInput, isInhibitor));

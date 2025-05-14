@@ -69,7 +69,7 @@ public class GUIEvents extends JFrame {
 
                     	    double[] paramArray = params.stream().mapToDouble(Double::doubleValue).toArray();
                     	    String eventName = eventNameField.getText().trim();
-                    	    EventPool.getInstance().addEventFromGUI(eventName, paramArray);
+                    	    EventPool.getInstance().addEvent(eventName, paramArray);
 
                     	} catch (NumberFormatException ex) {
                     	    JOptionPane.showMessageDialog(null, "Invalid number format in one of the fields.", "Input Error", JOptionPane.ERROR_MESSAGE);

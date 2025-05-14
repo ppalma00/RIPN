@@ -1,19 +1,19 @@
-FACTS:
-VARSINT: x
+FACTS: see
+VARSINT: x; y; v
 VARSREAL:
-INIT:
-DISCRETE: 
-DURATIVE: 
-TIMERS: timer
+INIT: y:=0
+DISCRETE: act3()
+DURATIVE:
+TIMERS: temp
 PLACES: p1; p2; p3; p4
 TRANSITIONS: t1; t2; t3; t4
 ARCS: p1->t1; t1->p2; p2->t2; t2->p3; p3->t3; t3->p1; p3->t4; t4->p4
-EVENTS: ev(0)
+EVENTS: ev(0, INT)
 INITMARKING: (1,0,0,0)
 
 <PN>
-p1: [x:=1; timer.start(50)]
+p1: [x:=1]
 p2: [x:=2] 
 p3: [x:=3] 
-t4: [] if(timer.end)
-t3: [] if (x>0) when(ev)
+t4: [] if(temp.end)
+t3: [y:=v] if (x>0) when(ev(v))

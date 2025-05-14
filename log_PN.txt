@@ -1,19 +1,25 @@
-[2025-05-06 13:12:03.795] Current state of the Petri Net:
-p0: ●
-p1: ○
-p2: ○
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-05-06 13:12:14.121] Current state of the Petri Net:
-p0: ○
+[2025-05-14 10:42:01.047] Current state of the Petri Net:
 p1: ●
 p2: ○
-[2025-05-06 13:12:16.125] Current state of the Petri Net:
-p0: ●
+p3: ○
+p4: ○
+🚫 Transition 't4' blocked by condition: temp.end
+[2025-05-14 10:42:01.312] Current state of the Petri Net:
+p1: ○
+p2: ●
+p3: ○
+p4: ○
+🚫 Transition 't4' blocked by condition: temp.end
+[2025-05-14 10:42:03.317] Current state of the Petri Net:
 p1: ○
 p2: ○
+p3: ●
+p4: ○
+🚫 Transition 't4' blocked by condition: temp.end
 ⏸️ No non-immediate transitions enabled at this time. Waiting...
-⏸️ No non-immediate transitions enabled at this time. Waiting...
+[2025-05-14 10:42:07.321] Current state of the Petri Net:
+p1: ○
+p2: ○
+p3: ○
+p4: ●
+⏸️ No fireable transitions at this moment. Waiting for changes...

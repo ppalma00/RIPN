@@ -1,41 +1,7 @@
-[2025-05-07 11:56:49.715] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: []
-   Active facts with parameters: {}
-   Integer variables: {x=0, y=0, z=0}
-   Real variables: {}
-
-[2025-05-07 11:56:49.739] 🔄 Executing rule with condition: True
-[2025-05-07 11:56:49.739] ⏩ Executing discrete action: act1 with parameters: []
-[2025-05-07 11:56:49.740] ⏩ Executing discrete action: act1 with parameters: []
-[2025-05-07 11:56:49.751] ⏩ Executing discrete action: t1.start with parameters: [5.0]
-[2025-05-07 11:56:49.751] 🛠 Extracted timer command: start for timer: t1
-[2025-05-07 11:56:49.751] ⏳ Timer started: t1 for 5 seconds
-[2025-05-07 11:56:49.877] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: []
-   Active facts with parameters: {veo=[[8]], }
-   Integer variables: {x=2, y=2, z=55}
-   Real variables: {}
-
-[2025-05-07 11:56:49.884] 🔄 Executing rule with condition: x==2
-[2025-05-07 11:56:49.884] ⏩ Executing discrete action: act2 with parameters: []
-[2025-05-07 11:56:49.884] ⏩ Executing discrete action: act2 with parameters: []
-[2025-05-07 11:56:49.988] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: [touch]
-   Active facts with parameters: {veo=[[8]], }
-   Integer variables: {x=2, y=2, z=55}
-   Real variables: {}
-
-[2025-05-07 11:56:54.790] ✅ Timer expired: t1_end activated
-[2025-05-07 11:56:54.790] 🛑 Timer fully removed: t1
-[2025-05-07 11:56:54.894] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: [t1_end, touch]
-   Active facts with parameters: {veo=[[8]], }
-   Integer variables: {x=2, y=2, z=55}
-   Real variables: {}
-
-[2025-05-07 11:56:54.895] 🔄 Executing rule with condition: t1.end
-[2025-05-07 11:56:54.895] ⏳ Starting durative action: actFIN()
+[2025-05-14 10:42:01.083] Initiating TR program...
+[2025-05-14 10:42:01.092] 🔄 Executing rule with condition: True
+[2025-05-14 10:42:01.093] ⏩ Executing discrete action: act0 with parameters: []
+[2025-05-14 10:42:01.103] 🛠 Extracted timer command: start for timer: temp
+[2025-05-14 10:42:07.130] 🔄 Executing rule with condition: temp.end
+[2025-05-14 10:42:07.137] 📤 Event sent to environment: ev[12.0]
+[2025-05-14 10:42:07.137] ⏳ Starting durative action: act2(x)
