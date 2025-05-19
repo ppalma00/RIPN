@@ -5,4 +5,7 @@ Cyber-Physical Systems require advanced modeling frameworks to handle their hybr
 
 see https://www.techrxiv.org/users/917165/articles/1289915-reactive-interpreted-petri-nets-a-unified-framework-for-dynamic-cyber-physical-system-modeling-2025
 
+Dependencies: 
+org.mvel2
+https://download.eclipse.org/oomph/simrel-orbit/nightly/N202306221213/archive/download.eclipse.org/oomph/simrel-orbit/nightly/N202306221213/index/org.mvel2_2.4.15.Final.html
 
