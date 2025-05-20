@@ -185,7 +185,6 @@ public class PetriNetAnimator implements Runnable {
                                 resolved[i] = beliefStore.getRealVar(var);
                             } else {
                                 logger.log("❌ Unknown variable in event match: " + var, true, false);
-                                continue;
                             }
                         }
                         EventPool.EventInstance inst = EventPool.getInstance().consumeEvent(name);

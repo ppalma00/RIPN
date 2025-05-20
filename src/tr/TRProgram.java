@@ -67,7 +67,7 @@ public class TRProgram {
                 stopDurativeActionsOfRule(lastExecutedRule);
             }
 
-            if (lastExecutedRule == null || lastExecutedRule != activeRule) {
+            if ((lastExecutedRule == null || lastExecutedRule != activeRule) && activeRule != null) {
                 executeRule(activeRule);
                 lastExecutedRule = activeRule;
             }
@@ -104,12 +104,12 @@ public class TRProgram {
 
                 String actionName = action.substring(0, action.indexOf("(")).trim(); 
                 Double[] parameters=null;
-                if (!actionName.equals("_to_ENV")) {
+                if (!actionName.equals("_send")) {
                 	 parameters = extractParameters(action);         
                 }
                 if (isTimerCommand(action)) {
                     executeTimerCommand(action, parameters);
-                } else if (actionName.equals("_to_ENV")) {
+                } else if (actionName.equals("_send")) {
                     Pair<String, double[]> envData = extractEnvEventNameAndParams(action);
                     String eventName = envData.getKey();
                     double[] eventParams = envData.getValue();
@@ -225,7 +225,7 @@ public class TRProgram {
 
         String paramString = action.substring(startIndex + 1, endIndex).trim();
         if (paramString.isEmpty()) {
-            logger.log("⚠️ _to_ENV requires at least one parameter (event name).", true, false);
+            logger.log("⚠️ _send requires at least one parameter (event name).", true, false);
             return new Pair<>(null, new double[0]);
         }
 
@@ -238,7 +238,7 @@ public class TRProgram {
             try {
                 paramList.add(Double.parseDouble(p));
             } catch (NumberFormatException e) {
-                logger.log("⚠️ Invalid numeric parameter in _to_ENV: " + p, true, false);
+                logger.log("⚠️ Invalid numeric parameter in _send: " + p, true, false);
             }
         }
 

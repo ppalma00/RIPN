@@ -1,12 +1,14 @@
-FACTS: see
-VARSINT: x
+FACTS: fact0
+VARSINT: x; y; z
 VARSREAL:
-DISCRETE: act1(); act0()
-DURATIVE: act2(INT)
-TIMERS: temp
-INIT: x:=0
+DISCRETE: actdis(); nothing()
+DURATIVE: 
+TIMERS: timer1 
+INIT: 
 
 <TR>
-temp.end -> act2(x); _to_ENV("ev", 12) []
-True -> act0(); temp.start(5) [remember(see)]
-
+timer1.end -> [x:=10; forget(_); y:=0; z:=0]
+x==10 -> [remember(fact0)]
+z==4 -> _send("ev")
+x==9 -> actdis(); timer1.start(2000) [y:=1]
+true -> nothing()

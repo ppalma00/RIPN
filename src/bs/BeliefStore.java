@@ -30,6 +30,7 @@ public class BeliefStore {
 
         return -1; 
     }
+    
     private int countParameters(String actionName, Set<String> declaredActions) {
         for (String declaredAction : declaredActions) {
             if (declaredAction.startsWith(actionName + "(") && declaredAction.endsWith(")")) { // Buscar la acción con `()`
@@ -42,6 +43,7 @@ public class BeliefStore {
         }
         return -1; // ✅ Si la acción no tiene `()`, no está correctamente declarada
     }
+    
     public Set<String> getDeclaredActions() {
         Set<String> allActions = new HashSet<>();
         allActions.addAll(declaredDiscreteActions);
@@ -138,8 +140,18 @@ public class BeliefStore {
     }
 
     public synchronized void addIntVar(String varName, int initialValue) {
-        intVars.put(varName, initialValue);
+        if (!intVars.containsKey(varName)) {
+            intVars.put(varName, initialValue);
+            if (logger != null) {
+                logger.log("ℹ️ Initialized integer variable '" + varName + "' to " + initialValue, true, false);
+            }
+        } else {
+            if (logger != null) {
+                logger.log("🔁 Skipped reinitialization of int var '" + varName + "' (already has value: " + intVars.get(varName) + ")", true, false);
+            }
+        }
     }
+
 
     public synchronized void setIntVar(String varName, int value) {
         if (intVars.containsKey(varName)) {
@@ -155,9 +167,19 @@ public class BeliefStore {
         return new HashMap<>(intVars);
     }
 
-    public void addRealVar(String varName, double initialValue) {
-        realVars.put(varName, initialValue);
+    public synchronized void addRealVar(String varName, double initialValue) {
+        if (!realVars.containsKey(varName)) {
+            realVars.put(varName, initialValue);
+            if (logger != null) {
+                logger.log("ℹ️ Initialized real variable '" + varName + "' to " + initialValue, false, false);
+            }
+        } else {
+            if (logger != null) {
+                logger.log("🔁 Skipped reinitialization of real var '" + varName + "' (already has value: " + realVars.get(varName) + ")", false, false);
+            }
+        }
     }
+
 
     public synchronized void setRealVar(String varName, double value) {
         if (realVars.containsKey(varName)) {

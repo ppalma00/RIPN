@@ -1,6 +1,1 @@
-[LOG STARTED] 2025-05-14 10:42:01.032
-[2025-05-14 10:42:07.135] Event added: ev
-Active Events:
-   ev [12.0] expires in 9223370289642648671 ms
-Unattended Events:
-
+[LOG STARTED] 2025-05-20 12:12:29.671

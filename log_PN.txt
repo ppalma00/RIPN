@@ -1,25 +1,3 @@
-[2025-05-14 10:42:01.047] Current state of the Petri Net:
-p1: ●
-p2: ○
-p3: ○
-p4: ○
-🚫 Transition 't4' blocked by condition: temp.end
-[2025-05-14 10:42:01.312] Current state of the Petri Net:
+[2025-05-20 12:12:29.696] Current state of the Petri Net:
+p0: ●
 p1: ○
-p2: ●
-p3: ○
-p4: ○
-🚫 Transition 't4' blocked by condition: temp.end
-[2025-05-14 10:42:03.317] Current state of the Petri Net:
-p1: ○
-p2: ○
-p3: ●
-p4: ○
-🚫 Transition 't4' blocked by condition: temp.end
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-05-14 10:42:07.321] Current state of the Petri Net:
-p1: ○
-p2: ○
-p3: ○
-p4: ●
-⏸️ No fireable transitions at this moment. Waiting for changes...

@@ -1,7 +1,0 @@
-[2025-05-14 10:42:01.083] Initiating TR program...
-[2025-05-14 10:42:01.092] 🔄 Executing rule with condition: True
-[2025-05-14 10:42:01.093] ⏩ Executing discrete action: act0 with parameters: []
-[2025-05-14 10:42:01.103] 🛠 Extracted timer command: start for timer: temp
-[2025-05-14 10:42:07.130] 🔄 Executing rule with condition: temp.end
-[2025-05-14 10:42:07.137] 📤 Event sent to environment: ev[12.0]
-[2025-05-14 10:42:07.137] ⏳ Starting durative action: act2(x)

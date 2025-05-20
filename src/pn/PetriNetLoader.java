@@ -2,13 +2,17 @@ package pn;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import both.LoggerManager;
 import bs.BeliefStore;
 
 public class PetriNetLoader {
 	@SuppressWarnings("resource")
-	public static PetriNet loadFromFile(String filename, BeliefStore beliefStore) throws IOException {
+	public static PetriNet loadFromFile(String filename, BeliefStore beliefStore, LoggerManager logger) throws IOException {
 		boolean hasPlaces = false;
 		boolean hasTransitions = false;
 		boolean hasArcs = false;
@@ -130,6 +134,7 @@ public class PetriNetLoader {
 	                isInput = false;
 	            } else {
 	            	throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.");
+	            	
 	            }
 
 	            arcs.add(new Arc(place, transition, isInput, isInhibitor));
@@ -139,20 +144,20 @@ public class PetriNetLoader {
 
 	    for (String name : places.keySet()) {
 	        if (transitions.containsKey(name)) {
-	            net.getLogger().log("❌ Error: The identifier '" + name + "' is declared both as a PLACE and a TRANSITION.", true, false);
+	            logger.log("❌ Error: The identifier '" + name + "' is declared both as a PLACE and a TRANSITION.", true, false);
 	            System.exit(1);
 	        }
 	    }
 	    String namePattern = "^[a-zA-Z][a-zA-Z0-9_]*$";
 	    for (String name : places.keySet()) {
 	        if (!name.matches(namePattern)) {
-	            net.getLogger().log("❌ Error: Invalid PLACE name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
+	        	logger.log("❌ Error: Invalid PLACE name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
 	            System.exit(1);
 	        }
 	    }
 	    for (String name : transitions.keySet()) {
 	        if (!name.matches(namePattern)) {
-	            net.getLogger().log("❌ Error: Invalid TRANSITION name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
+	        	logger.log("❌ Error: Invalid TRANSITION name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
 	            System.exit(1);
 	        }
 	    }
@@ -167,11 +172,24 @@ public class PetriNetLoader {
 	    	    if (!hasInitMarking) missing.append("INITMARKING, ");	    	  
 
 	    	    String msg = missing.substring(0, missing.length() - 2); // remove trailing comma
-	    	    net.getLogger().log(msg, true, false);
+	    	    logger.log(msg, true, false);
 	    	    System.exit(1);
 	    	}
-
-
+	    // Detect and remove unused transitions (no arcs)
+	    Set<String> connectedTransitions = new HashSet<>();
+	    for (Arc arc : net.getArcs()) {
+	        connectedTransitions.add(arc.getTransition().getName());
+	    }
+	    List<String> toRemove = new ArrayList<>();
+	    for (String tName : net.getTransitions().keySet()) {
+	        if (!connectedTransitions.contains(tName)) {
+	        	logger.log("⚠️ Warning: Transition '" + tName + "' is declared but has no arcs. It will be ignored.", true, false);
+	            toRemove.add(tName);
+	        }
+	    }
+	    for (String tName : toRemove) {
+	        net.getTransitions().remove(tName);
+	    }
 	    reader.close();
 	    return net;
 	}

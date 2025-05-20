@@ -1,31 +1,3 @@
-[2025-05-14 10:42:01.048] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: []
-   Active facts with parameters: {}
-   Integer variables: {v=0, x=0, y=0}
-   Real variables: {}
-
-[2025-05-14 10:42:01.103] ⏳ Timer started: temp for 5 seconds
-[2025-05-14 10:42:01.312] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: [see]
-   Active facts with parameters: {}
-   Integer variables: {v=0, x=2, y=0}
-   Real variables: {}
-
-[2025-05-14 10:42:03.317] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: [see]
-   Active facts with parameters: {}
-   Integer variables: {v=0, x=3, y=0}
-   Real variables: {}
-
-[2025-05-14 10:42:06.124] ✅ Timer expired: temp_end activated
-[2025-05-14 10:42:06.124] 🛑 Timer fully removed: temp
-[2025-05-14 10:42:07.130] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: [see, temp_end]
-   Active facts with parameters: {}
-   Integer variables: {v=0, x=3, y=0}
-   Real variables: {}
-
+ℹ️ Initialized integer variable 'x' to 0
+ℹ️ Initialized integer variable 'y' to 0
+ℹ️ Initialized integer variable 'z' to 0

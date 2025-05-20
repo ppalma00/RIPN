@@ -84,14 +84,14 @@ public class ExpressionEvaluatorPN {
 	        return false;
 	    }
 	}
-	public static Object evaluateExpression(String expr, BeliefStore beliefStore) {
+	public static Object evaluateExpression(String expr, BeliefStore beliefStore, LoggerManager logger) {
 	    try {
 	        Map<String, Object> context = new HashMap<>();
 	        context.putAll(beliefStore.getAllIntVars());
 	        context.putAll(beliefStore.getAllRealVars());
 	        return MVEL.eval(expr, context);
 	    } catch (Exception e) {
-	        System.err.println("❌ Error evaluating expression: " + expr);
+	        logger.log("❌ Error evaluating expression: " + expr, true, false);
 	        return null;
 	    }
 	}

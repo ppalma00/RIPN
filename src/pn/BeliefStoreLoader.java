@@ -144,7 +144,9 @@ static LoggerManager logger;
                     logger.log("❌ Error: Invalid INTVAR name '" + var + "'", true, false);
                     System.exit(1);
                 }
+            	if(!beliefStore.isIntVar(var)) {
                 beliefStore.addIntVar(var, 0); 
+            	}
             }
         }
     }
@@ -159,7 +161,9 @@ static LoggerManager logger;
                     logger.log("❌ Error: Invalid REALVAR name '" + var + "'", true, false);
                     System.exit(1);
                 }
+            	if(!beliefStore.isRealVar(var)) {
                 beliefStore.addRealVar(var, 0.0); 
+            	}
             }
         }
     }

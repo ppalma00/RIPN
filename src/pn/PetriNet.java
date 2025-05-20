@@ -126,15 +126,7 @@ public class PetriNet {
     }
     public List<String> fire(String transitionName) {
         List<String> pendingDiscreteNotifications = new ArrayList<>();
-/*
-        if (transitionConditions.containsKey(transitionName)) {
-            String condition = transitionConditions.get(transitionName);
-            if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger)) {
-            	logger.log("🚫 Skipped firing transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
-                return pendingDiscreteNotifications; // devuelvo vacío si no se cumple
-            }
-        }
-*/
+
         if (!canFire(transitionName, false)) return pendingDiscreteNotifications;
 
         Transition transition = transitions.get(transitionName);
@@ -164,7 +156,11 @@ public class PetriNet {
             p.setToken(false);
         }
         executeTransitionActions(transitionName);
+        logger.log("🔥 Transition fired: " + transitionName, true, true);
         return pendingDiscreteNotifications;
+    }
+    public List<Arc> getArcs() {
+        return arcs;
     }
 
     public void notifyPendingDiscreteActions() {
@@ -265,7 +261,7 @@ public class PetriNet {
                 List<String> evaluatedParams = Arrays.stream(paramStr.split(","))
                         .map(String::trim)
                         .map(p -> {
-                            Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore);
+                            Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore, logger);
                             return val.toString();
                         })
                         .collect(Collectors.toList());
@@ -273,7 +269,7 @@ public class PetriNet {
                 String paramString = String.join(", ", evaluatedParams);
                 beliefStore.addFact(factName + "(" + paramString + ")");
             } catch (Exception e) {
-                System.err.println("❌ Error parsing parameters for fact: " + fact + " → " + e.getMessage());
+                logger.log("❌ Error parsing parameters for fact: " + fact + " → " + e.getMessage().charAt(0), true, false);
             }
         } else {
             beliefStore.addFact(fact); 
@@ -333,7 +329,7 @@ public class PetriNet {
                         for (int i = 0; i < tokens.length; i++) {
                             String token = tokens[i].trim();
                             try {
-                                Object result = ExpressionEvaluatorPN.evaluateExpression(token, beliefStore);
+                                Object result = ExpressionEvaluatorPN.evaluateExpression(token, beliefStore, logger);
                                 if (result instanceof Number) {
                                     args[i] = ((Number) result).doubleValue();
                                 } else {
@@ -352,7 +348,6 @@ public class PetriNet {
                             if (args.length == 1) {
                                 int duration = (int) args[0];
                                 beliefStore.startTimer(timerName, duration);
-                                //logger.log("🕒 Timer " + timerName + " started for " + duration + " seconds", true, true);
                             } else {
                             	logger.log("❌ Timer start requires 1 argument: " + update, true, false);
                             }

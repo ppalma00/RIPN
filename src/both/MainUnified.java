@@ -63,7 +63,7 @@ public class MainUnified implements Observer {
                 Map<String, String> placeDiscreteActions = new HashMap<>();
 
                 BeliefStoreLoader.loadFromFile(filename, bs, loggerPN);
-                PetriNet net = PetriNetLoader.loadFromFile(filename, bs);
+                PetriNet net = PetriNetLoader.loadFromFile(filename, bs, loggerPN);
                 net.setBeliefStore(bs);
                 net.setLogger(main.loggerPN); 
                 net.setObserver(main);
@@ -82,13 +82,7 @@ public class MainUnified implements Observer {
                 net.setPlaceDiscreteActions(placeDiscreteActions);
 
                 Map<String, Boolean> emptyMarking = new HashMap<>();
-                /*
-                for (String placeName : net.getPlaces().keySet()) {
-                    if (net.getPlaces().get(placeName).hasToken()) {
-                        net.executePlaceActions(placeName);
-                    }
-                }
-*/
+                
                 net.updateDurativeActions(emptyMarking);
                 net.printState();
                 SwingUtilities.invokeLater(() -> new GUIEvents());

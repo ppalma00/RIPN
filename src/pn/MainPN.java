@@ -17,14 +17,14 @@ import guiEvents.GUIEvents;
 public class MainPN implements Observer {
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     public static void main(String[] args) {
-    	LoggerManager logger = new LoggerManager(false, "log_PN.txt");
+    	LoggerManager logger = new LoggerManager(true, "log_PN.txt");
         try {
             BeliefStore beliefStore = new BeliefStore();
             beliefStore.setLogger(logger);
             Map<String, List<String>> placeVariableUpdates = new HashMap<>();
             String filename = "RIPN_PN.txt";
             BeliefStoreLoader.loadFromFile(filename, beliefStore, logger);
-            PetriNet net = PetriNetLoader.loadFromFile(filename, beliefStore);
+            PetriNet net = PetriNetLoader.loadFromFile(filename, beliefStore, logger);
             net.setLogger(logger);
             net.setBeliefStore(beliefStore);
             MainPN observer = new MainPN();
@@ -42,14 +42,7 @@ public class MainPN implements Observer {
             net.setTransitionConditions(transitionConditions);
             net.setPlaceDiscreteActions(placeDiscreteActions);           
             Map<String, Boolean> emptyMarking = new HashMap<>(); 
-            /*
-            for (String placeName : net.getPlaces().keySet()) {
-                Place place = net.getPlaces().get(placeName);
-                if (place.hasToken()) {
-                    net.executePlaceActions(placeName);          
-                }
-            }
-            */
+            
             net.updateDurativeActions(emptyMarking); 
             net.printState();
             PetriNetAnimator animator = new PetriNetAnimator(net, 2000);
