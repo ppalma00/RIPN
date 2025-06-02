@@ -232,7 +232,7 @@ public class PetriNet {
                     .collect(Collectors.toList());
 
             if (beliefStore.getActiveFacts().containsKey(factName)) {
-                List<List<Integer>> instances = beliefStore.getActiveFacts().get(factName);
+                List<List<Object>> instances = beliefStore.getActiveFacts().get(factName);
 
                 @SuppressWarnings("unused")
 				boolean removed = instances.removeIf(existingParams -> {

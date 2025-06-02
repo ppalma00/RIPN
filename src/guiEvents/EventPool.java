@@ -69,6 +69,12 @@ public class EventPool {
                     .add(new EventInstance(parameters, spec.timeToLiveSeconds));
         dumpActiveEvents("Event added: " + eventName);  
     }
+    public Map<String, EventSpec> getDeclaredEvents() {
+        return Collections.unmodifiableMap(declaredEvents);
+    }
+    public boolean hasDeclaredEvents() {
+        return declaredEvents != null && !declaredEvents.isEmpty();
+    }
 
     public synchronized EventInstance consumeEvent(String eventName) {
         cleanExpiredEvents();

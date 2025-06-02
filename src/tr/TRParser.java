@@ -26,7 +26,10 @@ public class TRParser {
 	            if (line.startsWith("#")) continue;
 	            if (line.startsWith("FACTS:")) {
 	                parseFacts(line, beliefStore);
-	            } else if (line.startsWith("VARSINT:")) {
+	            } else if (line.startsWith("PERCEPTS:")) {
+	            	parsePercepts(line, beliefStore);
+	            }         
+	            else if (line.startsWith("VARSINT:")) {
 	                parseIntVars(line, beliefStore);
 	            } else if (line.startsWith("VARSREAL:")) {
 	                parseRealVars(line, beliefStore);
@@ -53,7 +56,8 @@ public class TRParser {
 	private static void parseInit(String line, BeliefStore beliefStore) {
 	    String[] initializations = line.substring(5).trim().split(";");	    
 	    for (String init : initializations) {
-	        init = init.trim();        
+	        init = init.trim();   
+	        if (init.isEmpty()) continue;
 	        if (!init.contains(":=")) {
 	            beliefStore.addFact(init); 
 	        } else {
@@ -561,6 +565,41 @@ public class TRParser {
             beliefStore.declareFact(fact);
         }
     }
+    private static void parsePercepts(String line, BeliefStore beliefStore) {
+        String rest = line.substring(9).trim();
+        if (rest.isEmpty()) return;
+
+        String[] percepts = rest.split(";");
+        for (String percept : percepts) {
+            percept = percept.trim();
+            if (percept.isEmpty()) continue;
+
+            if (beliefStore.isIntVar(percept) || beliefStore.isRealVar(percept)) {
+                logger.log("❌ Error #30: Percept '" + percept + "' cannot be declared as it conflicts with a variable declaration.", true, false);
+                System.exit(1);
+            }
+
+            String basePercept = percept;
+            int paramCount = 0;
+
+            if (percept.contains("(") && percept.endsWith(")")) {
+                basePercept = percept.substring(0, percept.indexOf("(")).trim();
+                String paramStr = percept.substring(percept.indexOf("(") + 1, percept.lastIndexOf(")")).trim();
+                if (!paramStr.isEmpty()) {
+                    paramCount = paramStr.split(",").length;
+                }
+            }
+
+            if (beliefStore.isIntVar(basePercept) || beliefStore.isRealVar(basePercept)) {
+                logger.log("❌ Error #30: Percept '" + basePercept + "' cannot be declared as it conflicts with a variable declaration.", true, false);
+                System.exit(1);
+            }
+
+
+            beliefStore.declarePercept(percept);         
+        }
+    }
+
 
     private static void parseDiscreteActions(String line, BeliefStore beliefStore) {
     	 String rest = line.substring(9).trim();

@@ -15,9 +15,12 @@ public class MainTR implements Observer {
             LoggerManager logger = new LoggerManager(false, "log_TR.txt");
             beliefStore.setLogger(logger);
             TRProgram program = TRParser.parse(trFilePath, beliefStore, cycleDelayMs, logger); // ✅
+           
             MainTR observer = new MainTR();
             program.addObserver(observer);
-
+            if (!beliefStore.getDeclaredPercepts().isEmpty()) {
+                javax.swing.SwingUtilities.invokeLater(() -> new guiPercepts.GUIPercepts(beliefStore));
+            }
             System.out.println("Initiating tr program...");
             new Thread(() -> program.run()).start();             
         } catch (Exception e) {

@@ -6,7 +6,7 @@ import both.LoggerManager;
 public class BeliefStore {
 	private final Map<String, Integer> intVars = Collections.synchronizedMap(new HashMap<>());
 	private final Map<String, Double> realVars = Collections.synchronizedMap(new HashMap<>());
-	private final Map<String, List<List<Integer>>> activeFacts = Collections.synchronizedMap(new HashMap<>());
+	private final Map<String, List<List<Object>>> activeFacts = Collections.synchronizedMap(new HashMap<>());
 	private final Set<String> activeFactsNoParams = Collections.synchronizedSet(new HashSet<>());
 	private final Set<String> declaredTimers = Collections.synchronizedSet(new HashSet<>());
 	private final Map<String, Long> timers = Collections.synchronizedMap(new HashMap<>());
@@ -14,9 +14,59 @@ public class BeliefStore {
     private final Set<String> declaredDurativeActions = Collections.synchronizedSet(new HashSet<>());
     private final Set<String> declaredDiscreteActions = Collections.synchronizedSet(new HashSet<>());
     private final Map<String, Integer> declaredFacts = Collections.synchronizedMap(new HashMap<>());
+    private final Set<String> declaredPercepts = Collections.synchronizedSet(new HashSet<>());
+    private final Map<String, List<String>> perceptsParameterTypes = new HashMap<>();
+    private Map<String, List<String>> factParameterTypes = new HashMap<>();
+
+
     private LoggerManager logger;
     private String lastDump = "";
-    
+    public Set<String> getDeclaredPercepts() {
+        return new HashSet<>(declaredPercepts);
+    }
+    public List<String> getPerceptParameterTypes(String name) {
+        List<String> original = perceptsParameterTypes.get(name);
+        return (original == null) ? new ArrayList<>() : new ArrayList<>(original);
+    }
+
+    public void declarePercept(String percept) {
+        percept = percept.trim();
+        if (percept.isEmpty()) return;
+        String baseName = percept;
+        List<String> types = new ArrayList<>();
+
+        if (percept.contains("(") && percept.endsWith(")")) {
+            baseName = percept.substring(0, percept.indexOf("(")).trim();
+            String paramStr = percept.substring(percept.indexOf("(") + 1, percept.lastIndexOf(")")).trim();
+
+            if (!paramStr.isEmpty()) {
+                String[] parts = paramStr.split(",");
+                for (String type : parts) {
+                    type = type.trim();
+                    if (!type.equals("INT") && !type.equals("REAL")) {
+                        logger.log("❌ Error: Invalid parameter type in percept declaration: " + type, true, false);
+                        System.exit(1);
+                    }
+                    types.add(type);
+                }
+            }
+        }
+        declaredPercepts.add(baseName);
+        perceptsParameterTypes.put(baseName, types); 
+
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < types.size(); i++) {
+            sb.append(types.get(i));             // ✔️ Usa el tipo real: INT o REAL
+            if (i < types.size() - 1) sb.append(",");
+        }
+      
+        if (!types.isEmpty()) {
+            declareFact(baseName + "(" + sb + ")");
+        } else {
+            declareFact(baseName);
+        }
+    }
+
     public void setLogger(LoggerManager logger) {
         this.logger = logger;
     }
@@ -33,15 +83,15 @@ public class BeliefStore {
     
     private int countParameters(String actionName, Set<String> declaredActions) {
         for (String declaredAction : declaredActions) {
-            if (declaredAction.startsWith(actionName + "(") && declaredAction.endsWith(")")) { // Buscar la acción con `()`
+            if (declaredAction.startsWith(actionName + "(") && declaredAction.endsWith(")")) { 
                 String paramContent = declaredAction.substring(actionName.length() + 1, declaredAction.length() - 1);
                 if (paramContent.trim().isEmpty()) {
-                    return 0; // ✅ Acciones como `alarma()` deben devolver 0 parámetros
+                    return 0; 
                 }
                 return paramContent.split(",").length;
             }
         }
-        return -1; // ✅ Si la acción no tiene `()`, no está correctamente declarada
+        return -1; 
     }
     
     public Set<String> getDeclaredActions() {
@@ -69,36 +119,75 @@ public class BeliefStore {
         return new HashSet<>(declaredDiscreteActions);
     }
     public synchronized void removeFact(String factPattern) {
-    	factPattern = factPattern.replace(".end", "_end");
+        factPattern = factPattern.replace(".end", "_end");
+
         if (factPattern.equals("t1_end")) {
-           
             if (activeFactsNoParams.remove(factPattern)) {
-               logger.log("🗑️ Fact removed: " + factPattern, true, false);
+                logger.log("🗑️ Fact removed: " + factPattern, true, false);
             }
             return;
         }
-        if (factPattern.contains("_") && factPattern.contains("(") && factPattern.contains("_")) {
+
+        // 1. Wildcard case
+        if (factPattern.contains("_") && factPattern.contains("(")) {
             String insideParens = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.indexOf(")"));
             if (insideParens.contains("_")) {
                 removeFactWithWildcard(factPattern);
                 return;
             }
         }
-   
-        if (factPattern.contains("(")) {
-            String baseFactName = factPattern.substring(0, factPattern.indexOf("("));
-            if (activeFacts.containsKey(baseFactName)) {
-                List<List<Integer>> instances = activeFacts.get(baseFactName);                      
-                if (instances.isEmpty()) {
-                    activeFacts.remove(baseFactName);
-                }
-            }
-        } else {
+
+        // 2. No-parameter case
+        if (!factPattern.contains("(")) {
             if (activeFactsNoParams.remove(factPattern)) {
-               logger.log("🗑️ Fact removed: " + factPattern, true, false);
+                logger.log("🗑️ Fact removed: " + factPattern, true, false);
+            }
+            return;
+        }
+
+        // 3. Fact with parameters – this part was missing!
+        String baseFactName = factPattern.substring(0, factPattern.indexOf("(")).trim();
+        String paramStr = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.lastIndexOf(")")).trim();
+        String[] paramArray = paramStr.split(",");
+
+        List<String> expectedTypes = factParameterTypes.getOrDefault(baseFactName, new ArrayList<>());
+        if (paramArray.length != expectedTypes.size()) {
+            logger.log("⚠️ Mismatch in parameter count for fact: " + factPattern, true, false);
+            return;
+        }
+
+        List<Object> paramList = new ArrayList<>();
+        for (int i = 0; i < paramArray.length; i++) {
+            String value = paramArray[i].trim();
+            String expectedType = expectedTypes.get(i);
+
+            try {
+                if (expectedType.equals("INT")) {
+                    paramList.add(Integer.parseInt(value));
+                } else if (expectedType.equals("REAL")) {
+                    paramList.add(Double.parseDouble(value));
+                } else {
+                    logger.log("⚠️ Unknown parameter type for fact: " + factPattern, true, false);
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                logger.log("⚠️ Invalid parameter format for fact: " + factPattern, true, false);
+                return;
+            }
+        }
+
+        List<List<Object>> instances = activeFacts.get(baseFactName);
+        if (instances != null) {
+            boolean removed = instances.remove(paramList);
+            if (removed) {
+                logger.log("🗑️ Fact removed: " + factPattern, true, false);
+            }
+            if (instances.isEmpty()) {
+                activeFacts.remove(baseFactName);
             }
         }
     }
+
     public synchronized void removeFactWithWildcard(String factPattern) {
         logger.log("🔍 Calling removeFactWithWildcard with: " + factPattern, true, true);
 
@@ -120,13 +209,13 @@ public class BeliefStore {
         String paramPattern = factPattern.substring(factPattern.indexOf("(") + 1, factPattern.indexOf(")"));
         String[] paramParts = paramPattern.split(",");
 
-        List<List<Integer>> instances = activeFacts.get(baseFactName);
+        List<List<Object>> instances = activeFacts.get(baseFactName);
         boolean removed = instances.removeIf(params -> {
             if (params.size() != paramParts.length) return false;
 
             for (int i = 0; i < params.size(); i++) {
-                if (!paramParts[i].equals("_") && !paramParts[i].equals(String.valueOf(params.get(i)))) {
-                    return false;
+            	if (!paramParts[i].equals("_") && !isParameterMatch(paramParts[i], params.get(i))){
+            	    return false;
                 }
             }
             return true;
@@ -137,6 +226,22 @@ public class BeliefStore {
         if (instances.isEmpty()) {
             activeFacts.remove(baseFactName);
         }
+    }
+    private boolean isParameterMatch(String pattern, Object value) {
+        if (value instanceof Integer) {
+            try {
+                return Integer.parseInt(pattern) == (Integer) value;
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        } else if (value instanceof Double) {
+            try {
+                return Double.parseDouble(pattern) == ((Double) value);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return false;
     }
 
     public synchronized void addIntVar(String varName, int initialValue) {
@@ -197,21 +302,30 @@ public class BeliefStore {
 
     public void declareFact(String fact) {
         fact = fact.trim();
-       
         String baseFact = fact.contains("(") ? fact.substring(0, fact.indexOf("(")) : fact;
-        
-        int paramCount = 0;
+
+        List<String> types = new ArrayList<>();
+
         if (fact.contains("(") && fact.contains(")")) {
             String paramPart = fact.substring(fact.indexOf("(") + 1, fact.indexOf(")")).trim();
             if (!paramPart.isEmpty()) {
-                paramCount = paramPart.split(",").length; 
+                String[] tokens = paramPart.split(",");
+                for (String tok : tokens) {
+                    types.add(tok);  
+                }
             }
         }
-
+        perceptsParameterTypes.put(baseFact, types); 
         if (!declaredFacts.containsKey(baseFact)) {
-            declaredFacts.put(baseFact, paramCount);          
+            declaredFacts.put(baseFact, types.size());
+            factParameterTypes.put(baseFact, types);  
         }
     }
+
+    public List<String> getFactParameterTypes(String factName) {
+        return factParameterTypes.getOrDefault(factName, new ArrayList<>());
+    }
+
 
     public int getFactParameterCount(String factName) {
         if (declaredFacts.containsKey(factName)) {
@@ -223,41 +337,58 @@ public class BeliefStore {
     public synchronized void addFact(String factWithParams) {
         factWithParams = factWithParams.trim();
 
-        String baseFactName = factWithParams.contains("(") ? factWithParams.substring(0, factWithParams.indexOf("(")) : factWithParams;
-
-        Integer[] parameters = new Integer[0];
-        if (factWithParams.contains("(") && factWithParams.contains(")")) {
-            String paramStr = factWithParams.substring(factWithParams.indexOf("(") + 1, factWithParams.indexOf(")"));
-            String[] paramArray = paramStr.split(",");
-
-            if (!paramStr.isEmpty()) {
-                parameters = Arrays.stream(paramArray)
-                        .map(String::trim)
-                        .map(Integer::parseInt)
-                        .toArray(Integer[]::new);
-            }
-        }
+        String baseFactName = factWithParams.contains("(")
+            ? factWithParams.substring(0, factWithParams.indexOf("("))
+            : factWithParams;
 
         if (!declaredFacts.containsKey(baseFactName)) {
-        	logger.log("⚠️ Attempt to activate an undeclared fact: " + factWithParams, true, false);
+            logger.log("⚠️ Attempt to activate an undeclared fact: " + factWithParams, true, false);
             return;
         }
 
-        if (parameters.length == 0) {
+        List<Object> parameters = new ArrayList<>();
+        if (factWithParams.contains("(") && factWithParams.contains(")")) {
+            String paramStr = factWithParams.substring(factWithParams.indexOf("(") + 1, factWithParams.lastIndexOf(")"));
+            String[] paramArray = paramStr.split(",");
+            List<String> expectedTypes = perceptsParameterTypes.getOrDefault(baseFactName, new ArrayList<>());
+
+            if (expectedTypes.size() != paramArray.length) {
+                logger.log("⚠️ Mismatch in parameter count for fact: " + factWithParams, true, false);
+                return;
+            }
+
+            for (int i = 0; i < paramArray.length; i++) {
+                String text = paramArray[i].trim();
+                String expectedType = expectedTypes.get(i);
+
+                try {
+                    if (expectedType.equals("INT")) {
+                        parameters.add(Integer.parseInt(text));
+                    } else if (expectedType.equals("REAL")) {
+                        parameters.add(Double.parseDouble(text));
+                    } else {
+                        logger.log("⚠️ Unknown expected parameter type for " + baseFactName + ": " + expectedType, true, false);
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    logger.log("⚠️ Invalid parameter value: '" + text + "' for expected type: " + expectedType, true, false);
+                    return;
+                }
+            }
+        }
+
+        if (parameters.isEmpty()) {
             if (!activeFactsNoParams.contains(baseFactName)) {
                 activeFactsNoParams.add(baseFactName);
             }
-        } 
-
-        else {
-            List<Integer> paramList = Arrays.asList(parameters);
-            activeFacts.computeIfAbsent(baseFactName, k -> new ArrayList<>());
-
-            if (!activeFacts.get(baseFactName).contains(paramList)) {
-                activeFacts.get(baseFactName).add(paramList);
+        } else {
+            List<List<Object>> factParamsList = activeFacts.computeIfAbsent(baseFactName, k -> new ArrayList<>());
+            if (!factParamsList.contains(parameters)) {
+                factParamsList.add(parameters);
             }
         }
     }
+
 
     public synchronized boolean isFactActive(String factPattern) {
         if (factPattern.contains("(")) {
@@ -280,7 +411,7 @@ public class BeliefStore {
         return new HashSet<>(activeFactsNoParams);
     }
 
-    public Map<String, List<List<Integer>>> getActiveFacts() {
+    public Map<String, List<List<Object>>> getActiveFacts() {
         return activeFacts;
     }
 
@@ -388,7 +519,7 @@ public class BeliefStore {
     	logger.log("   Active facts without parameters: " + activeFactsNoParams, true, false);
         
     	logger.log("   Active facts with parameters: {", false, false);
-        for (Map.Entry<String, List<List<Integer>>> entry : activeFacts.entrySet()) {
+        for (Map.Entry<String, List<List<Object>>> entry : activeFacts.entrySet()) {
         	logger.log(entry.getKey() + "=" + entry.getValue() + ", ", false, false);
         }
         logger.log("}", true, false);

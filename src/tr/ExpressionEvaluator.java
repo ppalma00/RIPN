@@ -17,9 +17,9 @@ public class ExpressionEvaluator {
             for (String fact : beliefStore.getActiveFactsNoParams()) {
                 context.put(fact, true);
             }
-            for (Map.Entry<String, List<List<Integer>>> entry : beliefStore.getActiveFacts().entrySet()) {
+            for (Map.Entry<String, List<List<Object>>> entry : beliefStore.getActiveFacts().entrySet()) {
                 String factBase = entry.getKey();
-                for (List<Integer> params : entry.getValue()) {
+                for (List<Object> params : entry.getValue()) {
                     String factWithParams = factBase + "(" + params.stream()
                             .map(String::valueOf)
                             .collect(Collectors.joining(",")) + ")";

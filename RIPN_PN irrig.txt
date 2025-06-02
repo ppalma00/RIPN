@@ -10,11 +10,10 @@ TRANSITIONS: tCheckDryness; tStartWatering; tStopByMoisture; tStopByManual; tSen
 
 ARCS: tCheckEnd->idle ; idle->tCheckDryness; watering->tCheckEnd; tCheckDryness->checking; 
 ARCS: checking->tStartWatering; tStartWatering->watering; watering->tStopByMoisture; watering->tStopByManual
-ARCS: tStopByMoisture->moistDetected;  moistDetected->tSendAlert;  tSendAlert->idle; tSendAlert->alertSent; 
-ARCS: moistDetected -o> tStartWatering     
+ARCS: tStopByMoisture->moistDetected;  moistDetected->tSendAlert;  tSendAlert->idle; tSendAlert->alertSent; moistDetected -o> tStartWatering     
 
 INITMARKING:(1,0,0,0,0)
-EVENTS: dryDetected(0, INT, REAL); stopButton(10)
+EVENTS: dryDetected(0); stopButton(10)
 
 <PN>
 idle: [tCheck.start(10)]

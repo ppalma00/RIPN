@@ -1,99 +1,103 @@
 package guiEvents;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class GUIEvents extends JFrame {
-
     private static final long serialVersionUID = 1L;
-
-	public GUIEvents() {
+    public GUIEvents() {
         setTitle("RIPN: GUI for sending events");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 400);
+        setSize(800, 600);
         setLocationRelativeTo(null);
-
         InputPanel panel = new InputPanel();
-        add(panel);
-
+        add(new JScrollPane(panel));
         setVisible(true);
     }
 
-    // Internal class for the input panel
     class InputPanel extends JPanel {
         private static final long serialVersionUID = 1L;
-		private static final int MAX_ROWS = 5;
 
         public InputPanel() {
-            setLayout(new GridLayout(MAX_ROWS+2, 5, 5, 5)); // 5 columns: word + 3 numbers + button
+            setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            add(new JLabel("Events", SwingConstants.CENTER));
 
-         // Add header labels
-            add(new JLabel("Event Name", SwingConstants.CENTER));
-            add(new JLabel("Param #1", SwingConstants.CENTER));
-            add(new JLabel("Param #2", SwingConstants.CENTER));
-            add(new JLabel("Param #3", SwingConstants.CENTER));
-            add(new JLabel("Send", SwingConstants.CENTER));
+            Map<String, EventPool.EventSpec> declaredEvents = EventPool.getInstance().getDeclaredEvents();
 
-            for (int i = 0; i < MAX_ROWS; i++) {
-            	JTextField eventNameField = new JTextField(20);
-                JTextField param1Field = new JTextField(8);
-                JTextField param2Field = new JTextField(8);
-                JTextField param3Field = new JTextField(8);
+            for (Map.Entry<String, EventPool.EventSpec> entry : declaredEvents.entrySet()) {
+                String eventName = entry.getKey();
+                List<String> types = entry.getValue().parameterTypes;
+
+                JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
+                row.add(new JLabel(eventName + ":"));
+
+                List<JTextField> fields = new ArrayList<>();
+
+                for (String type : types) {
+                    JPanel fieldGroup = new JPanel(new BorderLayout(2, 2));
+
+                    JLabel typeLabel = new JLabel(type);
+                    typeLabel.setFont(new Font("SansSerif", Font.PLAIN, 10));
+                    typeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+                    JTextField field = new JTextField(6);
+                    fields.add(field);
+
+                    fieldGroup.add(typeLabel, BorderLayout.NORTH);
+                    fieldGroup.add(field, BorderLayout.CENTER);
+
+                    row.add(fieldGroup);
+                }
+
                 JButton sendButton = new JButton("Send");
+                row.add(sendButton);
 
-                add(eventNameField);
-                add(param1Field);
-                add(param2Field);
-                add(param3Field);
-                add(sendButton);
+                sendButton.addActionListener(e -> {
+                    double[] params = new double[fields.size()];
+                    for (int i = 0; i < fields.size(); i++) {
+                        String input = fields.get(i).getText().trim();
+                        String expectedType = types.get(i);
 
-                sendButton.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                    	List<Double> params = new ArrayList<>();
+                        if (input.isEmpty()) {
+                            JOptionPane.showMessageDialog(null, "All parameters are required.", "Missing Input", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
 
-                    	try {
-                    	    if (!param1Field.getText().trim().isEmpty()) {
-                    	        params.add(Double.parseDouble(param1Field.getText().trim()));
-                    	    }
-                    	    if (!param2Field.getText().trim().isEmpty()) {
-                    	        params.add(Double.parseDouble(param2Field.getText().trim()));
-                    	    }
-                    	    if (!param3Field.getText().trim().isEmpty()) {
-                    	        params.add(Double.parseDouble(param3Field.getText().trim()));
-                    	    }
-
-                    	    double[] paramArray = params.stream().mapToDouble(Double::doubleValue).toArray();
-                    	    String eventName = eventNameField.getText().trim();
-                    	    EventPool.getInstance().addEvent(eventName, paramArray);
-
-                    	} catch (NumberFormatException ex) {
-                    	    JOptionPane.showMessageDialog(null, "Invalid number format in one of the fields.", "Input Error", JOptionPane.ERROR_MESSAGE);
-                    	}
-
+                        try {
+                            double value = Double.parseDouble(input);
+                            if (expectedType.equals("INT") && value != (int) value) {
+                                JOptionPane.showMessageDialog(null, "Parameter " + (i + 1) + " must be an integer.", "Type Error", JOptionPane.ERROR_MESSAGE);
+                                return;
+                            }
+                            params[i] = value;
+                        } catch (NumberFormatException ex) {
+                            JOptionPane.showMessageDialog(null, "Parameter " + (i + 1) + " must be a valid number.", "Format Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                     }
+
+                    EventPool.getInstance().addEvent(eventName, params);
                 });
+
+                this.add(row);
             }
 
-            // Add the Delete All Events button
             JButton deleteAllButton = new JButton("Delete All Events");
             deleteAllButton.addActionListener(e -> EventPool.getInstance().deleteAll());
 
-            // Empty slots for alignment
-            add(new JLabel(""));
-            add(new JLabel(""));
-            add(new JLabel(""));
-            add(new JLabel(""));
-            add(deleteAllButton);
+            JPanel footer = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+            footer.add(deleteAllButton);
+            this.add(footer);
         }
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new GUIEvents());
-    }
-}
 
+    public static void main(String[] args) {
+    	EventPool pool = EventPool.getInstance();
+        if (!pool.hasDeclaredEvents()) {
+            System.out.println("⚠️ No declared events found. GUIEvents will not launch.");
+            return;
+        }
+        SwingUtilities.invokeLater(GUIEvents::new);    }
+}

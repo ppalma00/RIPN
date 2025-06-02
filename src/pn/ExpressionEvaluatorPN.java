@@ -28,8 +28,8 @@ public class ExpressionEvaluatorPN {
 	        }
 	        for (String factName : beliefStore.getDeclaredFacts()) {
 	            if (beliefStore.getFactParameterCount(factName) > 0) {
-	                List<List<Integer>> instances = beliefStore.getActiveFacts().getOrDefault(factName, new ArrayList<>());
-	                for (List<Integer> params : instances) {
+	                List<List<Object>> instances = beliefStore.getActiveFacts().getOrDefault(factName, new ArrayList<>());
+	                for (List<Object> params : instances) {
 	                    String factWithParams = factName + "(" + params.stream()
 	                            .map(String::valueOf)
 	                            .collect(Collectors.joining(",")) + ")";
@@ -96,7 +96,7 @@ public class ExpressionEvaluatorPN {
 	    }
 	}
 
-	private static boolean matchWildcard(String wildcardPattern, List<Integer> factParams) {
+	private static boolean matchWildcard(String wildcardPattern, List<Object> factParams) {
 	    String[] patternParts = wildcardPattern.split(",");
 	    if (patternParts.length != factParams.size()) return false;
 	    for (int i = 0; i < patternParts.length; i++) {

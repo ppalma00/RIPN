@@ -21,6 +21,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import javax.swing.SwingUtilities;
+
+import guiEvents.EventPool;
 import guiEvents.GUIEvents;
 
 public class MainUnified implements Observer {
@@ -85,8 +87,9 @@ public class MainUnified implements Observer {
                 
                 net.updateDurativeActions(emptyMarking);
                 net.printState();
-                SwingUtilities.invokeLater(() -> new GUIEvents());
-                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS);             
+                if (EventPool.getInstance().hasDeclaredEvents()) {
+                    SwingUtilities.invokeLater(() -> new GUIEvents());
+                }                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS);             
                 new Thread(animator).start();
 
             } catch (Exception e) {
@@ -103,6 +106,9 @@ public class MainUnified implements Observer {
                 String trFile = "RIPN_TR.txt";
                 TRProgram program = TRParser.parse(trFile, bs, TR_CYCLE_DELAY_MS, main.loggerTR);
                 program.addObserver(main);
+                if (!bs.getDeclaredPercepts().isEmpty()) {
+                    javax.swing.SwingUtilities.invokeLater(() -> new guiPercepts.GUIPercepts(bs));
+                }
                 main.loggerTR.log("Initiating TR program...", true, true);
                 program.run(); // internally loops
             } catch (Exception e) {

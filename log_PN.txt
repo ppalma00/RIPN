@@ -1,3 +1,19 @@
-[2025-05-20 12:12:29.696] Current state of the Petri Net:
-p0: ●
-p1: ○
+ℹ️ Initialized integer variable 'moistureLevel' to 0
+ℹ️ Initialized integer variable 'threshold' to 0
+ℹ️ Initialized real variable 'temperature' to 0.0[2025-06-02 10:40:28.228] Current state of the Petri Net:
+alertSent: ○
+checking: ○
+watering: ○
+idle: ●
+moistDetected: ○
+[2025-06-02 10:40:28.229] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {moistureLevel=0, threshold=2}
+   Real variables: {temperature=0.0, }
+
+[2025-06-02 10:40:28.448] ⏳ Timer started: tCheck for 10 seconds
+🚫 Transition 'tCheckEnd' blocked by condition: tCheck.end
+🚫 Transition 'tStopByMoisture' blocked by condition: moistureLevel >= threshold
+⏸️ No non-immediate transitions enabled at this time. Waiting...

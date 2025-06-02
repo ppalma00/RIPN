@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import both.LoggerManager;
 import bs.BeliefStore;
 import bs.Observer;
+import guiEvents.EventPool;
 import guiEvents.GUIEvents;
 
 public class MainPN implements Observer {
@@ -46,7 +47,9 @@ public class MainPN implements Observer {
             net.updateDurativeActions(emptyMarking); 
             net.printState();
             PetriNetAnimator animator = new PetriNetAnimator(net, 2000);
-            SwingUtilities.invokeLater(() -> new GUIEvents());
+            if (EventPool.getInstance().hasDeclaredEvents()) {
+                SwingUtilities.invokeLater(() -> new GUIEvents());
+            }
             new Thread(animator).start();
         } catch (IOException e) {
         	logger.log("❌ Error loading files: " + e.getMessage(), true, false);

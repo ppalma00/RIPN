@@ -1,14 +1,15 @@
-FACTS: fact0
-VARSINT: x; y; z
+FACTS: look(INT)
+PERCEPTS: fin; reset
+VARSINT: x
 VARSREAL:
-DISCRETE: actdis(); nothing()
-DURATIVE: 
-TIMERS: timer1 
-INIT: 
+DISCRETE: do(); nil()
+DURATIVE: do2()
+TIMERS: timer 
+INIT: x:=0
 
 <TR>
-timer1.end -> [x:=10; forget(_); y:=0; z:=0]
-x==10 -> [remember(fact0)]
-z==4 -> _send("ev")
-x==9 -> actdis(); timer1.start(2000) [y:=1]
-true -> nothing()
+reset -> [forget(timer.end); x:=0; forget(look(_))]
+fin -> nil()
+timer.end -> do2()
+x==1 -> do() [remember(look(5))]
+True -> timer.start(5) [x:=1]

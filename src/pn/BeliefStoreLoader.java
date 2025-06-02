@@ -117,8 +117,6 @@ static LoggerManager logger;
         }
     }
 
-
-
     private static void loadFacts(String factsLine, BeliefStore beliefStore) {
     	if (factsLine.trim().isEmpty()) return;
         String[] facts = factsLine.split(";");
@@ -173,7 +171,8 @@ static LoggerManager logger;
         String[] assignments = initLine.split(";");
         for (String assignment : assignments) {
             assignment = assignment.trim();
-            if (!assignment.isEmpty() && assignment.contains(":=")) {
+            if (assignment.isEmpty()) continue;
+            if (assignment.contains(":=")) {
                 String[] parts = assignment.split(":=");
                 String varName = parts[0].trim();
                 String valueStr = parts[1].trim();
