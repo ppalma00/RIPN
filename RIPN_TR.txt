@@ -1,15 +1,15 @@
-FACTS: look(INT)
-PERCEPTS: fin; reset
+FACTS: fact1
+PERCEPTS: percept1
 VARSINT: x
 VARSREAL:
-DISCRETE: do(); nil()
-DURATIVE: do2()
-TIMERS: timer 
-INIT: x:=0
+DISCRETE: nil(); adi(INT, INT)
+DURATIVE: adu(INT)
+TIMERS: timer1 
+INIT: 
 
 <TR>
-reset -> [forget(timer.end); x:=0; forget(look(_))]
-fin -> nil()
-timer.end -> do2()
-x==1 -> do() [remember(look(5))]
-True -> timer.start(5) [x:=1]
+timer1.end -> nil()
+percept1 -> adi(1,2)
+x==3 && fact1-> _send("ev3")
+x==1 -> adi(3,4) [remember(fact1)]
+True -> adu(5); timer1.start(20) [x:=1]

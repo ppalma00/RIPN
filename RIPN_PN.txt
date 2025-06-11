@@ -1,28 +1,24 @@
-FACTS: dryDetected; moist(INT)
-VARSINT: moistureLevel; threshold
-VARSREAL: temperature
-INIT: moistureLevel := 0; threshold := 2
-DISCRETE: notifyStart(); notifyStop(INT)
-DURATIVE: waterValve(INT)
-TIMERS: tCheck
-PLACES: idle; checking; watering; moistDetected; alertSent
-TRANSITIONS: tCheckDryness; tStartWatering; tStopByMoisture; tStopByManual; tSendAlert; tCheckEnd;
+FACTS: fact1
+VARSINT: x
+VARSREAL: 
+INIT: 
+DISCRETE: adi2()
+DURATIVE: adu2()
+TIMERS: timer1
+PLACES: p0; p1; p2; p3; p4
+TRANSITIONS: t1; t2; t3; t4
+ARCS: p0->t1; t1->p1; p1->t2; t2->p2; p2->t3; t3->p0; t3->p3; p3->t4; t4->p4; p4->t3
 
-ARCS: tCheckEnd->idle ; idle->tCheckDryness; watering->tCheckEnd; tCheckDryness->checking; 
-ARCS: checking->tStartWatering; tStartWatering->watering; watering->tStopByMoisture; watering->tStopByManual
-ARCS: tStopByMoisture->moistDetected;  moistDetected->tSendAlert;  tSendAlert->idle; tSendAlert->alertSent; 
-ARCS: moistDetected -o> tStartWatering     
-
-INITMARKING:(1,0,0,0,0)
-EVENTS: dryDetected(0, INT, REAL); stopButton(10)
+INITMARKING: (1,0,0,1,0)
+EVENTS: ev1(0); ev2(0); ev3(10)
 
 <PN>
-idle: [tCheck.start(10)]
-tCheckEnd: [forget(tCheck.end)] if(tCheck.end) 
-tCheckDryness: [remember(dryDetected); forget(moist(_))] when (dryDetected) 
-checking: [notifyStart(); waterValve(1)]
-tStartWatering: [] if (moistureLevel < threshold)
-watering: [moistureLevel := moistureLevel + 1]
-tStopByMoisture: [] if (moistureLevel >= threshold)
-tStopByManual: [] when (stopButton)
-moistDetected: [notifyStop(moistureLevel); forget(dryDetected); remember(moist(moistureLevel))]
+p0: [x:=1; forget(timer1.end)]
+t1: when(ev1) [] if(x==1)
+p1: [x:=2]
+t2: when(ev2) []
+p2: [x:=3]
+t3: when(ev3) [forget(fact1)]
+p3: [adu2()]
+t4: [] if(fact1)
+p4: [adi(2)]

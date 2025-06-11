@@ -100,6 +100,7 @@ public class GUIPercepts extends JFrame {
                         fact.append(")");
                     }
                     beliefStore.addFact(fact.toString());
+                    JOptionPane.showMessageDialog(null, "Percept " + fact.toString()+" added!");
                 });
 
                 // ✅ REMOVE button listener
@@ -136,6 +137,7 @@ public class GUIPercepts extends JFrame {
                     } else {
                         beliefStore.removeFact(fact.toString());
                     }
+                    JOptionPane.showMessageDialog(null, "Percept "+ fact.toString()+ " removed!");
                 });
 
                 this.add(row);

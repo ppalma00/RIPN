@@ -27,7 +27,12 @@ public class MainTR implements Observer {
             e.printStackTrace();
         }
     }
-
+    /*
+     * These are the methods that would need to be modified to route outputs from the execution of actions (durative and discrete) to the environment. 
+     * Alternatively, it's possible to build a separate class that implements the Observer pattern instead. 
+     * You would only need to modify the line of code that notifies the Teleo-Reactive program (program.addObserver(main);) 
+     * of which object is their observer.
+     */
     @Override
     public void onDiscreteActionExecuted(String actionName, double[] parameters) {
     	String timestamp = LocalDateTime.now().format(formatter);

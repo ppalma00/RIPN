@@ -1,20 +1,99 @@
-ℹ️ Initialized integer variable 'moistureLevel' to 0
-ℹ️ Initialized integer variable 'threshold' to 0
-ℹ️ Initialized real variable 'temperature' to 0.0[2025-05-29 13:01:33.530] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: []
-   Active facts with parameters: {}
-   Integer variables: {moistureLevel=0, threshold=2}
-   Real variables: {temperature=0.0, }
-
 ℹ️ Initialized integer variable 'x' to 0
-ℹ️ Initialized integer variable 'y' to 0
-ℹ️ Initialized integer variable 'z' to 0
-[2025-05-29 13:01:33.673] 
+[2025-06-11 10:32:36.422] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
    Active facts with parameters: {}
-   Integer variables: {moistureLevel=0, x=0, y=0, threshold=2, z=0}
-   Real variables: {temperature=0.0, }
+   Integer variables: {x=0}
+   Real variables: {}
 
-[2025-05-29 13:01:33.717] ⏳ Timer started: tCheck for 10 seconds
+[2025-06-11 10:32:37.788] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+
+[2025-06-11 10:33:51.881] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=2}
+   Real variables: {}
+
+[2025-06-11 10:33:51.932] ⏳ Timer started: timer1 for 20 seconds
+[2025-06-11 10:33:52.935] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+
+[2025-06-11 10:33:53.884] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=3}
+   Real variables: {}
+
+🗑️ Fact removed: fact1
+[2025-06-11 10:33:55.886] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+
+[2025-06-11 10:33:56.952] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [percept1, fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+
+[2025-06-11 10:34:03.895] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [percept1, fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=2}
+   Real variables: {}
+
+[2025-06-11 10:34:05.897] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [percept1, fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=3}
+   Real variables: {}
+
+🗑️ Fact removed: percept1
+[2025-06-11 10:34:09.983] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=3}
+   Real variables: {}
+
+🗑️ Fact removed: fact1
+[2025-06-11 10:34:11.903] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+
+[2025-06-11 10:34:11.994] ✅ Timer expired: timer1_end activated
+[2025-06-11 10:34:11.994] 🛑 Timer fully removed: timer1
+[2025-06-11 10:34:12.997] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [timer1_end, fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+
+🗑️ Fact removed: timer1_end
+[2025-06-11 10:34:13.905] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: [fact1]
+   Active facts with parameters: {}
+   Integer variables: {x=1}
+   Real variables: {}
+

@@ -78,6 +78,8 @@ public class GUIEvents extends JFrame {
                     }
 
                     EventPool.getInstance().addEvent(eventName, params);
+                    JOptionPane.showMessageDialog(null, "Event " + eventName+" added!");
+
                 });
 
                 this.add(row);
