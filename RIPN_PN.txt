@@ -1,24 +1,16 @@
-FACTS: fact1
-VARSINT: x
+FACTS: see(INT)
+VARSINT: x; y; z
 VARSREAL: 
-INIT: 
-DISCRETE: adi2()
-DURATIVE: adu2()
-TIMERS: timer1
-PLACES: p0; p1; p2; p3; p4
-TRANSITIONS: t1; t2; t3; t4
-ARCS: p0->t1; t1->p1; p1->t2; t2->p2; p2->t3; t3->p0; t3->p3; p3->t4; t4->p4; p4->t3
-
-INITMARKING: (1,0,0,1,0)
-EVENTS: ev1(0); ev2(0); ev3(10)
+INIT: x:=1; see(3)
+DISCRETE: 
+DURATIVE: 
+TIMERS: 
+PLACES: p0; p1
+TRANSITIONS: t0; t1
+ARCS: p0->t0; t0->p1; p1->t1; t1->p0
+INITMARKING:(1,0)
+EVENTS: ev(0,INT)
 
 <PN>
-p0: [x:=1; forget(timer1.end)]
-t1: when(ev1) [] if(x==1)
-p1: [x:=2]
-t2: when(ev2) []
-p2: [x:=3]
-t3: when(ev3) [forget(fact1)]
-p3: [adu2()]
-t4: [] if(fact1)
-p4: [adi(2)]
+t0: when(ev(x)) [x:=x; y:=x; remember(see(4))] if(see(3))
+t1: [forget(see(_))] if(x>10 && see(4))

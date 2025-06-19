@@ -160,9 +160,11 @@ public class PetriNetAnimator implements Runnable {
     private boolean consumeFirstAvailableTriggerEvent(Transition tr) {
         BeliefStore beliefStore = net.getBeliefStore();
         LoggerManager logger = net.getLogger();
+
         for (String rawEvent : tr.getTriggerEvents()) {
             rawEvent = rawEvent.trim();
             String[] eventOptions = rawEvent.split("\\|\\|");
+
             for (String ev : eventOptions) {
                 ev = ev.trim();
                 if (ev.isEmpty()) continue;
@@ -175,31 +177,27 @@ public class PetriNetAnimator implements Runnable {
                         String name = ev.substring(0, ev.indexOf("(")).trim();
                         String paramString = ev.substring(ev.indexOf("(") + 1, ev.lastIndexOf(")"));
                         String[] paramVars = paramString.split(",");
-                        double[] resolved = new double[paramVars.length];
 
-                        for (int i = 0; i < paramVars.length; i++) {
-                            String var = paramVars[i].trim();
-                            if (beliefStore.isIntVar(var)) {
-                                resolved[i] = beliefStore.getIntVar(var);
-                            } else if (beliefStore.isRealVar(var)) {
-                                resolved[i] = beliefStore.getRealVar(var);
-                            } else {
-                                logger.log("❌ Unknown variable in event match: " + var, true, false);
-                            }
-                        }
                         EventPool.EventInstance inst = EventPool.getInstance().consumeEvent(name);
                         if (inst != null) {
                             double[] values = inst.getParameters();
-                            if (values.length == paramVars.length) {
-                                for (int i = 0; i < values.length; i++) {
-                                    String var = paramVars[i].trim();
-                                    if (beliefStore.isIntVar(var)) {
-                                        beliefStore.setIntVar(var, (int) values[i]);
-                                    } else if (beliefStore.isRealVar(var)) {
-                                        beliefStore.setRealVar(var, values[i]);
-                                    }
+
+                            if (values.length != paramVars.length) {
+                                logger.log("❌ Event parameter count mismatch for event: " + name, true, false);
+                                return false;
+                            }
+
+                            // Construimos el contexto temporal para esta transición
+                            Map<String, Object> context = new HashMap<>();
+                            for (int i = 0; i < values.length; i++) {
+                                String var = paramVars[i].trim();
+                                if (!var.isEmpty()) {
+                                    context.put(var, (int) values[i]); // o usar double si se espera
                                 }
                             }
+
+                            // Asociamos el contexto temporal a la transición
+                            tr.setTempContext(context); // requiere método setTempContext en Transition
                             return true;
                         }
                     } catch (Exception ex) {
@@ -208,6 +206,7 @@ public class PetriNetAnimator implements Runnable {
                 }
             }
         }
+
         return false;
     }
 }

@@ -18,7 +18,7 @@ import guiEvents.GUIEvents;
 public class MainPN implements Observer {
 	private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     public static void main(String[] args) {
-    	LoggerManager logger = new LoggerManager(true, "log_PN.txt");
+    	LoggerManager logger = new LoggerManager(false, "log_PN.txt");
         try {
             BeliefStore beliefStore = new BeliefStore();
             beliefStore.setLogger(logger);

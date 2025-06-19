@@ -1,11 +1,22 @@
 package pn;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Transition {
     String name;
     private List<String> triggerEvents = new ArrayList<>();
+    private Map<String, Object> tempContext = new HashMap<>();
+
+    public Map<String, Object> getTempContext() {
+        return tempContext;
+    }
+
+    public void setTempContext(Map<String, Object> context) {
+        this.tempContext = context;
+    }
 
     public void setTriggerEvents(List<String> events) {
         this.triggerEvents = events;

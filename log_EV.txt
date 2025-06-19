@@ -1,57 +1,10 @@
-[LOG STARTED] 2025-06-11 10:32:36.311
-[2025-06-11 10:33:44.442] Event added: ev2
+[LOG STARTED] 2025-06-19 12:57:21.524
+[2025-06-19 12:57:26.646] Event added: ev
 Active Events:
-   ev2 [] expires in 9223370287223951365 ms
+   ev [15.0] expires in 9223370286524129159 ms
 Unattended Events:
 
-[2025-06-11 10:33:50.076] Event added: ev1
-Active Events:
-   ev2 [] expires in 9223370287223945731 ms
-   ev1 [] expires in 9223370287223945731 ms
-Unattended Events:
-
-[2025-06-11 10:33:51.880] Event consumed: ev1 with parameters []
-Active Events:
-   ev2 [] expires in 9223370287223943927 ms
-Unattended Events:
-
-[2025-06-11 10:33:53.883] Event consumed: ev2 with parameters []
-Active Events:
-Unattended Events:
-
-[2025-06-11 10:33:53.944] Event added: ev3
-Active Events:
-   ev3 [] expires in 9999 ms
-Unattended Events:
-
-[2025-06-11 10:33:55.885] Event consumed: ev3 with parameters []
-Active Events:
-Unattended Events:
-
-[2025-06-11 10:34:02.073] Event added: ev1
-Active Events:
-   ev1 [] expires in 9223370287223933734 ms
-Unattended Events:
-
-[2025-06-11 10:34:03.894] Event consumed: ev1 with parameters []
-Active Events:
-Unattended Events:
-
-[2025-06-11 10:34:04.609] Event added: ev2
-Active Events:
-   ev2 [] expires in 9223370287223931198 ms
-Unattended Events:
-
-[2025-06-11 10:34:05.897] Event consumed: ev2 with parameters []
-Active Events:
-Unattended Events:
-
-[2025-06-11 10:34:09.985] Event added: ev3
-Active Events:
-   ev3 [] expires in 9999 ms
-Unattended Events:
-
-[2025-06-11 10:34:11.902] Event consumed: ev3 with parameters []
+[2025-06-19 12:57:27.804] Event consumed: ev with parameters [15.0]
 Active Events:
 Unattended Events:
 

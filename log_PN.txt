@@ -1,79 +1,30 @@
-[2025-06-11 10:32:36.422] Current state of the Petri Net:
+ℹ️ Initialized integer variable 'x' to 0
+ℹ️ Initialized integer variable 'y' to 0
+ℹ️ Initialized integer variable 'z' to 0
+[2025-06-18 10:50:43.649] Current state of the Petri Net:
 p0: ●
 p1: ○
-p2: ○
-p3: ●
-p4: ○
-[2025-06-11 10:32:37.787] 🔥 Transition fired: t4
-[2025-06-11 10:32:37.787] Current state of the Petri Net:
-p0: ●
-p1: ○
-p2: ○
-p3: ○
-p4: ●
+[2025-06-18 10:50:43.650] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=1, y=0, z=0}
+   Real variables: {}
+
+🚫 Transition 't1' blocked by condition: x>10
 ⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-06-11 10:33:51.881] 🚫 Skipped actions in transition t1 (Condition not met: x==1)
-[2025-06-11 10:33:51.881] 🔥 Transition fired: t1
-[2025-06-11 10:33:51.881] Current state of the Petri Net:
+[2025-06-18 10:50:52.006] 🔥 Transition fired: t0
+[2025-06-18 10:50:52.006] Current state of the Petri Net:
 p0: ○
 p1: ●
-p2: ○
-p3: ○
-p4: ●
-🚫 Transition 't1' blocked by condition: x==1
-[2025-06-11 10:33:53.884] 🔥 Transition fired: t2
-[2025-06-11 10:33:53.884] Current state of the Petri Net:
-p0: ○
-p1: ○
-p2: ●
-p3: ○
-p4: ●
-🚫 Transition 't1' blocked by condition: x==1
-[2025-06-11 10:33:55.886] 🔥 Transition fired: t3
-[2025-06-11 10:33:55.886] Current state of the Petri Net:
+[2025-06-18 10:50:52.006] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {}
+   Integer variables: {x=55, y=0, z=0}
+   Real variables: {}
+
+[2025-06-18 10:50:54.010] 🔥 Transition fired: t1
+[2025-06-18 10:50:54.010] Current state of the Petri Net:
 p0: ●
 p1: ○
-p2: ○
-p3: ●
-p4: ○
-[2025-06-11 10:33:57.887] 🔥 Transition fired: t4
-[2025-06-11 10:33:57.888] Current state of the Petri Net:
-p0: ●
-p1: ○
-p2: ○
-p3: ○
-p4: ●
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-06-11 10:34:03.895] 🚫 Skipped actions in transition t1 (Condition not met: x==1)
-[2025-06-11 10:34:03.895] 🔥 Transition fired: t1
-[2025-06-11 10:34:03.895] Current state of the Petri Net:
-p0: ○
-p1: ●
-p2: ○
-p3: ○
-p4: ●
-🚫 Transition 't1' blocked by condition: x==1
-[2025-06-11 10:34:05.897] 🔥 Transition fired: t2
-[2025-06-11 10:34:05.897] Current state of the Petri Net:
-p0: ○
-p1: ○
-p2: ●
-p3: ○
-p4: ●
-🚫 Transition 't1' blocked by condition: x==1
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-06-11 10:34:11.903] 🔥 Transition fired: t3
-[2025-06-11 10:34:11.903] Current state of the Petri Net:
-p0: ●
-p1: ○
-p2: ○
-p3: ●
-p4: ○
-[2025-06-11 10:34:13.905] 🔥 Transition fired: t4
-[2025-06-11 10:34:13.905] Current state of the Petri Net:
-p0: ●
-p1: ○
-p2: ○
-p3: ○
-p4: ●
-⏸️ No non-immediate transitions enabled at this time. Waiting...

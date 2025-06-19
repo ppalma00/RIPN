@@ -236,11 +236,19 @@ public class TRProgram {
         for (int i = 1; i < parts.length; i++) {
             String p = parts[i].trim();
             try {
-                paramList.add(Double.parseDouble(p));
-            } catch (NumberFormatException e) {
+                if (beliefStore.isIntVar(p)) {
+                    paramList.add((double) beliefStore.getIntVar(p));
+                } else if (beliefStore.isRealVar(p)) {
+                    paramList.add(beliefStore.getRealVar(p));
+                } else {
+                    // Intenta convertirlo directamente
+                    paramList.add(Double.parseDouble(p));
+                }
+            } catch (Exception e) {
                 logger.log("⚠️ Invalid numeric parameter in _send: " + p, true, false);
             }
         }
+
 
         return new Pair<>(eventName, paramList.stream().mapToDouble(Double::doubleValue).toArray());
     }

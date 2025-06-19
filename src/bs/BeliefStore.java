@@ -1,6 +1,8 @@
 package bs;
 import java.util.*;
 import java.util.regex.*;
+import java.util.stream.Collectors;
+
 import both.LoggerManager;
 
 public class BeliefStore {
@@ -27,6 +29,59 @@ public class BeliefStore {
     public List<String> getPerceptParameterTypes(String name) {
         List<String> original = perceptsParameterTypes.get(name);
         return (original == null) ? new ArrayList<>() : new ArrayList<>(original);
+    }
+    public List<List<String>> getFactsMatchingNameAndArity(String name, int arity) {
+        List<List<String>> results = new ArrayList<>();
+        for (String fact : getAllFacts()) {
+            if (!fact.startsWith(name + "(")) continue;
+            if (!fact.endsWith(")")) continue;
+
+            String inside = fact.substring(fact.indexOf("(") + 1, fact.lastIndexOf(")"));
+            String[] parts = inside.split(",");
+            if (parts.length != arity) continue;
+
+            List<String> params = Arrays.stream(parts).map(String::trim).collect(Collectors.toList());
+            results.add(params);
+        }
+        return results;
+    }
+    public List<String> getAllFacts() {
+        List<String> facts = new ArrayList<>();
+
+        // Sin parámetros
+        for (String fact : activeFactsNoParams) {
+            facts.add(fact);
+        }
+
+        // Con parámetros
+        for (Map.Entry<String, List<List<Object>>> entry : activeFacts.entrySet()) {
+            String baseName = entry.getKey();
+            for (List<Object> params : entry.getValue()) {
+                String joined = params.stream()
+                                      .map(Object::toString)
+                                      .collect(Collectors.joining(","));
+                facts.add(baseName + "(" + joined + ")");
+            }
+        }
+
+        return facts;
+    }
+
+    public String getVariableValueAsString(String var) {
+        if (isIntVar(var)) return String.valueOf(getIntVar(var));
+        if (isRealVar(var)) return String.valueOf(getRealVar(var));
+        return null;
+    }
+    public boolean hasFactWithArity(String name, int arity) {
+        for (String fact : getAllFacts()) {
+            if (!fact.startsWith(name + "(")) continue;
+            if (!fact.endsWith(")")) continue;
+
+            String inside = fact.substring(fact.indexOf("(") + 1, fact.lastIndexOf(")"));
+            String[] parts = inside.split(",");
+            if (parts.length == arity) return true;
+        }
+        return false;
     }
 
     public void declarePercept(String percept) {
@@ -311,7 +366,7 @@ public class BeliefStore {
             if (!paramPart.isEmpty()) {
                 String[] tokens = paramPart.split(",");
                 for (String tok : tokens) {
-                    types.add(tok);  
+                    types.add(tok.trim());  
                 }
             }
         }

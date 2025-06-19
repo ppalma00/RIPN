@@ -78,18 +78,25 @@ public class PetriNet {
     }
 
     public boolean canFire(String transitionName, boolean showBlockedCondition) {
-    	if (transitionConditions.containsKey(transitionName)) {
+        Transition transition = transitions.get(transitionName);
+        if (transition == null) return false;
+
+        // Evaluar condición lógica si existe
+        if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
-            if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger)) {
+
+            // Recuperar contexto temporal del evento, si lo hay
+            Map<String, Object> context = (transition != null) ? transition.getTempContext() : null;
+
+            if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, context)) {
                 if (showBlockedCondition) {
                     logger.log("🚫 Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
                 }
                 return false;
             }
         }
-        Transition transition = transitions.get(transitionName);
-        if (transition == null) return false;
 
+        // Verificación de los arcos
         List<Place> inputPlaces = new ArrayList<>();
         List<Place> outputPlaces = new ArrayList<>();
         List<Place> inhibitorPlaces = new ArrayList<>();
@@ -115,8 +122,10 @@ public class PetriNet {
         for (Place p : inhibitorPlaces) {
             if (p.hasToken()) return false;
         }
+
         return true;
     }
+
     public void notifyDiscreteActions(List<String> actions) {
         if (observer != null) {
             for (String actionName : actions) {
@@ -176,48 +185,121 @@ public class PetriNet {
     }
 
     private void executeTransitionActions(String transitionName) {
+        Transition transition = this.transitions.get(transitionName);
+        Map<String, Object> context = (transition != null) ? transition.getTempContext() : null;
+
         if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
-            boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger);
 
+            boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, context);
             if (!conditionMet) {
-            	logger.log("🚫 Skipped actions in transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
+                logger.log("🚫 Skipped actions in transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
                 return; // 🔹 Si la condición no se cumple, NO ejecutamos las acciones
             }
         }
+
         if (transitionVariableUpdates.containsKey(transitionName)) {
             for (String update : transitionVariableUpdates.get(transitionName)) {
                 update = update.trim();
-                
+
                 if (update.startsWith("remember(") && update.endsWith(")")) {
                     String fact = update.substring(9, update.length() - 1).trim();
-                    processRememberFact(fact);
+                    processRememberFactWithContext(fact, context);
+
                 } else if (update.startsWith("forget(") && update.endsWith(")")) {
                     String fact = update.substring(7, update.length() - 1).trim();
-                    processForgetFact(fact);
+                    processForgetFactWithContext(fact, context);
+
                 } else {
-                    // Procesar asignación de variables como antes
                     String[] parts = update.split(":=");
                     if (parts.length == 2) {
                         String varName = parts[0].trim();
                         String expression = parts[1].trim();
                         try {
-                            Object result = evaluateExpression(expression);
+                            Object result = evaluateExpression(expression, context);
                             if (result instanceof Integer && beliefStore.isIntVar(varName)) {
-                                beliefStore.setIntVar(varName, (Integer) result);                         
+                                beliefStore.setIntVar(varName, (Integer) result);
                             } else if (result instanceof Double && beliefStore.isRealVar(varName)) {
                                 beliefStore.setRealVar(varName, (Double) result);
                             } else {
-                            	logger.log("❌ Invalid type for variable: " + varName, true, false);
+                                logger.log("❌ Invalid type for variable: " + varName, true, false);
                             }
                         } catch (Exception e) {
-                        	logger.log("❌ Error evaluating expression: " + expression, true, false);
+                            logger.log("❌ Error evaluating expression: " + expression, true, false);
                         }
                     }
                 }
             }
         }
+        if (transition != null) {
+            transition.setTempContext(null);
+        }
     }
+    private void processForgetFactWithContext(String fact, Map<String, Object> context) {
+        if (fact.contains("(") && fact.endsWith(")")) {
+            String factName = fact.substring(0, fact.indexOf("(")).trim();
+            String paramStr = fact.substring(fact.indexOf("(") + 1, fact.length() - 1).trim();
+
+            // 🟡 Si contiene un wildcard explícito, usa directamente el eliminador con comodines
+            if (paramStr.contains("_")) {
+                beliefStore.removeFactWithWildcard(fact);
+                return;
+            }
+
+            // 🟢 Evaluación estándar si no hay wildcard
+            List<String> paramList = Arrays.stream(paramStr.split(","))
+                    .map(String::trim)
+                    .map(p -> {
+                        Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore, logger, context);
+                        return val.toString();
+                    })
+                    .collect(Collectors.toList());
+
+            if (beliefStore.getActiveFacts().containsKey(factName)) {
+                List<List<Object>> instances = beliefStore.getActiveFacts().get(factName);
+
+                boolean removed = instances.removeIf(existingParams -> {
+                    if (existingParams.size() != paramList.size()) return false;
+                    for (int i = 0; i < existingParams.size(); i++) {
+                        if (!paramList.get(i).equals(String.valueOf(existingParams.get(i)))) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+
+                if (instances.isEmpty()) {
+                    beliefStore.getActiveFacts().remove(factName);
+                }
+            }
+        } else {
+            beliefStore.removeFact(fact);
+        }
+    }
+
+    private void processRememberFactWithContext(String fact, Map<String, Object> context) {
+        if (fact.contains("(") && fact.endsWith(")")) {
+            String factName = fact.substring(0, fact.indexOf("(")).trim();
+            String paramStr = fact.substring(fact.indexOf("(") + 1, fact.length() - 1).trim();
+            try {
+                List<String> evaluatedParams = Arrays.stream(paramStr.split(","))
+                        .map(String::trim)
+                        .map(p -> {
+                            Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore, logger, context);
+                            return val.toString();
+                        })
+                        .collect(Collectors.toList());
+
+                String paramString = String.join(", ", evaluatedParams);
+                beliefStore.addFact(factName + "(" + paramString + ")");
+            } catch (Exception e) {
+                logger.log("❌ Error parsing parameters for fact: " + fact + " → " + e.getMessage(), true, false);
+            }
+        } else {
+            beliefStore.addFact(fact);
+        }
+    }
+
     public Map<String, String> getPlaceDiscreteActions() {
         return placeDiscreteActions;
     }
@@ -261,7 +343,7 @@ public class PetriNet {
                 List<String> evaluatedParams = Arrays.stream(paramStr.split(","))
                         .map(String::trim)
                         .map(p -> {
-                            Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore, logger);
+                        	Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore, logger, null);
                             return val.toString();
                         })
                         .collect(Collectors.toList());
@@ -279,7 +361,7 @@ public class PetriNet {
     public void executePlaceActions(String placeName) {
         if (placeConditions.containsKey(placeName)) {
             String condition = placeConditions.get(placeName);
-            boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger);
+            boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, null);
             if (!conditionMet) {
             	logger.log("🚫 Skipped actions in place " + placeName + " (Condition not met: " + condition + ")", true, true);
                 return;
@@ -396,14 +478,23 @@ public class PetriNet {
     }
 
 
-    private Object evaluateExpression(String expression) {
-        Map<String, Object> context = new HashMap<>();
+    private Object evaluateExpression(String expression, Map<String, Object> context) {
+        Map<String, Object> combinedContext = new HashMap<>();
 
-        beliefStore.getAllIntVars().forEach(context::put);
-        beliefStore.getAllRealVars().forEach(context::put);
+        combinedContext.putAll(beliefStore.getAllIntVars());
+        combinedContext.putAll(beliefStore.getAllRealVars());
 
-        return MVEL.eval(expression, context);
+        if (context != null) {
+            combinedContext.putAll(context); // sobrescribe si hay conflicto
+        }
+
+        return MVEL.eval(expression, combinedContext);
     }
+
+    private Object evaluateExpression(String expression) {
+        return evaluateExpression(expression, null);
+    }
+
 
     public void printState() {
     	logger.log("Current state of the Petri Net:", true, true);

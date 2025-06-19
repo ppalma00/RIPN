@@ -54,34 +54,70 @@ public class TRParser {
 	}
 
 	private static void parseInit(String line, BeliefStore beliefStore) {
-	    String[] initializations = line.substring(5).trim().split(";");	    
+	    String[] initializations = line.substring(5).trim().split(";");
 	    for (String init : initializations) {
-	        init = init.trim();   
+	        init = init.trim();
 	        if (init.isEmpty()) continue;
+
+	        // Caso: hecho sin asignación, p.ej. see(1..100)
 	        if (!init.contains(":=")) {
-	            beliefStore.addFact(init); 
+	            if (init.contains("(") && init.contains("..") && init.endsWith(")")) {
+	                String base = init.substring(0, init.indexOf("(")).trim();
+	                String inside = init.substring(init.indexOf("(") + 1, init.indexOf(")")).trim();
+
+	                if (inside.contains("..")) {
+	                    String[] bounds = inside.split("\\.\\.");
+	                    if (bounds.length != 2) {
+	                        logger.log("❌ Error: Invalid range format in INIT: " + init, true, false);
+	                        System.exit(1);
+	                    }
+	                    try {
+	                        int from = Integer.parseInt(bounds[0].trim());
+	                        int to = Integer.parseInt(bounds[1].trim());
+
+	                        if (to < from || (to - from + 1) > 1000) {
+	                            logger.log("❌ Error: Invalid or too large range in INIT (max 1000). Line: " + init, true, false);
+	                            System.exit(1);
+	                        }
+
+	                        for (int i = from; i <= to; i++) {
+	                            beliefStore.addFact(base + "(" + i + ")");
+	                        }
+
+	                    } catch (NumberFormatException e) {
+	                        logger.log("❌ Error: Range values must be integers in INIT: " + init, true, false);
+	                        System.exit(1);
+	                    }
+	                    continue; // ya procesado
+	                }
+	            }
+
+	            // Caso normal: hecho sin parámetro o con uno explícito
+	            beliefStore.addFact(init);
 	        } else {
+	            // Caso: asignación de variable
 	            String[] parts = init.split(":=");
 	            String varName = parts[0].trim();
 	            String value = parts[1].trim();
 
 	            if (!beliefStore.isIntVar(varName) && !beliefStore.isRealVar(varName)) {
-	            	logger.log("❌ Error #26: Variable '" + varName + "' is not declared in VARSINT or VARSREAL before initialization.\n   ❌ Line: " + init, true, false);
+	                logger.log("❌ Error #26: Variable '" + varName + "' is not declared in VARSINT or VARSREAL before initialization.\n   ❌ Line: " + init, true, false);
 	                System.exit(1);
 	            }
 	            try {
 	                if (beliefStore.isIntVar(varName)) {
 	                    beliefStore.setIntVar(varName, Integer.parseInt(value));
-	                } else if (beliefStore.isRealVar(varName)) {
+	                } else {
 	                    beliefStore.setRealVar(varName, Double.parseDouble(value));
 	                }
 	            } catch (NumberFormatException e) {
-	            	logger.log("❌ Error #27: Invalid format in initialization: " + init, true, false);
+	                logger.log("❌ Error #27: Invalid format in initialization: " + init, true, false);
 	                System.exit(1);
 	            }
 	        }
 	    }
 	}
+
 
 	private static void validateAndParseRule(String line, TRProgram program, BeliefStore beliefStore) {
 	    if (line.isEmpty()) return;
@@ -137,11 +173,39 @@ public class TRParser {
 
 	    final String finalUpdatesStr = updatesStr;
 	    Runnable beliefStoreUpdates = finalUpdatesStr.isEmpty() ? null : () -> applyUpdates(finalUpdatesStr, beliefStore);
+	    Map<String, Boolean> outVarsMap = new HashMap<>();
+
+	    Pattern factPattern = Pattern.compile("([a-zA-Z_][a-zA-Z0-9_]*)\\(([^)]*)\\)");
+	    Matcher matcher = factPattern.matcher(conditionStr);
+	    while (matcher.find()) {
+	        String[] params = matcher.group(2).split(",");
+	        for (String param : params) {
+	            param = param.trim();
+	            if (param.startsWith("out ")) {
+	                String varName = param.substring(4).trim();
+	                if (outVarsMap.containsKey(varName) && !outVarsMap.get(varName)) {
+	                    logger.log("❌ Error: Variable '" + varName + "' se usa con y sin 'out' en la misma condición", true, false);
+	                    System.exit(1);
+	                }
+	                outVarsMap.put(varName, true);
+	            } else {
+	                if (outVarsMap.containsKey(param) && outVarsMap.get(param)) {
+	                    logger.log("❌ Error: Variable '" + param + "' se usa con y sin 'out' en la misma condición", true, false);
+	                    System.exit(1);
+	                }
+	                outVarsMap.putIfAbsent(param, false);
+	            }
+	        }
+	    }
+	    String cleanedConditionStr = conditionStr.replaceAll("\\bout\\s+", "");
+
 	    Predicate<BeliefStore> condition = beliefStoreState -> {
 	        ExpressionEvaluator evaluator = new ExpressionEvaluator();
-	        return evaluator.evaluateLogicalExpression(conditionStr, beliefStoreState, logger);
+	        return evaluator.evaluateLogicalExpression(cleanedConditionStr, beliefStoreState, logger, outVarsMap);
 	    };
-	    TRRule rule = new TRRule(condition, conditionStr, discreteActions, durativeActions, beliefStoreUpdates);
+
+
+	    TRRule rule = new TRRule(condition, conditionStr, discreteActions, durativeActions, beliefStoreUpdates, outVarsMap);
 	    program.addRule(rule);
 	}
 
@@ -164,13 +228,16 @@ public class TRParser {
 	        System.exit(1);
 	    }
 
+	    String logicalPart = conditionStr.replaceAll("[a-zA-Z_][a-zA-Z0-9_]*\\([^\\)]*\\)", "true");
+
 	    try {
-	        MVEL.compileExpression(conditionStr);
+	        MVEL.compileExpression(logicalPart);
 	    } catch (Exception e) {
-	    	logger.log("❌ Error #33: Expression evaluation error: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
-	    	logger.log("   ↳ " + e.getMessage(), true, false);
+	        logger.log("❌ Error #33: Logical expression error in condition: " + logicalPart + "\n   ❌ Rule: " + fullRule, false, false);
+	        logger.log("   ↳ " + e.getMessage(), true, false);
 	        System.exit(1);
 	    }
+
 	}
 
 	private static void validateArithmeticExpressions(String updates, String fullRule) {
@@ -431,7 +498,9 @@ public class TRParser {
                     }
                 }
 
-                if (!varName.equals("_") && !declaredVars.contains(varName) && !beliefStore.isFactDeclared(varName)) {
+                if (!varName.equals("_") && !varName.equals("out") && 
+                	    !declaredVars.contains(varName) && !beliefStore.isFactDeclared(varName)) {
+
                 	logger.log("❌ Error #11: Variable or fact '" + varName + "' is used in a rule but not declared.", true, false);
                     System.exit(1);
                 }
@@ -521,6 +590,10 @@ public class TRParser {
             	logger.log("❌ Error #29: Variable '" + var + "' cannot be declared as it conflicts with a FACTS declaration.", true, false);
                 System.exit(1);
             }
+            if (var.equals("out")) {
+            	logger.log("❌ Error: out is not a valid name for a Variable ", true, false);
+                System.exit(1);
+            }
             if(!beliefStore.isIntVar(var)) {
             beliefStore.addIntVar(var, 0);
             }
@@ -541,6 +614,10 @@ public class TRParser {
             }
             if (beliefStore.isFactDeclared(var)) {
             	logger.log("❌ Error #29: Variable '" + var + "' cannot be declared as it conflicts with a FACTS declaration.", true, false);
+                System.exit(1);
+            }
+            if (var.equals("out")) {
+            	logger.log("❌ Error: out is not a valid name for a Variable ", true, false);
                 System.exit(1);
             }
             if(!beliefStore.isRealVar(var)) {

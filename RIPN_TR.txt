@@ -1,15 +1,12 @@
-FACTS: fact1
-PERCEPTS: percept1
-VARSINT: x
+FACTS: 
+PERCEPTS: see(INT, INT)
+VARSINT: x; y 
 VARSREAL:
-DISCRETE: nil(); adi(INT, INT)
-DURATIVE: adu(INT)
-TIMERS: timer1 
-INIT: 
+DISCRETE: do(INT)
+DURATIVE: 
+TIMERS: 
+INIT: x:=1; y:=3
 
 <TR>
-timer1.end -> nil()
-percept1 -> adi(1,2)
-x==3 && fact1-> _send("ev3")
-x==1 -> adi(3,4) [remember(fact1)]
-True -> adu(5); timer1.start(20) [x:=1]
+see(out y, _) -> do(y)
+x==1 -> do(x) [x:=x+1; remember(see(100,2))]

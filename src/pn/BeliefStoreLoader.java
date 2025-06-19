@@ -43,6 +43,20 @@ static LoggerManager logger;
         }
         reader.close();
     }
+    private static boolean hasBalancedParenthesesAndBrackets(String line) {
+        int parenCount = 0;
+        int bracketCount = 0;
+        for (char c : line.toCharArray()) {
+            if (c == '(') parenCount++;
+            else if (c == ')') parenCount--;
+            else if (c == '[') bracketCount++;
+            else if (c == ']') bracketCount--;
+
+            if (parenCount < 0 || bracketCount < 0) return false; // Cierre sin apertura
+        }
+        return parenCount == 0 && bracketCount == 0;
+    }
+
     private static boolean isValidName(String name) {
         return VALID_NAME_PATTERN.matcher(name).matches();
     }
@@ -167,11 +181,12 @@ static LoggerManager logger;
     }
 
     private static void initializeVars(String initLine, BeliefStore beliefStore, LoggerManager logger) {
-    	if (initLine.trim().isEmpty()) return;
+        if (initLine.trim().isEmpty()) return;
         String[] assignments = initLine.split(";");
         for (String assignment : assignments) {
             assignment = assignment.trim();
             if (assignment.isEmpty()) continue;
+
             if (assignment.contains(":=")) {
                 String[] parts = assignment.split(":=");
                 String varName = parts[0].trim();
@@ -186,11 +201,47 @@ static LoggerManager logger;
                         beliefStore.setRealVar(varName, value);
                     }
                 } catch (NumberFormatException e) {
-                	logger.log("⚠️ Error parsing initial value for variable: " + assignment, true, false);
+                    logger.log("⚠️ Error parsing initial value for variable: " + assignment, true, false);
+                }
+            } else {
+                // Inicialización de hechos (incluyendo rangos como see(1..5))
+                if (assignment.contains("(") && assignment.endsWith(")")) {
+                    String base = assignment.substring(0, assignment.indexOf("(")).trim();
+                    String inside = assignment.substring(assignment.indexOf("(") + 1, assignment.lastIndexOf(")")).trim();
+
+                    if (inside.contains("..")) {
+                        // Intervalo detectado
+                        String[] bounds = inside.split("\\.\\.");
+                        if (bounds.length != 2) {
+                            logger.log("❌ Error: Invalid range format in INIT: " + assignment, true, false);
+                            System.exit(1);
+                        }
+                        try {
+                            int from = Integer.parseInt(bounds[0].trim());
+                            int to = Integer.parseInt(bounds[1].trim());
+                            if (to < from || (to - from + 1) > 1000) {
+                                logger.log("❌ Error: Invalid or too large range in INIT (max 1000). Line: " + assignment, true, false);
+                                System.exit(1);
+                            }
+                            for (int i = from; i <= to; i++) {
+                                beliefStore.addFact(base + "(" + i + ")");
+                            }
+                        } catch (NumberFormatException e) {
+                            logger.log("❌ Error: Range values must be integers in INIT: " + assignment, true, false);
+                            System.exit(1);
+                        }
+                    } else {
+                        // Hecho normal con parámetros
+                        beliefStore.addFact(assignment);
+                    }
+                } else {
+                    // Hecho sin parámetros
+                    beliefStore.addFact(assignment);
                 }
             }
         }
     }
+
 
     private static void loadActions(String actionsLine, BeliefStore beliefStore, boolean isDurative) {
     	if (actionsLine.trim().isEmpty()) return;
@@ -245,6 +296,10 @@ static LoggerManager logger;
     			continue;
     		}
     		if (line.contains(":")) {
+    			if (!hasBalancedParenthesesAndBrackets(line)) {
+    			    logger.log("❌ Error: Unmatched parenthesis or bracket in line: " + line, true, false);
+    			    System.exit(1); 
+    			}
     			String[] parts = line.split(":", 2);
     			String elementName = parts[0].trim();
     			String actionLine = parts[1].trim();
@@ -279,12 +334,30 @@ static LoggerManager logger;
     			    actionLine = actionLine.replace(whenMatcher.group(0), "").trim(); 
     			}
 		
-    			Pattern ifPattern = Pattern.compile("if\\s*\\(\\s*([^)]*?)\\s*\\)");
-    			Matcher ifMatcher = ifPattern.matcher(actionLine);
-    			if (ifMatcher.find()) {
-    			    condition = ifMatcher.group(1).trim();
-    			    actionLine = actionLine.replace(ifMatcher.group(0), "").trim();
+    			// Buscar 'if(...)' con paréntesis equilibrados
+    			int ifIndex = actionLine.indexOf("if(");
+    			if (ifIndex != -1) {
+    			    int open = ifIndex + 2; // posición del primer paréntesis
+    			    int depth = 1;
+    			    int close = -1;
+    			    for (int i = open + 1; i < actionLine.length(); i++) {
+    			        char c = actionLine.charAt(i);
+    			        if (c == '(') depth++;
+    			        else if (c == ')') depth--;
+    			        if (depth == 0) {
+    			            close = i;
+    			            break;
+    			        }
+    			    }
+    			    if (close != -1) {
+    			        condition = actionLine.substring(open + 1, close).trim();
+    			        actionLine = (actionLine.substring(0, ifIndex) + actionLine.substring(close + 1)).trim();
+    			    } else {
+    			        logger.log("❌ Error: unmatched parentheses in if(...) clause → " + line, true, false);
+    			        continue;
+    			    }
     			}
+
 
     			actionLine = actionLine.trim();
 
