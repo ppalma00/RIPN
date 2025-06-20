@@ -26,6 +26,13 @@ public class BeliefStore {
     public Set<String> getDeclaredPercepts() {
         return new HashSet<>(declaredPercepts);
     }
+    public boolean containsIntVar(String var) {
+        return intVars.containsKey(var);
+    }
+
+    public boolean containsRealVar(String var) {
+        return realVars.containsKey(var);
+    }
     public List<String> getPerceptParameterTypes(String name) {
         List<String> original = perceptsParameterTypes.get(name);
         return (original == null) ? new ArrayList<>() : new ArrayList<>(original);

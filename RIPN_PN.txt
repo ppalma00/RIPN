@@ -1,7 +1,7 @@
-FACTS: see(INT)
+FACTS: see(INT, INT)
 VARSINT: x; y; z
 VARSREAL: 
-INIT: x:=1; see(3)
+INIT: x:=1; see(3,4)
 DISCRETE: 
 DURATIVE: 
 TIMERS: 
@@ -12,5 +12,5 @@ INITMARKING:(1,0)
 EVENTS: ev(0,INT)
 
 <PN>
-t0: when(ev(x)) [x:=x; y:=x; remember(see(4))] if(see(3))
-t1: [forget(see(_))] if(x>10 && see(4))
+t0: when(ev(x)) [x:=x; y:=x; remember(see(4,9))] if(see(3,4))
+t1: [x:=z*10] if(see(z, 9) && x>10)

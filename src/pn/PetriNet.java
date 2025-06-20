@@ -80,23 +80,38 @@ public class PetriNet {
     public boolean canFire(String transitionName, boolean showBlockedCondition) {
         Transition transition = transitions.get(transitionName);
         if (transition == null) return false;
-
-        // Evaluar condición lógica si existe
         if (transitionConditions.containsKey(transitionName)) {
             String condition = transitionConditions.get(transitionName);
-
-            // Recuperar contexto temporal del evento, si lo hay
-            Map<String, Object> context = (transition != null) ? transition.getTempContext() : null;
-
-            if (!ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, context)) {
+            Map<String, Object> context = transition.getTempContext();
+            if (context == null) {
+                context = new HashMap<>();
+                transition.setTempContext(context);
+            }
+            boolean result = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, context);
+            if (!result) {
                 if (showBlockedCondition) {
                     logger.log("🚫 Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
                 }
                 return false;
             }
+
+            // ✅ Propagar valores de variables instanciadas (out) al BeliefStore
+            for (Map.Entry<String, Object> entry : context.entrySet()) {
+                String var = entry.getKey();
+                Object value = entry.getValue();
+                if (beliefStore.containsIntVar(var) && value instanceof Number) {
+                    beliefStore.setIntVar(var, ((Number) value).intValue());
+                } else if (beliefStore.containsRealVar(var) && value instanceof Number) {
+                    beliefStore.setRealVar(var, ((Number) value).doubleValue());
+                }
+            }
+
+            // 📝 Guardar el contexto para posibles acciones posteriores
+            if (transition != null) {
+                transition.setTempContext(context);
+            }
         }
 
-        // Verificación de los arcos
         List<Place> inputPlaces = new ArrayList<>();
         List<Place> outputPlaces = new ArrayList<>();
         List<Place> inhibitorPlaces = new ArrayList<>();
