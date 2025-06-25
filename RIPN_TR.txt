@@ -1,12 +1,12 @@
 FACTS: 
-PERCEPTS: see(INT, INT)
-VARSINT: x; y 
+PERCEPTS: see(INT)
+VARSINT: x; y; z
 VARSREAL:
-DISCRETE: do(INT)
+DISCRETE: do(INT); do2(INT)
 DURATIVE: 
 TIMERS: 
-INIT: x:=1; y:=3
+INIT: x:=1; y:=3; see(100)
 
 <TR>
-see(out y, _) -> do(y)
-x==1 -> do(x) [x:=x+1; remember(see(100,2))]
+see(out z) && z > 150 -> do2(z)
+x==1 -> do(x) [x:=x+1; remember(see(200))]

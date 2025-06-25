@@ -183,10 +183,12 @@ static LoggerManager logger;
     private static void initializeVars(String initLine, BeliefStore beliefStore, LoggerManager logger) {
         if (initLine.trim().isEmpty()) return;
         String[] assignments = initLine.split(";");
+        
         for (String assignment : assignments) {
             assignment = assignment.trim();
             if (assignment.isEmpty()) continue;
 
+            // Caso: asignación a variable (x := 3)
             if (assignment.contains(":=")) {
                 String[] parts = assignment.split(":=");
                 String varName = parts[0].trim();
@@ -199,12 +201,17 @@ static LoggerManager logger;
                     } else if (beliefStore.isRealVar(varName)) {
                         double value = Double.parseDouble(valueStr);
                         beliefStore.setRealVar(varName, value);
+                    } else {
+                        logger.log("❌ Error: Variable '" + varName + "' no declarada en VARSINT o VARSREAL.\n   ❌ Línea: " + assignment, true, false);
+                        System.exit(1);
                     }
                 } catch (NumberFormatException e) {
-                    logger.log("⚠️ Error parsing initial value for variable: " + assignment, true, false);
+                    logger.log("❌ Error: Valor no numérico en la inicialización: " + assignment, true, false);
+                    System.exit(1);
                 }
+
+            // Caso: hecho (con o sin rango)
             } else {
-                // Inicialización de hechos (incluyendo rangos como see(1..5))
                 if (assignment.contains("(") && assignment.endsWith(")")) {
                     String base = assignment.substring(0, assignment.indexOf("(")).trim();
                     String inside = assignment.substring(assignment.indexOf("(") + 1, assignment.lastIndexOf(")")).trim();
@@ -213,21 +220,21 @@ static LoggerManager logger;
                         // Intervalo detectado
                         String[] bounds = inside.split("\\.\\.");
                         if (bounds.length != 2) {
-                            logger.log("❌ Error: Invalid range format in INIT: " + assignment, true, false);
+                            logger.log("❌ Error: Formato inválido de rango en INIT: " + assignment, true, false);
                             System.exit(1);
                         }
                         try {
                             int from = Integer.parseInt(bounds[0].trim());
                             int to = Integer.parseInt(bounds[1].trim());
                             if (to < from || (to - from + 1) > 1000) {
-                                logger.log("❌ Error: Invalid or too large range in INIT (max 1000). Line: " + assignment, true, false);
+                                logger.log("❌ Error: Rango inválido o demasiado grande (máx 1000). Línea: " + assignment, true, false);
                                 System.exit(1);
                             }
                             for (int i = from; i <= to; i++) {
                                 beliefStore.addFact(base + "(" + i + ")");
                             }
                         } catch (NumberFormatException e) {
-                            logger.log("❌ Error: Range values must be integers in INIT: " + assignment, true, false);
+                            logger.log("❌ Error: Valores del rango deben ser enteros en INIT: " + assignment, true, false);
                             System.exit(1);
                         }
                     } else {

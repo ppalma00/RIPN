@@ -7,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 public class ExpressionEvaluator {
+	
 	public boolean evaluateLogicalExpression(String expr, BeliefStore store, LoggerManager logger, Map<String, Boolean> outVarsMap) {
 	    List<String> predicates = new ArrayList<>();
 	    List<String> expressions = new ArrayList<>();
@@ -107,9 +108,32 @@ public class ExpressionEvaluator {
 	            }
 
 	            if (compatible) {
-	                matchFound = true;
-	                break;
+	                // Evaluamos la condición completa con el binding actual
+	                Map<String, Object> candidateContext = new HashMap<>();
+	                candidateContext.putAll(store.getAllIntVars());
+	                candidateContext.putAll(store.getAllRealVars());
+
+	                for (String param : outVarsMap.keySet()) {
+	                    if (store.containsIntVar(param)) {
+	                        candidateContext.put(param, store.getIntVar(param));
+	                    } else if (store.containsRealVar(param)) {
+	                        candidateContext.put(param, store.getRealVar(param));
+	                    }
+	                }
+
+	                String exprOnly = String.join(" && ", expressions);
+	                try {
+	                    Object result = MVEL.eval(exprOnly, candidateContext);
+	                    if (result instanceof Boolean && (Boolean) result) {
+	                        matchFound = true;
+	                        break;
+	                    }
+	                } catch (Exception e) {
+	                    logger.log("❌ Error evaluando expresión lógica/arimética con binding: " + exprOnly + " → " + e.getMessage(), true, false);
+	                    return false;
+	                }
 	            }
+
 	        }
 
 	        if (negated) matchFound = !matchFound;

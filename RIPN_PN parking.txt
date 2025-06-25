@@ -23,7 +23,7 @@ t2: [forget(high_demand)] if(NWaiting < limit)
 p1: [remember(waiting(c))]
 t3: when (parked(c,s)) [forget(waiting(c)); forget(free(s))]
 t6: [remember(free(s)); forget(assigned(c,s))] if(timer2.end)
-t4: [forget(waiting(c))] if(free(s) && low_temp(s))
+t4: [forget(waiting(c))] if(free(out s) && low_temp(out s))
 t5: when(exitzone(c)) [NWaiting:=NWaiting+1; forget(waiting(c))]
 p5: [open_exit_barrier()]
 t7: when(parked(c,s)) [forget(assigned(c,s)); remember(parked(c,s)); NWaiting:=NWaiting+1]
