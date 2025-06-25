@@ -5,8 +5,8 @@ VARSREAL:
 DISCRETE: do(INT); do2(INT)
 DURATIVE: 
 TIMERS: 
-INIT: x:=1; y:=3; see(100)
+INIT: x:=1; y:=3; z:=4
 
 <TR>
-see(out z) && z > 150 -> do2(z)
-x==1 -> do(x) [x:=x+1; remember(see(200))]
+see(out z) -> do2(z)
+x==1 -> do(x) [x:=x+1]

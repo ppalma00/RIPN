@@ -108,33 +108,36 @@ public class ExpressionEvaluator {
 	            }
 
 	            if (compatible) {
-	                // Evaluamos la condición completa con el binding actual
-	                Map<String, Object> candidateContext = new HashMap<>();
-	                candidateContext.putAll(store.getAllIntVars());
-	                candidateContext.putAll(store.getAllRealVars());
-
-	                for (String param : outVarsMap.keySet()) {
-	                    if (store.containsIntVar(param)) {
-	                        candidateContext.put(param, store.getIntVar(param));
-	                    } else if (store.containsRealVar(param)) {
-	                        candidateContext.put(param, store.getRealVar(param));
+	                boolean hasOutInPredicate = params.stream().anyMatch(p -> outVarsMap.getOrDefault(p, false));
+	                if (hasOutInPredicate && !expressions.isEmpty()) {
+	                    // Requiere evaluar expresión con el binding actual
+	                    Map<String, Object> candidateContext = new HashMap<>();
+	                    candidateContext.putAll(store.getAllIntVars());
+	                    candidateContext.putAll(store.getAllRealVars());
+	                    for (String var : outVarsMap.keySet()) {
+	                        if (store.containsIntVar(var)) candidateContext.put(var, store.getIntVar(var));
+	                        if (store.containsRealVar(var)) candidateContext.put(var, store.getRealVar(var));
 	                    }
-	                }
 
-	                String exprOnly = String.join(" && ", expressions);
-	                try {
-	                    Object result = MVEL.eval(exprOnly, candidateContext);
-	                    if (result instanceof Boolean && (Boolean) result) {
-	                        matchFound = true;
-	                        break;
+	                    String exprOnly = String.join(" && ", expressions);
+	                    try {
+	                        Object result = MVEL.eval(exprOnly, candidateContext);
+	                        if (result instanceof Boolean && (Boolean) result) {
+	                            matchFound = true;
+	                            break;
+	                        }
+	                    } catch (Exception e) {
+	                        logger.log("❌ Error evaluando expresión lógica/arimética con binding: " + exprOnly + " → " + e.getMessage(), true, false);
+	                        return false;
 	                    }
-	                } catch (Exception e) {
-	                    logger.log("❌ Error evaluando expresión lógica/arimética con binding: " + exprOnly + " → " + e.getMessage(), true, false);
-	                    return false;
+	                } else {
+	                    // No hay out o no hay expresión, basta con el matching
+	                    matchFound = true;
+	                    break;
 	                }
 	            }
-
 	        }
+
 
 	        if (negated) matchFound = !matchFound;
 	        if (!matchFound) return false;
