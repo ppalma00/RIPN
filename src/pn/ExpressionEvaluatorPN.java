@@ -66,6 +66,12 @@ public class ExpressionEvaluatorPN {
 
 	        while (matcher.find()) {
 	            String factBase = matcher.group(1);
+	            boolean negated = false;
+	            if (factBase.startsWith("!")) {
+	                negated = true;
+	                factBase = factBase.substring(1);
+	            }
+
 	            String[] params = matcher.group(2).trim().isEmpty() ? new String[0] : matcher.group(2).trim().split("\\s*,\\s*");
 	            List<List<Object>> instances = beliefStore.getActiveFacts().getOrDefault(factBase, Collections.emptyList());
 
@@ -173,7 +179,8 @@ public class ExpressionEvaluatorPN {
 	                    }
 	                }
 
-	                matcher.appendReplacement(processedCondition, String.valueOf(matchFound));
+	                boolean resultPred = negated ? !matchFound : matchFound;
+	                matcher.appendReplacement(processedCondition, String.valueOf(resultPred));
 	            } else {
 	                outer:
 	                for (List<Object> instance : instances) {

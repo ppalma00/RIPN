@@ -3,10 +3,9 @@ PERCEPTS: see(INT)
 VARSINT: x; y; z
 VARSREAL:
 DISCRETE: do(INT); do2(INT)
-DURATIVE: 
-TIMERS: 
-INIT: x:=1; y:=3; z:=4
+TIMERS: timer1
+INIT: x:=1; y:=3; z:=4; see(5)
 
 <TR>
-see(out z) -> do2(z)
-x==1 -> do(x) [x:=x+1]
+!see(_) -> do2(z); timer1.pause()
+x==1 -> do(x); timer1.start(6) [x:=x+1; forget(see(_))]

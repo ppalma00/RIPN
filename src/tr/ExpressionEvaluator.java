@@ -12,17 +12,16 @@ public class ExpressionEvaluator {
 	    List<String> predicates = new ArrayList<>();
 	    List<String> expressions = new ArrayList<>();
 
-	    // Separar partes unidas por &&
 	    for (String rawPart : expr.split("&&")) {
 	        String part = rawPart.trim();
 
-	        // Si parece un predicado: nombre(args)
-	        if (part.matches("[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(.*\\)")) {
+	        if (part.matches("!?[a-zA-Z_][a-zA-Z0-9_]*\\s*\\(.*\\)")) {
 	            predicates.add(part);
 	        } else {
 	            expressions.add(part);
 	        }
 	    }
+
 
 	    // Primero: evaluar predicados (con o sin out)
 	    for (String part : predicates) {
@@ -138,9 +137,9 @@ public class ExpressionEvaluator {
 	            }
 	        }
 
-
-	        if (negated) matchFound = !matchFound;
-	        if (!matchFound) return false;
+	        if ((negated && matchFound) || (!negated && !matchFound)) {
+	            return false;
+	        }
 	    }
 
 	    // Luego: evaluar expresión lógica/arimética (ej. x==2)

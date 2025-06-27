@@ -52,6 +52,21 @@ public class TRParser {
 	    validateVariablesInRules(ruleConditions, beliefStore);
 	    return program;
 	}
+	private static void checkBalancedParentheses(String str, String context) {
+	    int count = 0;
+	    for (char c : str.toCharArray()) {
+	        if (c == '(') count++;
+	        else if (c == ')') count--;
+	        if (count < 0) {
+	            logger.log("❌ Error: Too many ')' in " + context + ": " + str, true, false);
+	            System.exit(1);
+	        }
+	    }
+	    if (count > 0) {
+	        logger.log("❌ Error: Missing ')' in " + context + ": " + str, true, false);
+	        System.exit(1);
+	    }
+	}
 
 	private static void parseInit(String line, BeliefStore beliefStore) {
 	    String[] initializations = line.substring(5).trim().split(";");
@@ -143,10 +158,17 @@ public class TRParser {
 	        System.exit(1);
 	    }
 	    validateLogicalCondition(conditionStr, beliefStore, line);
-	    validateActionsInRule(actionsStr, beliefStore, line); 
+
+	    if (!actionsStr.isEmpty()) {
+	        checkBalancedParentheses(actionsStr, "actions in rule: " + line);
+	        validateActionsInRule(actionsStr, beliefStore, line);
+	    }
+
 	    if (!updatesStr.isEmpty()) {
+	        checkBalancedParentheses(updatesStr, "updates in rule: " + line);
 	        validateArithmeticExpressions(updatesStr, line);
 	    }
+
 	    List<String> discreteActions = new ArrayList<>();
 	    List<String> durativeActions = new ArrayList<>();
 	    if (!actionsStr.isEmpty()) {
