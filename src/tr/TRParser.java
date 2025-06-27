@@ -220,11 +220,13 @@ public class TRParser {
 	        }
 	    }
 	    String cleanedConditionStr = conditionStr.replaceAll("\\bout\\s+", "");
+	    String finalCleanedConditionStr = cleanedConditionStr.replaceAll("\\b(\\w+)\\.end\\b", "$1_end");
 
 	    Predicate<BeliefStore> condition = beliefStoreState -> {
 	        ExpressionEvaluator evaluator = new ExpressionEvaluator();
-	        return evaluator.evaluateLogicalExpression(cleanedConditionStr, beliefStoreState, logger, outVarsMap);
+	        return evaluator.evaluateLogicalExpression(finalCleanedConditionStr, beliefStoreState, logger, outVarsMap);
 	    };
+
 
 
 	    TRRule rule = new TRRule(condition, conditionStr, discreteActions, durativeActions, beliefStoreUpdates, outVarsMap);

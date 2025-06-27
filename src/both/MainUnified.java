@@ -57,7 +57,7 @@ public class MainUnified implements Observer {
     private void runPetriNet(BeliefStore bs, MainUnified main){
         new Thread(() -> {
             try {
-                String filename = "RIPN_PN.txt";
+                String filename = "RIPN_PN parking.txt";
                 Map<String, List<String>> placeVarUpdates = new HashMap<>();
                 Map<String, List<String>> transitionVarUpdates = new HashMap<>();
                 Map<String, String> placeConds = new HashMap<>();
@@ -103,7 +103,7 @@ public class MainUnified implements Observer {
     private static void runTRProgram(BeliefStore bs, MainUnified main) {
         new Thread(() -> {
             try {
-                String trFile = "RIPN_TR.txt";
+                String trFile = "RIPN_TR parking.txt";
                 TRProgram program = TRParser.parse(trFile, bs, TR_CYCLE_DELAY_MS, main.loggerTR);
                 program.addObserver(main);
                 if (!bs.getDeclaredPercepts().isEmpty()) {

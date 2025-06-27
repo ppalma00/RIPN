@@ -7,5 +7,5 @@ TIMERS: timer1
 INIT: x:=1; y:=3; z:=4; see(5)
 
 <TR>
-!see(_) -> do2(z); timer1.pause()
+timer1.end-> do2(z)
 x==1 -> do(x); timer1.start(6) [x:=x+1; forget(see(_))]

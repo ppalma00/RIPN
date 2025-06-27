@@ -1,23 +1,601 @@
-[2025-06-11 10:32:37.629] Initiating TR program...
-[2025-06-11 10:32:37.716] 🔄 Executing rule with condition: x==1
-[2025-06-11 10:32:37.721] ⏩ Executing discrete action: adi with parameters: [3.0, 4.0]
-[2025-06-11 10:33:51.931] 🔄 Executing rule with condition: True
-[2025-06-11 10:33:51.932] 🛠 Extracted timer command: start for timer: timer1
-[2025-06-11 10:33:51.932] ⏳ Starting durative action: adu(5)
-[2025-06-11 10:33:52.935] ✅ Stopping durative action: adu(5)
-[2025-06-11 10:33:52.936] 🔄 Executing rule with condition: x==1
-[2025-06-11 10:33:52.936] ⏩ Executing discrete action: adi with parameters: [3.0, 4.0]
-[2025-06-11 10:33:53.942] 🔄 Executing rule with condition: x==3 && fact1
-[2025-06-11 10:33:53.945] 📤 Event sent to environment: ev3[]
-[2025-06-11 10:33:55.947] 🔄 Executing rule with condition: x==1
-[2025-06-11 10:33:55.948] ⏩ Executing discrete action: adi with parameters: [3.0, 4.0]
-[2025-06-11 10:33:56.952] 🔄 Executing rule with condition: percept1
-[2025-06-11 10:33:56.952] ⏩ Executing discrete action: adi with parameters: [1.0, 2.0]
-[2025-06-11 10:34:09.984] 🔄 Executing rule with condition: x==3 && fact1
-[2025-06-11 10:34:09.985] 📤 Event sent to environment: ev3[]
-[2025-06-11 10:34:11.993] 🔄 Executing rule with condition: x==1
-[2025-06-11 10:34:11.994] ⏩ Executing discrete action: adi with parameters: [3.0, 4.0]
-[2025-06-11 10:34:12.998] 🔄 Executing rule with condition: timer1.end
-[2025-06-11 10:34:12.998] ⏩ Executing discrete action: nil with parameters: []
-[2025-06-11 10:34:14.002] 🔄 Executing rule with condition: x==1
-[2025-06-11 10:34:14.002] ⏩ Executing discrete action: adi with parameters: [3.0, 4.0]
+[2025-06-27 12:33:41.021] Initiating TR program...
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True
+❌ Error en MVEL: [Error: unresolvable property or identifier: high_demand]
+[Near : {... high_demand ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: high_demand && !free(_)
+❌ Error en MVEL: [Error: unresolvable property or identifier: True]
+[Near : {... True ....}]
+             ^
+[Line: 1, Column: 1]
+   ❌ Expresión: True

@@ -141,15 +141,17 @@ public class ExpressionEvaluator {
 	            return false;
 	        }
 	    }
-
-	    // Luego: evaluar expresión lógica/arimética (ej. x==2)
 	    if (!expressions.isEmpty()) {
 	        String logicalExpr = String.join(" && ", expressions);
 	        try {
 	            Map<String, Object> context = new HashMap<>();
 	            context.putAll(store.getAllIntVars());
 	            context.putAll(store.getAllRealVars());
-
+	            for (String timer : store.getDeclaredTimers()) {
+	                String timerEndFact = timer + "_end";
+	                boolean isActive = store.isFactActive(timerEndFact);
+	                context.put(timerEndFact, isActive);
+	            }
 	            Object result = MVEL.eval(logicalExpr, context);
 	            if (result instanceof Boolean) return (Boolean) result;
 	            logger.log("❌ Error: expresión no booleana: " + logicalExpr, true, false);

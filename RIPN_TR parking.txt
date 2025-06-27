@@ -1,5 +1,5 @@
 FACTS: 
-PERCEPTS: free(INT); assigned(INT) 
+PERCEPTS: free(INT); assigned(INT, INT) 
 VARSINT: id; slot
 VARSREAL:
 DISCRETE: 
@@ -8,7 +8,7 @@ TIMERS: timer1
 INIT: id:=9
 
 <TR>
-assigned(out slot) -> park(slot)
+assigned(id, out slot) -> park(slot)
 free(out slot) && timer1.end -> park(slot)
-high_demand && !free(out slot) -> exiting_zone()
+high_demand && !free(_) -> exiting_zone()
 True -> _send("new_car", id); timer1.start(600)

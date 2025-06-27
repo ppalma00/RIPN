@@ -1,30 +1,33 @@
-ℹ️ Initialized integer variable 'x' to 0
-ℹ️ Initialized integer variable 'y' to 0
-ℹ️ Initialized integer variable 'z' to 0
-[2025-06-18 10:50:43.649] Current state of the Petri Net:
+[2025-06-27 12:33:40.977] Current state of the Petri Net:
+p0: ○
+p1: ○
+p2: ○
+p3: ○
+p4: ●
+p5: ○
+🚫 Transition 't4' blocked by condition: free(out s) && low_temp(s)
+🚫 Transition 't6' blocked by condition: timer2.end
+🚫 Transition 't1' blocked by condition: NWaiting >= limit
+[2025-06-27 12:33:41.071] 🔥 Transition fired: t8
+[2025-06-27 12:33:41.071] Current state of the Petri Net:
 p0: ●
 p1: ○
-[2025-06-18 10:50:43.650] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: []
-   Active facts with parameters: {}
-   Integer variables: {x=1, y=0, z=0}
-   Real variables: {}
-
-🚫 Transition 't1' blocked by condition: x>10
-⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-06-18 10:50:52.006] 🔥 Transition fired: t0
-[2025-06-18 10:50:52.006] Current state of the Petri Net:
+p2: ○
+p3: ○
+p4: ○
+p5: ○
+🚫 Transition 't4' blocked by condition: free(out s) && low_temp(s)
+🚫 Transition 't6' blocked by condition: timer2.end
+🚫 Transition 't1' blocked by condition: NWaiting >= limit
+[2025-06-27 12:33:43.079] 🔥 Transition fired: t2
+[2025-06-27 12:33:43.079] Current state of the Petri Net:
 p0: ○
 p1: ●
-[2025-06-18 10:50:52.006] 
-🔹 Current BeliefStore state:
-   Active facts without parameters: []
-   Active facts with parameters: {}
-   Integer variables: {x=55, y=0, z=0}
-   Real variables: {}
-
-[2025-06-18 10:50:54.010] 🔥 Transition fired: t1
-[2025-06-18 10:50:54.010] Current state of the Petri Net:
-p0: ●
-p1: ○
+p2: ○
+p3: ○
+p4: ○
+p5: ○
+🚫 Transition 't4' blocked by condition: free(out s) && low_temp(s)
+🚫 Transition 't6' blocked by condition: timer2.end
+🚫 Transition 't1' blocked by condition: NWaiting >= limit
+⏸️ No non-immediate transitions enabled at this time. Waiting...

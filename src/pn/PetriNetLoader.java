@@ -80,8 +80,9 @@ public class PetriNetLoader {
 	            int i = 0;
 	        
 	            if (tokens.length != places.size()) {
-	                throw new IllegalArgumentException("❌ Error: The number of entries in INITMARKING (" + tokens.length + 
-	                                                   ") does not match the number of PLACES (" + places.size() + ").");
+	            	logger.log("❌ Error: The number of entries in INITMARKING (" + tokens.length + 
+	                                                   ") does not match the number of PLACES (" + places.size() + ").", true, false);
+	            	System.exit(1);
 	            }
 	            for (String placeName : placeOrder) {
 	                boolean hasToken = tokens[i].trim().equals("1");
@@ -100,7 +101,8 @@ public class PetriNetLoader {
 	            String[] nodes = arc.trim().split(isInhibitor ? "-o>" : "->");
 
 	            if (nodes.length != 2) {
-	                throw new IllegalArgumentException("❌ Error: Invalid arc syntax → '" + arc + "'");
+	            	logger.log("❌ Error: Invalid arc syntax → '" + arc + "'", true, false);
+	            	System.exit(1);
 	            }
 
 	            String from = nodes[0].trim();
@@ -111,18 +113,21 @@ public class PetriNetLoader {
 	            boolean toIsPlace = places.containsKey(to);
 	            boolean toIsTransition = transitions.containsKey(to);
 	            if ((fromIsPlace && toIsPlace) || (fromIsTransition && toIsTransition)) {
-	                throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Arcs must connect a PLACE and a TRANSITION, not two PLACES or two TRANSITIONS.");
+	            	logger.log("❌ Error: Invalid arc '" + arc + "'. Arcs must connect a PLACE and a TRANSITION, not two PLACES or two TRANSITIONS.", true, false);
+	                System.exit(1);
 	            }
 	            if (!fromIsPlace && !fromIsTransition) {
-	                throw new IllegalArgumentException("❌ Error: '" + from + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.");
+	            	logger.log("❌ Error: '" + from + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.", true, false);
+	                System.exit(1);
 	            }
 	            if (!toIsPlace && !toIsTransition) {
-	                throw new IllegalArgumentException("❌ Error: '" + to + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.");
+	            	logger.log("❌ Error: '" + to + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.", true, false);
+	                System.exit(1);
 	            }
 
-	            Place place;
-	            Transition transition;
-	            boolean isInput;
+	            Place place=null;
+	            Transition transition=null;
+	            boolean isInput=false;
 
 	            if (fromIsPlace && toIsTransition) {
 	                place = places.get(from);
@@ -133,10 +138,9 @@ public class PetriNetLoader {
 	                transition = transitions.get(from);
 	                isInput = false;
 	            } else {
-	            	throw new IllegalArgumentException("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.");
-	            	
+	            	logger.log("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.", true, false);
+	            	System.exit(1);
 	            }
-
 	            arcs.add(new Arc(place, transition, isInput, isInhibitor));
 	            net.addArc(from, to, isInhibitor);
 	        }

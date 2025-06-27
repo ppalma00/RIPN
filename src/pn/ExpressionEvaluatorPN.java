@@ -59,7 +59,11 @@ public class ExpressionEvaluatorPN {
 	        if (contextOverride != null) context.putAll(contextOverride);
 	        context.putAll(beliefStore.getAllIntVars());
 	        context.putAll(beliefStore.getAllRealVars());
-
+	        for (String timer : beliefStore.getDeclaredTimers()) {
+	            String timerEndFact = timer + "_end";
+	            boolean isActive = beliefStore.isFactActive(timerEndFact);
+	            context.put(timerEndFact, isActive);
+	        }
 	        Pattern factPattern = Pattern.compile("\\b(\\w+)\\(([^)]*)\\)");
 	        Matcher matcher = factPattern.matcher(condition);
 	        StringBuffer processedCondition = new StringBuffer();
