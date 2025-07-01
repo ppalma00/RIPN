@@ -1,11 +1,11 @@
-FACTS: 
-PERCEPTS: see(INT)
-VARSINT: x; y; z
+FACTS: see(INT)
+PERCEPTS:
+VARSINT: x
 VARSREAL:
-DISCRETE: do(INT); do2(INT)
-TIMERS: timer1
-INIT: x:=1; y:=3; z:=4; see(5)
+DISCRETE: do(INT)
+TIMERS: t1
+INIT: x:=1; see(8)
 
 <TR>
-timer1.end-> do2(z)
-x==1 -> do(x); timer1.start(6) [x:=x+1; forget(see(_))]
+see(out x) && t1.end -> do(x)
+true -> t1.start(5)

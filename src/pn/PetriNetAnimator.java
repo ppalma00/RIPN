@@ -26,10 +26,16 @@ public class PetriNetAnimator implements Runnable {
         boolean waitingLogged = false;
         BeliefStore beliefStore = net.getBeliefStore();
         Map<String, Boolean> previousMarking = new HashMap<>();
-        for (String placeName : net.getPlaces().keySet()) {
-            previousMarking.put(placeName, false);
+        for (Place p : net.getPlaces().values()) {
+            if (p.hasToken()) {
+                net.executePlaceActions(p.getName());
+                previousMarking.put(p.getName(), true);
+            } else {
+                previousMarking.put(p.getName(), false);
+            }
         }
-
+        net.printState();
+        previousMarking = net.captureCurrentMarking();
         while (true) {
             Map<String, Boolean> currentMarking = net.captureCurrentMarking();
 
@@ -62,6 +68,15 @@ public class PetriNetAnimator implements Runnable {
                 String t = immediateTransitions.get(0);
                 Map<String, Boolean> beforeFire = net.captureCurrentMarking();
                 List<String> discreteActions = net.fire(t);
+
+                Transition firedTransition = net.getTransitions().get(t);
+                if (firedTransition != null) {
+                    List<Place> outputPlaces = net.getOutputPlaces(firedTransition);
+                    for (Place p : outputPlaces) {
+                        net.executePlaceActions(p.getName());
+                    }
+                }
+
                 waitingLogged = false;
                 net.updateDurativeActions(beforeFire);
                 net.checkExpiredTimers();
@@ -103,6 +118,7 @@ public class PetriNetAnimator implements Runnable {
                     logger.log("Simulation interrupted.", true, true);
                     break;
                 }
+                
                 previousMarking = new HashMap<>(currentMarking);
                 continue;
             }
@@ -135,6 +151,16 @@ public class PetriNetAnimator implements Runnable {
 
             Map<String, Boolean> beforeFire = net.captureCurrentMarking();
             List<String> discreteActions = net.fire(t);
+            
+            Transition firedTransition = net.getTransitions().get(t);
+            if (firedTransition != null) {
+                List<Place> outputPlaces = net.getOutputPlaces(firedTransition);
+                for (Place p : outputPlaces) {
+                    net.executePlaceActions(p.getName());
+                }
+            }
+
+            
             waitingLogged = false;
 
             net.updateDurativeActions(beforeFire);

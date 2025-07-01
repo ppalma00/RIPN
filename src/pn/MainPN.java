@@ -23,7 +23,7 @@ public class MainPN implements Observer {
             BeliefStore beliefStore = new BeliefStore();
             beliefStore.setLogger(logger);
             Map<String, List<String>> placeVariableUpdates = new HashMap<>();
-            String filename = "RIPN_PN.txt";
+            String filename = "RIPN_PN parking.txt";
             BeliefStoreLoader.loadFromFile(filename, beliefStore, logger);
             PetriNet net = PetriNetLoader.loadFromFile(filename, beliefStore, logger);
             net.setLogger(logger);
@@ -45,7 +45,7 @@ public class MainPN implements Observer {
             Map<String, Boolean> emptyMarking = new HashMap<>(); 
             
             net.updateDurativeActions(emptyMarking); 
-            net.printState();
+           // net.printState();
             PetriNetAnimator animator = new PetriNetAnimator(net, 2000);
             if (EventPool.getInstance().hasDeclaredEvents()) {
                 SwingUtilities.invokeLater(() -> new GUIEvents());

@@ -171,9 +171,9 @@ public class PetriNet {
             boolean wasEmpty = !p.hasToken();
             p.setToken(true);
 
-            if (wasEmpty) {
-                executePlaceActions(p.getName());
-            }
+          // if (wasEmpty) {
+            //    executePlaceActions(p.getName());
+          // }
         }
 
         for (Place p : inputPlaces) {
@@ -197,6 +197,15 @@ public class PetriNet {
     }
     public Observer getObserver() {
         return observer;
+    }
+    public List<Place> getOutputPlaces(Transition t) {
+        List<Place> outputPlaces = new ArrayList<>();
+        for (Arc arc : arcs) {
+            if (arc.getTransition() == t && !arc.isInput()) {
+                outputPlaces.add(arc.getPlace());
+            }
+        }
+        return outputPlaces;
     }
 
     private void executeTransitionActions(String transitionName) {
@@ -388,11 +397,11 @@ public class PetriNet {
 
                 if (update.startsWith("remember(") && update.endsWith(")")) {
                     String fact = update.substring(9, update.length() - 1).trim();
-                    processRememberFact(fact);
+                    processRememberFactWithContext(fact, null);
 
                 } else if (update.startsWith("forget(") && update.endsWith(")")) {
                     String fact = update.substring(7, update.length() - 1).trim();
-                    processForgetFact(fact);
+                    processForgetFactWithContext(fact, null);
 
                 } else if (update.contains(":=")) {
                     String[] parts = update.split(":=");

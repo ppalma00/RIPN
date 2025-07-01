@@ -4,24 +4,62 @@
 ℹ️ Initialized integer variable 's' to 0
 ℹ️ Initialized integer variable 'id' to 0
 ℹ️ Initialized integer variable 'slot' to 0
-[2025-06-27 12:33:40.978] 
+[2025-07-01 10:22:35.576] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {}
+   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
    Integer variables: {NWaiting=0, c=0, s=0, limit=100, id=9, slot=0}
    Real variables: {}
 
-[2025-06-27 12:33:41.071] 
+[2025-07-01 10:22:35.759] ⏳ Timer started: timer1 for 600 seconds
+[2025-07-01 10:22:36.764] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {}
-   Integer variables: {NWaiting=1, c=0, s=0, limit=100, id=9, slot=0}
+   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
+   Integer variables: {NWaiting=0, c=0, s=10, limit=100, id=9, slot=20}
    Real variables: {}
 
-[2025-06-27 12:33:43.079] 
+[2025-07-01 10:22:37.757] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {waiting=[[0]], }
-   Integer variables: {NWaiting=1, c=0, s=0, limit=100, id=9, slot=0}
+   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
+   Integer variables: {NWaiting=0, c=9, s=10, limit=100, id=9, slot=20}
+   Real variables: {}
+
+[2025-07-01 10:22:39.765] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=20}
+   Real variables: {}
+
+[2025-07-01 10:22:41.770] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {waiting=[[9]], low_temp=[[10], [20], [30]], free=[[10], [20]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=20}
+   Real variables: {}
+
+[2025-07-01 10:22:43.777] ⏳ Timer started: timer2 for 300 seconds
+[2025-07-01 10:22:43.779] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20], [30]], free=[[20]], }
+   Integer variables: {NWaiting=1, c=9, s=20, limit=100, id=9, slot=20}
+   Real variables: {}
+
+[2025-07-01 10:22:44.790] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20], [30]], free=[[20]], }
+   Integer variables: {NWaiting=1, c=9, s=20, limit=100, id=9, slot=10}
+   Real variables: {}
+
+[2025-07-01 10:22:47.788] ⏳ Timer started: timer2 for 300 seconds
+[2025-07-01 10:22:47.804] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10], [9, 20]], low_temp=[[10], [20], [30]], }
+   Integer variables: {NWaiting=1, c=9, s=20, limit=100, id=9, slot=10}
    Real variables: {}
 

@@ -113,11 +113,26 @@ public class ExpressionEvaluator {
 	                    Map<String, Object> candidateContext = new HashMap<>();
 	                    candidateContext.putAll(store.getAllIntVars());
 	                    candidateContext.putAll(store.getAllRealVars());
+	                 // Añadir todos los hechos declarados (sin parámetros) como false si no existen
+	                    for (String fact : store.getDeclaredFacts()) {
+	                        if (!fact.contains("(")) {
+	                            candidateContext.putIfAbsent(fact, false);
+	                        }
+	                    }
+	                    for (String timer : store.getDeclaredTimers()) {
+	                        String timerEndFact = timer + "_end";
+	                        candidateContext.putIfAbsent(timerEndFact, false);
+	                    }
+
 	                    for (String var : outVarsMap.keySet()) {
 	                        if (store.containsIntVar(var)) candidateContext.put(var, store.getIntVar(var));
 	                        if (store.containsRealVar(var)) candidateContext.put(var, store.getRealVar(var));
 	                    }
-
+	                    for (String timer : store.getDeclaredTimers()) {
+	                        String timerEndFact = timer + "_end";
+	                        boolean isActive = store.isFactActive(timerEndFact);
+	                        candidateContext.put(timerEndFact, isActive);
+	                    }
 	                    String exprOnly = String.join(" && ", expressions);
 	                    try {
 	                        Object result = MVEL.eval(exprOnly, candidateContext);
@@ -144,9 +159,25 @@ public class ExpressionEvaluator {
 	    if (!expressions.isEmpty()) {
 	        String logicalExpr = String.join(" && ", expressions);
 	        try {
-	            Map<String, Object> context = new HashMap<>();
-	            context.putAll(store.getAllIntVars());
-	            context.putAll(store.getAllRealVars());
+	        	Map<String, Object> context = new HashMap<>();
+	        	context.putAll(store.getAllIntVars());
+	        	context.putAll(store.getAllRealVars());
+	        	for (String fact : store.getDeclaredFacts()) {
+	        	    if (!fact.contains("(")) {
+	        	        context.putIfAbsent(fact, false);
+	        	    }
+	        	}
+	        	for (String timer : store.getDeclaredTimers()) {
+	        	    String timerEndFact = timer + "_end";
+	        	    context.putIfAbsent(timerEndFact, false);
+	        	}
+
+	        	for (String timer : store.getDeclaredTimers()) {
+	        	    String timerEndFact = timer + "_end";
+	        	    boolean isActive = store.isFactActive(timerEndFact);
+	        	    context.put(timerEndFact, isActive);
+	        	}
+
 	            for (String timer : store.getDeclaredTimers()) {
 	                String timerEndFact = timer + "_end";
 	                boolean isActive = store.isFactActive(timerEndFact);
