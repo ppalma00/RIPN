@@ -1,7 +1,7 @@
 FACTS: high_demand; waiting(INT); free(INT); low_temp(INT); assigned(INT,INT); parked(INT, INT)
 VARSINT: NWaiting; limit; c; s
 VARSREAL: 
-INIT: NWaiting:=0; limit:=100; low_temp(10); low_temp(20); low_temp(30); free(10); free(20)
+INIT: NWaiting:=0; limit:=100; low_temp(10); low_temp(20); free(10)
 DISCRETE: open_exit_barrier(); open_entrance_barrier()
 DURATIVE: keepopenilluminated()
 TIMERS: timer2
@@ -27,4 +27,4 @@ t4: [forget(waiting(c))] if(free(out s) && low_temp(s))
 t5: when(exitzone(c)) [NWaiting:=NWaiting-1; forget(waiting(c))]
 p5: [open_exit_barrier()]
 t7: when(parked(c,s)) [forget(assigned(c,s)); remember(parked(c,s)); NWaiting:=NWaiting-1]
-p2: [keepopenilluminated(); forget(free(s)); remember(assigned(c,s)); timer2.start(10)]  
+p2: [keepopenilluminated(); forget(free(s)); remember(assigned(c,s)); timer2.start(300)]  

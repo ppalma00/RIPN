@@ -13,5 +13,5 @@ EVENTS: ev(0)
 
 <PN>
 p0: [act(); remember(see(8))]
-t0: when (ev)[remember(see(9))] 
-p1: [x:=4; forget(see(8)); remember(see(99))]
+t0: [remember(see(9))] 
+p1: [x:=4; forget(see(8)); t1.start(100)]

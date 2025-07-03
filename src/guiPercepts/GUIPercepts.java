@@ -34,14 +34,20 @@ public class GUIPercepts extends JFrame {
             for (String percept : beliefStore.getDeclaredPercepts()) {
                 int arity = beliefStore.getFactParameterCount(percept);
 
-                final List<String> paramTypes = beliefStore.getPerceptParameterTypes(percept);  // ✅ Esto es clave
+                final List<String> paramTypes;
+                if (arity > 0) {
+                    paramTypes = beliefStore.getPerceptParameterTypes(percept);
+                } else {
+                    paramTypes = new ArrayList<>();
+                }
 
                 JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT));
                 row.add(new JLabel(percept + ":"));
 
                 List<JTextField> fields = new ArrayList<>();
+
                 for (int i = 0; i < arity; i++) {
-                    String expectedType = paramTypes.get(i);
+                    String expectedType = (i < paramTypes.size()) ? paramTypes.get(i) : "INT";
                     JPanel fieldGroup = new JPanel(new BorderLayout(2, 2));
 
                     JLabel typeLabel = new JLabel(expectedType);
@@ -62,15 +68,14 @@ public class GUIPercepts extends JFrame {
                 row.add(addButton);
                 row.add(removeButton);
 
-                // ✅ ADD button listener
                 addButton.addActionListener(e -> {
-                    if (fields.stream().anyMatch(f -> f.getText().trim().equals("_"))) {
-                        JOptionPane.showMessageDialog(null, "Wildcard '_' not allowed when adding percepts.", "Wildcard Error", JOptionPane.ERROR_MESSAGE);
-                        return;
-                    }
-
                     StringBuilder fact = new StringBuilder(percept);
+
                     if (!fields.isEmpty()) {
+                        if (fields.stream().anyMatch(f -> f.getText().trim().equals("_"))) {
+                            JOptionPane.showMessageDialog(null, "Wildcard '_' not allowed when adding percepts.", "Wildcard Error", JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
                         fact.append("(");
                         for (int i = 0; i < fields.size(); i++) {
                             String text = fields.get(i).getText().trim();
@@ -78,34 +83,29 @@ public class GUIPercepts extends JFrame {
                                 JOptionPane.showMessageDialog(null, "All parameters are required.", "Missing Input", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
-
                             String expectedType = paramTypes.get(i);
                             try {
                                 if (expectedType.equals("INT")) {
                                     Integer.parseInt(text);
                                 } else if (expectedType.equals("REAL")) {
                                     Double.parseDouble(text);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Unknown parameter type: " + expectedType, "Type Error", JOptionPane.ERROR_MESSAGE);
-                                    return;
                                 }
                             } catch (NumberFormatException ex) {
-                                JOptionPane.showMessageDialog(null, "Parameter " + (i + 1) + " must be of type " + expectedType + ".", "Format Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(null, "Parameter " + (i+1) + " must be of type " + expectedType + ".", "Format Error", JOptionPane.ERROR_MESSAGE);
                                 return;
                             }
-
                             fact.append(text);
-                            if (i < fields.size() - 1) fact.append(",");
+                            if (i < fields.size()-1) fact.append(",");
                         }
                         fact.append(")");
                     }
                     beliefStore.addFact(fact.toString());
-                    JOptionPane.showMessageDialog(null, "Percept " + fact.toString()+" added!");
+                    JOptionPane.showMessageDialog(null, "Percept " + fact.toString() + " added!");
                 });
 
-                // ✅ REMOVE button listener
                 removeButton.addActionListener(e -> {
                     StringBuilder fact = new StringBuilder(percept);
+
                     if (!fields.isEmpty()) {
                         fact.append("(");
                         for (int i = 0; i < fields.size(); i++) {
@@ -123,26 +123,45 @@ public class GUIPercepts extends JFrame {
                                         Double.parseDouble(text);
                                     }
                                 } catch (NumberFormatException ex) {
-                                    JOptionPane.showMessageDialog(null, "Parameter " + (i + 1) + " must be of type " + expectedType + " or '_'.", "Format Error", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "Parameter " + (i+1) + " must be of type " + expectedType + " or '_'.", "Format Error", JOptionPane.ERROR_MESSAGE);
                                     return;
                                 }
                             }
                             fact.append(text);
-                            if (i < fields.size() - 1) fact.append(",");
+                            if (i < fields.size()-1) fact.append(",");
                         }
                         fact.append(")");
                     }
-                    if (fact.toString().contains("_")) {
-                        beliefStore.removeFactWithWildcard(fact.toString());
-                    } else {
-                        beliefStore.removeFact(fact.toString());
+
+                    String factStr = fact.toString();
+                    boolean useWildcard = false;
+
+                    if (factStr.contains("(")) {
+                        String paramStr = factStr.substring(factStr.indexOf("(") + 1, factStr.lastIndexOf(")"));
+                        if (!paramStr.isEmpty()) {
+                            String[] params = paramStr.split(",");
+                            for (String p : params) {
+                                if (p.trim().equals("_")) {
+                                    useWildcard = true;
+                                    break;
+                                }
+                            }
+                        }
                     }
-                    JOptionPane.showMessageDialog(null, "Percept "+ fact.toString()+ " removed!");
+
+                    boolean deleted;
+                    if (useWildcard) {
+                        beliefStore.removeFactWithWildcard(factStr);
+                    } else {
+                        beliefStore.removeFact(factStr);
+                    }
+
+                        JOptionPane.showMessageDialog(null, "Percept " + factStr + " removed!");
+                     
                 });
 
                 this.add(row);
             }
-
         }
     }
 

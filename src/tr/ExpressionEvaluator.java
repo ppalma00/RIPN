@@ -22,8 +22,6 @@ public class ExpressionEvaluator {
 	        }
 	    }
 
-
-	    // Primero: evaluar predicados (con o sin out)
 	    for (String part : predicates) {
 	        boolean negated = false;
 	        if (part.startsWith("!")) {
@@ -43,7 +41,6 @@ public class ExpressionEvaluator {
 	        List<String> params = new ArrayList<>();
 	        for (String a : args) params.add(a.trim());
 
-	        // Caso especial: comodín
 	        if (params.size() == 1 && params.get(0).equals("_")) {
 	            boolean exists = store.hasFactWithArity(predName, 1);
 	            if (negated) exists = !exists;
@@ -145,7 +142,6 @@ public class ExpressionEvaluator {
 	                        return false;
 	                    }
 	                } else {
-	                    // No hay out o no hay expresión, basta con el matching
 	                    matchFound = true;
 	                    break;
 	                }
@@ -158,31 +154,26 @@ public class ExpressionEvaluator {
 	    }
 	    if (!expressions.isEmpty()) {
 	        String logicalExpr = String.join(" && ", expressions);
-	        try {
-	        	Map<String, Object> context = new HashMap<>();
-	        	context.putAll(store.getAllIntVars());
-	        	context.putAll(store.getAllRealVars());
-	        	for (String fact : store.getDeclaredFacts()) {
-	        	    if (!fact.contains("(")) {
-	        	        context.putIfAbsent(fact, false);
-	        	    }
-	        	}
-	        	for (String timer : store.getDeclaredTimers()) {
-	        	    String timerEndFact = timer + "_end";
-	        	    context.putIfAbsent(timerEndFact, false);
-	        	}
 
-	        	for (String timer : store.getDeclaredTimers()) {
-	        	    String timerEndFact = timer + "_end";
-	        	    boolean isActive = store.isFactActive(timerEndFact);
-	        	    context.put(timerEndFact, isActive);
-	        	}
+	        // 👇 Sustituye hechos sin parámetros
+	        for (String fact : store.getDeclaredFacts()) {
+	            if (!fact.contains("(")) {
+	                boolean isActive = store.getActiveFactsNoParams().contains(fact);
+	                logicalExpr = logicalExpr.replaceAll("\\b" + fact + "\\b", String.valueOf(isActive));
+	            }
+	        }
+
+	        try {
+	            Map<String, Object> context = new HashMap<>();
+	            context.putAll(store.getAllIntVars());
+	            context.putAll(store.getAllRealVars());
 
 	            for (String timer : store.getDeclaredTimers()) {
 	                String timerEndFact = timer + "_end";
 	                boolean isActive = store.isFactActive(timerEndFact);
 	                context.put(timerEndFact, isActive);
 	            }
+
 	            Object result = MVEL.eval(logicalExpr, context);
 	            if (result instanceof Boolean) return (Boolean) result;
 	            logger.log("❌ Error: expresión no booleana: " + logicalExpr, true, false);
@@ -193,93 +184,97 @@ public class ExpressionEvaluator {
 	        }
 	    }
 
+
 	    return true;
 	}
 
 	public boolean evaluateLogicalExpression(String condition, BeliefStore beliefStore, LoggerManager logger) {
-        try {
-            condition = condition.replaceAll("\\bTrue\\b", "true").replaceAll("\\bFalse\\b", "false");
-            condition = condition.replaceAll("\\b(\\w+)\\.end\\b", "$1_end");     
-            Map<String, Object> context = new HashMap<>();
-            context.putAll(beliefStore.getAllIntVars());
-            context.putAll(beliefStore.getAllRealVars());
-            for (String fact : beliefStore.getActiveFactsNoParams()) {
-                context.put(fact, true);
-            }
-            for (Map.Entry<String, List<List<Object>>> entry : beliefStore.getActiveFacts().entrySet()) {
-                String factBase = entry.getKey();
-                for (List<Object> params : entry.getValue()) {
-                    String factWithParams = factBase + "(" + params.stream()
-                            .map(String::valueOf)
-                            .collect(Collectors.joining(",")) + ")";
-                    context.put(factWithParams, true);
-                }
-            }        
-            Set<String> intVars = beliefStore.getDeclaredIntVars();
-            Set<String> realVars = beliefStore.getDeclaredRealVars();
+	    try {
+	        condition = condition.replaceAll("\\bTrue\\b", "true").replaceAll("\\bFalse\\b", "false");
+	        condition = condition.replaceAll("\\b(\\w+)\\.end\\b", "$1_end");
 
-            Pattern factPattern = Pattern.compile("\\b(\\w+)\\(([^)]*)\\)"); 
-            Matcher matcher = factPattern.matcher(condition);
-            StringBuffer processedCondition = new StringBuffer();
-            while (matcher.find()) {
-                String factBase = matcher.group(1);
-                String params = matcher.group(2).trim();
-                String[] paramParts = params.isEmpty() ? new String[0] : params.split(",");
-                boolean matchFound = false;
+	        Map<String, Object> context = new HashMap<>();
+	        context.putAll(beliefStore.getAllIntVars());
+	        context.putAll(beliefStore.getAllRealVars());
 
-                List<List<Object>> factInstances = beliefStore.getActiveFacts().getOrDefault(factBase, Collections.emptyList());
-                outerLoop:
-                for (List<Object> instance : factInstances) {
-                    if (instance.size() != paramParts.length) continue;
-                    for (int i = 0; i < paramParts.length; i++) {
-                        String token = paramParts[i].trim();
-                        Object value = instance.get(i);
+	        for (String fact : beliefStore.getActiveFactsNoParams()) {
+	            context.put(fact, true);
+	        }
+	        for (Map.Entry<String, List<List<Object>>> entry : beliefStore.getActiveFacts().entrySet()) {
+	            String factBase = entry.getKey();
+	            for (List<Object> params : entry.getValue()) {
+	                String factWithParams = factBase + "(" + params.stream()
+	                        .map(String::valueOf)
+	                        .collect(Collectors.joining(",")) + ")";
+	                context.put(factWithParams, true);
+	            }
+	        }
 
-                        if (token.equals("_")) continue;
+	        Set<String> intVars = beliefStore.getDeclaredIntVars();
+	        Set<String> realVars = beliefStore.getDeclaredRealVars();
 
-                        if (intVars.contains(token)) {
-                            int val = ((Number) value).intValue();
-                            context.put(token, val);
-                            beliefStore.setIntVar(token, val);  // ✅ sincroniza con BeliefStore
-                        } else if (realVars.contains(token)) {
-                            double val = ((Number) value).doubleValue();
-                            context.put(token, val);
-                            beliefStore.setRealVar(token, val); // ✅ sincroniza con BeliefStore
-                        } else {
-                            // Constant match
-                            if (!String.valueOf(value).equals(token)) {
-                                continue outerLoop;
-                            }
-                        }
+	        for (String fact : beliefStore.getDeclaredFacts()) {
+	            if (!fact.contains("(")) {
+	                boolean isActive = beliefStore.getActiveFactsNoParams().contains(fact);
+	                condition = condition.replaceAll("\\b" + fact + "\\b", String.valueOf(isActive));
+	            }
+	        }
 
-                    }
-                    matchFound = true;
-                    break;
-                }
-                matcher.appendReplacement(processedCondition, String.valueOf(matchFound));
-            }
-           
-            matcher.appendTail(processedCondition);
-            condition = processedCondition.toString();
+	        Pattern factPattern = Pattern.compile("\\b(\\w+)\\(([^)]*)\\)");
+	        Matcher matcher = factPattern.matcher(condition);
+	        StringBuffer processedCondition = new StringBuffer();
+	        while (matcher.find()) {
+	            String factBase = matcher.group(1);
+	            String params = matcher.group(2).trim();
+	            String[] paramParts = params.isEmpty() ? new String[0] : params.split(",");
+	            boolean matchFound = false;
 
-            for (String fact : beliefStore.getDeclaredFacts()) {
-                if (!fact.contains("(")) { 
-                    boolean isActive = context.containsKey(fact) && context.get(fact) != null && (Boolean) context.get(fact);
-                    condition = condition.replaceAll("\\b" + fact + "\\b", String.valueOf(isActive));
-                }
-            }
-            for (String timer : beliefStore.getDeclaredTimers()) {
-                String timerEndFact = timer + "_end";
-                boolean isActive = beliefStore.isFactActive(timerEndFact);
-                context.put(timerEndFact, isActive); // True si expiró, False si aún no
-            }
-            Object result = MVEL.eval(condition, context);
-            return result instanceof Boolean && (Boolean) result;
-        } catch (Exception e) {
-        	logger.log("❌ Error evaluating logical expression: " + condition, true, false);
-            e.printStackTrace();
-            return false;
-        }
-    }
+	            List<List<Object>> factInstances = beliefStore.getActiveFacts().getOrDefault(factBase, Collections.emptyList());
+	            outerLoop:
+	            for (List<Object> instance : factInstances) {
+	                if (instance.size() != paramParts.length) continue;
+	                for (int i = 0; i < paramParts.length; i++) {
+	                    String token = paramParts[i].trim();
+	                    Object value = instance.get(i);
+
+	                    if (token.equals("_")) continue;
+
+	                    if (intVars.contains(token)) {
+	                        int val = ((Number) value).intValue();
+	                        context.put(token, val);
+	                        beliefStore.setIntVar(token, val);
+	                    } else if (realVars.contains(token)) {
+	                        double val = ((Number) value).doubleValue();
+	                        context.put(token, val);
+	                        beliefStore.setRealVar(token, val);
+	                    } else {
+	                        if (!String.valueOf(value).equals(token)) {
+	                            continue outerLoop;
+	                        }
+	                    }
+	                }
+	                matchFound = true;
+	                break;
+	            }
+	            matcher.appendReplacement(processedCondition, String.valueOf(matchFound));
+	        }
+	        matcher.appendTail(processedCondition);
+	        condition = processedCondition.toString();
+
+	        for (String timer : beliefStore.getDeclaredTimers()) {
+	            String timerEndFact = timer + "_end";
+	            boolean isActive = beliefStore.isFactActive(timerEndFact);
+	            context.put(timerEndFact, isActive);
+	        }
+
+	        Object result = MVEL.eval(condition, context);
+	        return result instanceof Boolean && (Boolean) result;
+	    } catch (Exception e) {
+	        logger.log("❌ Error evaluating logical expression: " + condition, true, false);
+	        e.printStackTrace();
+	        return false;
+	    }
+	}
+
 }
 

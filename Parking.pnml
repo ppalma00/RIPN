@@ -1,0 +1,251 @@
+<?xml version="1.0"?>
+<pnml xmlns="http://www.pnml.org/version-2009/grammar/pnml">
+	<!-- Written by GreatSPN Editor. -->
+	<net id="Parkingsystemv2" type="http://www.pnml.org/version-2009/grammar/ptnet">
+		<name>
+			<text>Parking system v2</text>
+		</name>
+		<page id="page0">
+			<name>
+				<text>DefaultPage</text>
+			</name>
+			<!-- List of places -->
+			<place id="P0">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>P0</text>
+				</name>
+				<graphics>
+					<position x="170" y="100"/>
+				</graphics>
+			</place>
+			<place id="P1">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>P1</text>
+				</name>
+				<graphics>
+					<position x="170" y="150"/>
+				</graphics>
+			</place>
+			<place id="P2">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>P2</text>
+				</name>
+				<graphics>
+					<position x="170" y="230"/>
+				</graphics>
+			</place>
+			<place id="P3">
+				<name>
+					<graphics>
+						<offset x="0" y="-5"/>
+					</graphics>
+					<text>P3</text>
+				</name>
+				<graphics>
+					<position x="60" y="230"/>
+				</graphics>
+				<initialMarking>
+					<text>1</text>
+				</initialMarking>
+			</place>
+			<place id="P4">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>P4</text>
+				</name>
+				<graphics>
+					<position x="130" y="60"/>
+				</graphics>
+			</place>
+			<place id="P5">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>P5</text>
+				</name>
+				<graphics>
+					<position x="370" y="240"/>
+				</graphics>
+			</place>
+			<!-- List of transitions -->
+			<transition id="T0">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T0</text>
+				</name>
+				<graphics>
+					<position x="75" y="60"/>
+				</graphics>
+			</transition>
+			<transition id="T2">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T2</text>
+				</name>
+				<graphics>
+					<position x="205" y="120"/>
+				</graphics>
+			</transition>
+			<transition id="T1">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T1</text>
+				</name>
+				<graphics>
+					<position x="145" y="120"/>
+				</graphics>
+			</transition>
+			<transition id="T3">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T3</text>
+				</name>
+				<graphics>
+					<position x="85" y="190"/>
+				</graphics>
+			</transition>
+			<transition id="T4">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T4</text>
+				</name>
+				<graphics>
+					<position x="175" y="190"/>
+				</graphics>
+			</transition>
+			<transition id="T5">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T5</text>
+				</name>
+				<graphics>
+					<position x="375" y="190"/>
+				</graphics>
+			</transition>
+			<transition id="T6">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T6</text>
+				</name>
+				<graphics>
+					<position x="125" y="230"/>
+				</graphics>
+			</transition>
+			<transition id="T7">
+				<name>
+					<graphics>
+						<offset x="0" y="0"/>
+					</graphics>
+					<text>T7</text>
+				</name>
+				<graphics>
+					<position x="175" y="280"/>
+				</graphics>
+			</transition>
+			<transition id="T8">
+				<name>
+					<graphics>
+						<offset x="10" y="-5"/>
+					</graphics>
+					<text>T8</text>
+				</name>
+				<graphics>
+					<position x="178" y="60"/>
+				</graphics>
+			</transition>
+			<transition id="T9">
+				<name>
+					<graphics>
+						<offset x="15" y="-5"/>
+					</graphics>
+					<text>T9</text>
+				</name>
+				<graphics>
+					<position x="378" y="300"/>
+				</graphics>
+			</transition>
+			<!-- List of arcs -->
+			<arc id="id1" source="P0" target="T2">
+			</arc>
+			<arc id="id2" source="P0" target="T1">
+			</arc>
+			<arc id="id3" source="T2" target="P1">
+			</arc>
+			<arc id="id4" source="T1" target="P1">
+			</arc>
+			<arc id="id5" source="P1" target="T3">
+			</arc>
+			<arc id="id6" source="P1" target="T4">
+			</arc>
+			<arc id="id7" source="T4" target="P2">
+			</arc>
+			<arc id="id8" source="P2" target="T7">
+			</arc>
+			<arc id="id9" source="P3" target="T0">
+				<graphics>
+					<position x="40" y="240"/>
+					<position x="40" y="70"/>
+				</graphics>
+			</arc>
+			<arc id="id10" source="T3" target="P3">
+			</arc>
+			<arc id="id11" source="T9" target="P3">
+				<graphics>
+					<position x="380" y="325"/>
+					<position x="70" y="325"/>
+					<position x="70" y="270"/>
+				</graphics>
+			</arc>
+			<arc id="id12" source="P2" target="T6">
+			</arc>
+			<arc id="id13" source="P1" target="T5">
+				<graphics>
+					<position x="280" y="200"/>
+				</graphics>
+			</arc>
+			<arc id="id14" source="T0" target="P4">
+			</arc>
+			<arc id="id15" source="P4" target="T8">
+			</arc>
+			<arc id="id16" source="T8" target="P0">
+			</arc>
+			<arc id="id17" source="T5" target="P5">
+			</arc>
+			<arc id="id18" source="P5" target="T9">
+			</arc>
+			<arc id="id19" source="T6" target="P1">
+			</arc>
+			<arc id="id20" source="T7" target="P3">
+				<graphics>
+					<position x="90" y="290"/>
+				</graphics>
+			</arc>
+		</page>
+	</net>
+</pnml>

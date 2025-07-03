@@ -4,62 +4,93 @@
 ℹ️ Initialized integer variable 's' to 0
 ℹ️ Initialized integer variable 'id' to 0
 ℹ️ Initialized integer variable 'slot' to 0
-[2025-07-01 10:22:35.576] 
+[2025-07-03 12:09:36.894] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
+   Active facts with parameters: {low_temp=[[10], [20]], free=[[10]], }
    Integer variables: {NWaiting=0, c=0, s=0, limit=100, id=9, slot=0}
    Real variables: {}
 
-[2025-07-01 10:22:35.759] ⏳ Timer started: timer1 for 600 seconds
-[2025-07-01 10:22:36.764] 
+[2025-07-03 12:09:37.073] ⏳ Timer started: timer1 for 600 seconds
+[2025-07-03 12:09:38.074] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
-   Integer variables: {NWaiting=0, c=0, s=10, limit=100, id=9, slot=20}
+   Active facts with parameters: {low_temp=[[10], [20]], free=[[10]], }
+   Integer variables: {NWaiting=0, c=0, s=10, limit=100, id=9, slot=10}
    Real variables: {}
 
-[2025-07-01 10:22:37.757] 
+[2025-07-03 12:09:39.071] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
-   Integer variables: {NWaiting=0, c=9, s=10, limit=100, id=9, slot=20}
+   Active facts with parameters: {low_temp=[[10], [20]], free=[[10]], }
+   Integer variables: {NWaiting=0, c=9, s=10, limit=100, id=9, slot=10}
    Real variables: {}
 
-[2025-07-01 10:22:39.765] 
+[2025-07-03 12:09:41.079] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {low_temp=[[10], [20], [30]], free=[[10], [20]], }
-   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=20}
+   Active facts with parameters: {low_temp=[[10], [20]], free=[[10]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
    Real variables: {}
 
-[2025-07-01 10:22:41.770] 
+[2025-07-03 12:09:43.086] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {waiting=[[9]], low_temp=[[10], [20], [30]], free=[[10], [20]], }
-   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=20}
+   Active facts with parameters: {waiting=[[9]], low_temp=[[10], [20]], free=[[10]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
    Real variables: {}
 
-[2025-07-01 10:22:43.777] ⏳ Timer started: timer2 for 300 seconds
-[2025-07-01 10:22:43.779] 
+[2025-07-03 12:09:44.098] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20], [30]], free=[[20]], }
-   Integer variables: {NWaiting=1, c=9, s=20, limit=100, id=9, slot=20}
+   Active facts with parameters: {waiting=[[9]], low_temp=[[10], [20]], free=[[10], [5]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
    Real variables: {}
 
-[2025-07-01 10:22:44.790] 
+[2025-07-03 12:09:45.094] ⏳ Timer started: timer2 for 300 seconds
+[2025-07-03 12:09:45.094] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20], [30]], free=[[20]], }
-   Integer variables: {NWaiting=1, c=9, s=20, limit=100, id=9, slot=10}
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20]], free=[[5]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=5}
    Real variables: {}
 
-[2025-07-01 10:22:47.788] ⏳ Timer started: timer2 for 300 seconds
-[2025-07-01 10:22:47.804] 
+[2025-07-03 12:09:46.104] 
 🔹 Current BeliefStore state:
    Active facts without parameters: []
-   Active facts with parameters: {assigned=[[9, 10], [9, 20]], low_temp=[[10], [20], [30]], }
-   Integer variables: {NWaiting=1, c=9, s=20, limit=100, id=9, slot=10}
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20]], free=[[5]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
+   Real variables: {}
+
+[2025-07-03 12:09:48.111] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20]], free=[[5], [7]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
+   Real variables: {}
+
+[2025-07-03 12:09:49.106] ⏳ Timer started: timer2 for 300 seconds
+🗑️ Fact removed: free(5)
+[2025-07-03 12:09:54.128] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20]], free=[[7]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
+   Real variables: {}
+
+[2025-07-03 12:09:58.146] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20]], free=[[7], [8]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
+   Real variables: {}
+
+[2025-07-03 12:10:01.649] 🔍 Calling removeFactWithWildcard with: free(_)
+[2025-07-03 12:10:01.649] 🗑️ Removed facts matching wildcard pattern: free(_)
+[2025-07-03 12:10:02.153] 
+🔹 Current BeliefStore state:
+   Active facts without parameters: []
+   Active facts with parameters: {assigned=[[9, 10]], low_temp=[[10], [20]], }
+   Integer variables: {NWaiting=1, c=9, s=10, limit=100, id=9, slot=10}
    Real variables: {}
 

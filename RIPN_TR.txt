@@ -1,11 +1,11 @@
 FACTS: see(INT)
-PERCEPTS:
+PERCEPTS: 
 VARSINT: x
 VARSREAL:
 DISCRETE: do(INT)
 TIMERS: t1
-INIT: x:=1; see(8)
+INIT: x:=1
 
 <TR>
-see(out x) && t1.end -> do(x)
-true -> t1.start(5)
+see(_) -> do(x)
+true -> [x:=2; remember(see(5))]

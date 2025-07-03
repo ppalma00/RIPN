@@ -1,10 +1,10 @@
-[LOG STARTED] 2025-07-01 13:11:26.601
-[2025-07-01 13:11:38.790] Event added: new_car
+[LOG STARTED] 2025-07-03 12:09:36.882
+[2025-07-03 12:09:37.071] Event added: new_car
 Active Events:
-   new_car [9.0] expires in 9223370285486477015 ms
+   new_car [9.0] expires in 9223370285317398734 ms
 Unattended Events:
 
-[2025-07-01 13:11:38.919] Event consumed: new_car with parameters [9.0]
+[2025-07-03 12:09:39.070] Event consumed: new_car with parameters [9.0]
 Active Events:
 Unattended Events:
 
