@@ -9,7 +9,7 @@ PLACES: p0; p1
 TRANSITIONS: t0; t1
 ARCS: p0->t0; t0->p1; p1->t1
 INITMARKING: (1,0)
-EVENTS: ev(0)
+EVENTS:
 
 <PN>
 p0: [act(); remember(see(8))]

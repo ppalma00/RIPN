@@ -1,11 +1,4 @@
-[2025-07-03 12:09:36.894] Current state of the Petri Net:
-p0: ○
-p1: ○
-p2: ○
-p3: ●
-p4: ○
-p5: ○
-[2025-07-03 12:09:37.043] Current state of the Petri Net:
+[2025-07-04 11:48:27.533] Current state of the Petri Net:
 p0: ○
 p1: ○
 p2: ○
@@ -15,8 +8,8 @@ p5: ○
 🚫 Transition 't6' blocked by condition: timer2.end
 🚫 Transition 't1' blocked by condition: NWaiting >= limit
 ⏸️ No non-immediate transitions enabled at this time. Waiting...
-[2025-07-03 12:09:39.070] 🔥 Transition fired: t0
-[2025-07-03 12:09:39.071] Current state of the Petri Net:
+[2025-07-04 11:48:29.567] 🔥 Transition fired: t0
+[2025-07-04 11:48:29.568] Current state of the Petri Net:
 p0: ○
 p1: ○
 p2: ○
@@ -25,8 +18,8 @@ p4: ●
 p5: ○
 🚫 Transition 't6' blocked by condition: timer2.end
 🚫 Transition 't1' blocked by condition: NWaiting >= limit
-[2025-07-03 12:09:41.078] 🔥 Transition fired: t8
-[2025-07-03 12:09:41.078] Current state of the Petri Net:
+[2025-07-04 11:48:31.572] 🔥 Transition fired: t8
+[2025-07-04 11:48:31.573] Current state of the Petri Net:
 p0: ●
 p1: ○
 p2: ○
@@ -35,8 +28,8 @@ p4: ○
 p5: ○
 🚫 Transition 't6' blocked by condition: timer2.end
 🚫 Transition 't1' blocked by condition: NWaiting >= limit
-[2025-07-03 12:09:43.083] 🔥 Transition fired: t2
-[2025-07-03 12:09:43.085] Current state of the Petri Net:
+[2025-07-04 11:48:33.578] 🔥 Transition fired: t2
+[2025-07-04 11:48:33.579] Current state of the Petri Net:
 p0: ○
 p1: ●
 p2: ○
@@ -45,12 +38,24 @@ p4: ○
 p5: ○
 🚫 Transition 't6' blocked by condition: timer2.end
 🚫 Transition 't1' blocked by condition: NWaiting >= limit
-[2025-07-03 12:09:45.093] 🔥 Transition fired: t4
-[2025-07-03 12:09:45.094] Current state of the Petri Net:
+[2025-07-04 11:48:35.584] 🔥 Transition fired: t4
+[2025-07-04 11:48:35.585] Current state of the Petri Net:
 p0: ○
 p1: ○
 p2: ●
 p3: ○
+p4: ○
+p5: ○
+🚫 Transition 't4' blocked by condition: free(out s) && low_temp(s)
+🚫 Transition 't6' blocked by condition: timer2.end
+🚫 Transition 't1' blocked by condition: NWaiting >= limit
+⏸️ No non-immediate transitions enabled at this time. Waiting...
+[2025-07-04 11:49:03.651] 🔥 Transition fired: t7
+[2025-07-04 11:49:03.651] Current state of the Petri Net:
+p0: ○
+p1: ○
+p2: ○
+p3: ●
 p4: ○
 p5: ○
 🚫 Transition 't4' blocked by condition: free(out s) && low_temp(s)

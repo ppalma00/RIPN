@@ -95,7 +95,6 @@ public class PetriNet {
                 return false;
             }
 
-            // ✅ Propagar valores de variables instanciadas (out) al BeliefStore
             for (Map.Entry<String, Object> entry : context.entrySet()) {
                 String var = entry.getKey();
                 Object value = entry.getValue();
@@ -106,7 +105,6 @@ public class PetriNet {
                 }
             }
 
-            // 📝 Guardar el contexto para posibles acciones posteriores
             if (transition != null) {
                 transition.setTempContext(context);
             }

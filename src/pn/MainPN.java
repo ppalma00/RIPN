@@ -45,7 +45,6 @@ public class MainPN implements Observer {
             Map<String, Boolean> emptyMarking = new HashMap<>(); 
             
             net.updateDurativeActions(emptyMarking); 
-           // net.printState();
             PetriNetAnimator animator = new PetriNetAnimator(net, 2000);
             if (EventPool.getInstance().hasDeclaredEvents()) {
                 SwingUtilities.invokeLater(() -> new GUIEvents());

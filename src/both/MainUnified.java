@@ -86,7 +86,6 @@ public class MainUnified implements Observer {
                 Map<String, Boolean> emptyMarking = new HashMap<>();
                 
                 net.updateDurativeActions(emptyMarking);
-                net.printState();
                 if (EventPool.getInstance().hasDeclaredEvents()) {
                     SwingUtilities.invokeLater(() -> new GUIEvents());
                 }                PetriNetAnimator animator = new PetriNetAnimator(net, PN_REFRESH_RATE_MS);             

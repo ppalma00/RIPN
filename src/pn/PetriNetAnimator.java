@@ -29,10 +29,7 @@ public class PetriNetAnimator implements Runnable {
         for (Place p : net.getPlaces().values()) {
             if (p.hasToken()) {
                 net.executePlaceActions(p.getName());
-                previousMarking.put(p.getName(), true);
-            } else {
-                previousMarking.put(p.getName(), false);
-            }
+            } 
         }
         net.printState();
         previousMarking = net.captureCurrentMarking();
@@ -42,7 +39,7 @@ public class PetriNetAnimator implements Runnable {
             for (String timerId : beliefStore.getDeclaredTimers()) {
                 beliefStore.isTimerExpired(timerId);
             }
-
+/*
             for (String placeName : currentMarking.keySet()) {
                 boolean wasMarked = previousMarking.getOrDefault(placeName, false);
                 boolean isNowMarked = currentMarking.get(placeName);
@@ -50,7 +47,7 @@ public class PetriNetAnimator implements Runnable {
                     net.executePlaceActions(placeName);
                 }
             }
-
+*/
             final boolean showBlockedConditions = !waitingLogged;
 
             List<String> enabledTransitions = net.getTransitions().keySet().stream()
@@ -213,7 +210,6 @@ public class PetriNetAnimator implements Runnable {
                                 return false;
                             }
 
-                            // Construimos el contexto temporal para esta transición
                             Map<String, Object> context = new HashMap<>();
                             for (int i = 0; i < values.length; i++) {
                                 String var = paramVars[i].trim();
@@ -222,7 +218,6 @@ public class PetriNetAnimator implements Runnable {
                                 }
                             }
 
-                            // Asociamos el contexto temporal a la transición
                             tr.setTempContext(context); // requiere método setTempContext en Transition
                             return true;
                         }

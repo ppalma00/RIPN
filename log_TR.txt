@@ -1,6 +1,9 @@
-[2025-07-03 12:09:37.042] Initiating TR program...
-[2025-07-03 12:09:37.060] 🔄 Executing rule with condition: true
-[2025-07-03 12:09:37.073] 📤 Event sent to environment: new_car[9.0]
-[2025-07-03 12:09:37.073] 🛠 Extracted timer command: start for timer: timer1
-[2025-07-03 12:09:45.100] 🔄 Executing rule with condition: assigned(id, out slot)
-[2025-07-03 12:09:45.101] ⏳ Starting durative action: park(slot)
+[2025-07-04 11:48:27.532] Initiating TR program...
+[2025-07-04 11:48:27.604] 🔄 Executing rule with condition: true
+[2025-07-04 11:48:27.645] 📤 Event sent to environment: new_car[9.0]
+[2025-07-04 11:48:27.646] 🛠 Extracted timer command: start for timer: timer1
+[2025-07-04 11:48:35.682] 🔄 Executing rule with condition: assigned(id, out slot)
+[2025-07-04 11:48:35.683] ⏳ Starting durative action: park(slot)
+[2025-07-04 11:49:02.788] ✅ Stopping durative action: park(slot)
+[2025-07-04 11:49:02.789] 🔄 Executing rule with condition: already_parked
+[2025-07-04 11:49:02.790] 📤 Event sent to environment: parked[9.0, 10.0]

@@ -12,7 +12,7 @@ ARCS: t5->p5; p3->t0; t0->p4; p4->t8; t8->p0
 ARCS: p2->t6; t6->p1; p2->t7; t7->p3; p5->t9; t9->p3
 
 INITMARKING: (0,0,0,1,0,0)
-EVENTS: new_car(0, INT); parked(0, INT, INT); exitzone(0, INT)
+EVENTS: new_car(0, INT); parked(5, INT, INT); exitzone(5, INT)
 
 <PN>
 t0: when(new_car(c)) [c:=c]
