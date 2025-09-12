@@ -5,7 +5,9 @@ Cyber-Physical Systems require advanced modeling frameworks to handle their hybr
 
 The implementation has been done in Java. You can run either a Petri net or a Teleo-Reactive program, or both, sharing a BeliefStore of knowledge. There is a main file for each of the three scenarios. You can change the frequency of the interpreter loop, the files for the output of the log. When there are events to be managed by the Petri net a Java Swing interface is offered to send events to the interpreter. The same for the Teleo-Reactive part regarding the sending of percepts to the BeliefStore.
 
-see https://www.techrxiv.org/users/917165/articles/1289915-reactive-interpreted-petri-nets-a-unified-framework-for-dynamic-cyber-physical-system-modeling-2025
+see https://www.techrxiv.org/users/917165/articles/1289915-reactive-interpreted-petri-nets-a-unified-framework-for-dynamic-cyber-physical-system-modeling-2025 
+
+see https://www.sciencedirect.com/science/article/pii/S2352711025002626?via%3Dihub "RIPN: A tool for implementing cyber-physical systems by using interpreted Petri Nets and teleo-reactive programs", SoftwareX Elsevier Journal, Sept. 2025.
 
 We are still working on improving the code to minimize errors.
 
