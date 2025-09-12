@@ -39,15 +39,7 @@ public class PetriNetAnimator implements Runnable {
             for (String timerId : beliefStore.getDeclaredTimers()) {
                 beliefStore.isTimerExpired(timerId);
             }
-/*
-            for (String placeName : currentMarking.keySet()) {
-                boolean wasMarked = previousMarking.getOrDefault(placeName, false);
-                boolean isNowMarked = currentMarking.get(placeName);
-                if (!wasMarked && isNowMarked) {
-                    net.executePlaceActions(placeName);
-                }
-            }
-*/
+
             final boolean showBlockedConditions = !waitingLogged;
 
             List<String> enabledTransitions = net.getTransitions().keySet().stream()

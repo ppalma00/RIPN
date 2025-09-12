@@ -168,10 +168,6 @@ public class PetriNet {
         for (Place p : outputPlaces) {
             boolean wasEmpty = !p.hasToken();
             p.setToken(true);
-
-          // if (wasEmpty) {
-            //    executePlaceActions(p.getName());
-          // }
         }
 
         for (Place p : inputPlaces) {
@@ -179,6 +175,7 @@ public class PetriNet {
         }
         executeTransitionActions(transitionName);
         logger.log("🔥 Transition fired: " + transitionName, true, true);
+        beliefStore.dumpState();
         return pendingDiscreteNotifications;
     }
     public List<Arc> getArcs() {

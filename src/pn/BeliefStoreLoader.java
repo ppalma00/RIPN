@@ -385,8 +385,8 @@ static LoggerManager logger;
     			    }
 	    
     			    if (net.getPlaces().containsKey(elementName)) {
-    			    	if (condition != null || !triggerEvents.isEmpty()) {
-    			            logger.log("⚠️ 'if' or 'when' clauses are not allowed in place definitions: " + line, true, false);   			          
+    			    	if (!triggerEvents.isEmpty()) {
+    			            logger.log("⚠️ 'when' clauses are not allowed in place definitions: " + line, true, false);   			          
     			            continue;
     			    	}
     			        placeVariableUpdates.put(elementName, actionList);
