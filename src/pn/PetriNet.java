@@ -21,6 +21,12 @@ public class PetriNet {
     private List<String> pendingDiscreteActions = new ArrayList<>();
     private Map<String, Integer> discreteActionArity = new HashMap<>();
     private LoggerManager logger;
+    private final java.util.Set<String> activeDuratives = new java.util.HashSet<>();
+
+    private String durativeKey(String placeName, String update) {
+        return placeName + "||" + update.trim();
+    }
+
     public LoggerManager getLogger() {
         return logger;
     }
@@ -90,7 +96,7 @@ public class PetriNet {
             boolean result = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, context);
             if (!result) {
                 if (showBlockedCondition) {
-                    logger.log("🚫 Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
+                    logger.log("Msg: Transition '" + transitionName + "' blocked by condition: " + condition, true, false);
                 }
                 return false;
             }
@@ -174,7 +180,7 @@ public class PetriNet {
             p.setToken(false);
         }
         executeTransitionActions(transitionName);
-        logger.log("🔥 Transition fired: " + transitionName, true, true);
+        logger.log("Msg: Transition fired: " + transitionName, true, true);
         beliefStore.dumpState();
         return pendingDiscreteNotifications;
     }
@@ -212,8 +218,8 @@ public class PetriNet {
 
             boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, context);
             if (!conditionMet) {
-                logger.log("🚫 Skipped actions in transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
-                return; // 🔹 Si la condición no se cumple, NO ejecutamos las acciones
+                logger.log("Msg: Skipped actions in transition " + transitionName + " (Condition not met: " + condition + ")", true, true);
+                return; 
             }
         }
 
@@ -241,10 +247,10 @@ public class PetriNet {
                             } else if (result instanceof Double && beliefStore.isRealVar(varName)) {
                                 beliefStore.setRealVar(varName, (Double) result);
                             } else {
-                                logger.log("❌ Invalid type for variable: " + varName, true, false);
+                                logger.log("Error: Invalid type for variable: " + varName, true, false);
                             }
                         } catch (Exception e) {
-                            logger.log("❌ Error evaluating expression: " + expression, true, false);
+                            logger.log("Error: Error evaluating expression: " + expression, true, false);
                         }
                     }
                 }
@@ -259,13 +265,11 @@ public class PetriNet {
             String factName = fact.substring(0, fact.indexOf("(")).trim();
             String paramStr = fact.substring(fact.indexOf("(") + 1, fact.length() - 1).trim();
 
-            // 🟡 Si contiene un wildcard explícito, usa directamente el eliminador con comodines
             if (paramStr.contains("_")) {
                 beliefStore.removeFactWithWildcard(fact);
                 return;
             }
 
-            // 🟢 Evaluación estándar si no hay wildcard
             List<String> paramList = Arrays.stream(paramStr.split(","))
                     .map(String::trim)
                     .map(p -> {
@@ -312,7 +316,7 @@ public class PetriNet {
                 String paramString = String.join(", ", evaluatedParams);
                 beliefStore.addFact(factName + "(" + paramString + ")");
             } catch (Exception e) {
-                logger.log("❌ Error parsing parameters for fact: " + fact + " → " + e.getMessage(), true, false);
+                logger.log("Error: Error parsing parameters for fact: " + fact + " → " + e.getMessage(), true, false);
             }
         } else {
             beliefStore.addFact(fact);
@@ -370,7 +374,7 @@ public class PetriNet {
                 String paramString = String.join(", ", evaluatedParams);
                 beliefStore.addFact(factName + "(" + paramString + ")");
             } catch (Exception e) {
-                logger.log("❌ Error parsing parameters for fact: " + fact + " → " + e.getMessage().charAt(0), true, false);
+                logger.log("Error: Error parsing parameters for fact: " + fact + " → " + e.getMessage().charAt(0), true, false);
             }
         } else {
             beliefStore.addFact(fact); 
@@ -382,7 +386,7 @@ public class PetriNet {
             String condition = placeConditions.get(placeName);
             boolean conditionMet = ExpressionEvaluatorPN.evaluateLogicalExpression(condition, beliefStore, logger, null);
             if (!conditionMet) {
-            	logger.log("🚫 Skipped actions in place " + placeName + " (Condition not met: " + condition + ")", true, true);
+            	logger.log("Msg: Skipped actions in place " + placeName + " (Condition not met: " + condition + ")", true, true);
                 return;
             }
         }
@@ -410,10 +414,10 @@ public class PetriNet {
                             } else if (result instanceof Double && beliefStore.isRealVar(varName)) {
                                 beliefStore.setRealVar(varName, (Double) result);
                             } else {
-                            	logger.log("❌ Invalid type for variable: " + varName, true, false);
+                            	logger.log("Error: Invalid type for variable: " + varName, true, false);
                             }
                         } catch (Exception e) {
-                        	logger.log("❌ Error evaluating expression: " + expression, true, false);
+                        	logger.log("Error: Error evaluating expression: " + expression, true, false);
                         }
                     }
 
@@ -434,11 +438,11 @@ public class PetriNet {
                                 if (result instanceof Number) {
                                     args[i] = ((Number) result).doubleValue();
                                 } else {
-                                    logger.log("❌ Non-numeric argument in action: " + token, true, false);
+                                    logger.log("Error: Non-numeric argument in action: " + token, true, false);
                                     args[i] = 0;
                                 }
                             } catch (Exception e) {
-                                logger.log("❌ Error evaluating argument '" + token + "': " + e.getMessage(), true, false);
+                                logger.log("Error: Error evaluating argument '" + token + "': " + e.getMessage(), true, false);
                                 args[i] = 0;
                             }
                         }
@@ -450,7 +454,7 @@ public class PetriNet {
                                 int duration = (int) args[0];
                                 beliefStore.startTimer(timerName, duration);
                             } else {
-                            	logger.log("❌ Timer start requires 1 argument: " + update, true, false);
+                            	logger.log("Error: Timer start requires 1 argument: " + update, true, false);
                             }
                             continue; 
                         }
@@ -549,17 +553,22 @@ public class PetriNet {
     }
 
     public void updateDurativeActions(Map<String, Boolean> previousMarking) {
+        // 1) Parar durativas al perder el marcado SOLO si estaban activas
         for (String placeName : places.keySet()) {
             Place place = places.get(placeName);
             boolean currentlyMarked = place.hasToken();
-            boolean previouslyMarked = previousMarking.getOrDefault(placeName, false);      
+            boolean previouslyMarked = previousMarking.getOrDefault(placeName, false);
+
             if (!currentlyMarked && previouslyMarked) {
                 if (placeVariableUpdates.containsKey(placeName)) {
                     for (String update : placeVariableUpdates.get(placeName)) {
                         if (isDurativeAction(update)) {
-                            String actionName = extractActionName(update);                    
-                            if (observer != null) {
-                                observer.onDurativeActionStopped(actionName);
+                            String key = durativeKey(placeName, update);
+                            if (activeDuratives.remove(key)) { // ← solo si estaba activa
+                                String actionName = extractActionName(update);
+                                if (observer != null) {
+                                    observer.onDurativeActionStopped(actionName);
+                                }
                             }
                         }
                     }
@@ -567,19 +576,32 @@ public class PetriNet {
             }
         }
 
+        // 2) Iniciar durativas al ganar marcado SI la condición del lugar es verdadera
         for (String placeName : places.keySet()) {
             Place place = places.get(placeName);
             boolean currentlyMarked = place.hasToken();
             boolean previouslyMarked = previousMarking.getOrDefault(placeName, false);
 
             if (currentlyMarked && !previouslyMarked) {
+                String cond = placeConditions.get(placeName);
+                if (cond != null && !cond.isEmpty()) {
+                    boolean ok = ExpressionEvaluatorPN.evaluateLogicalExpression(cond, beliefStore, logger, null);
+                    if (!ok) {
+                        logger.log("Msg: Skipped durative starts in place " + placeName +
+                                   " (Condition not met: " + cond + ")", true, true);
+                        continue; // no iniciar durativas si la condición no se cumple
+                    }
+                }
                 if (placeVariableUpdates.containsKey(placeName)) {
                     for (String update : placeVariableUpdates.get(placeName)) {
                         if (isDurativeAction(update)) {
-                            String actionName = extractActionName(update);
-                            double[] params = extractActionParameters(update);                 
-                            if (observer != null) {
-                                observer.onDurativeActionStarted(actionName, params);
+                            String key = durativeKey(placeName, update);
+                            if (activeDuratives.add(key)) { // ← marca como activa (evita reinicios)
+                                String actionName = extractActionName(update);
+                                double[] params = extractActionParameters(update);
+                                if (observer != null) {
+                                    observer.onDurativeActionStarted(actionName, params);
+                                }
                             }
                         }
                     }
@@ -587,6 +609,7 @@ public class PetriNet {
             }
         }
     }
+
 
     private boolean isDurativeAction(String update) {
         String base = extractActionName(update);

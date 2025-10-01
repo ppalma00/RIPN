@@ -16,7 +16,7 @@ public class LoggerManager {
         try {
             Writer = new PrintWriter(new FileWriter(fileName, false));
         } catch (IOException e) {
-            System.err.println("❌ Failed to initialize log files: " + e.getMessage());
+            System.err.println("Error: Failed to initialize log files: " + e.getMessage());
         }
     	}
     }

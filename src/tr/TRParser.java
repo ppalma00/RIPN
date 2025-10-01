@@ -58,12 +58,12 @@ public class TRParser {
 	        if (c == '(') count++;
 	        else if (c == ')') count--;
 	        if (count < 0) {
-	            logger.log("❌ Error: Too many ')' in " + context + ": " + str, true, false);
+	            logger.log("Error: Too many ')' in " + context + ": " + str, true, false);
 	            System.exit(1);
 	        }
 	    }
 	    if (count > 0) {
-	        logger.log("❌ Error: Missing ')' in " + context + ": " + str, true, false);
+	        logger.log("Error: Missing ')' in " + context + ": " + str, true, false);
 	        System.exit(1);
 	    }
 	}
@@ -83,7 +83,7 @@ public class TRParser {
 	                if (inside.contains("..")) {
 	                    String[] bounds = inside.split("\\.\\.");
 	                    if (bounds.length != 2) {
-	                        logger.log("❌ Error: Invalid range format in INIT: " + init, true, false);
+	                        logger.log("Error: Invalid range format in INIT: " + init, true, false);
 	                        System.exit(1);
 	                    }
 	                    try {
@@ -91,7 +91,7 @@ public class TRParser {
 	                        int to = Integer.parseInt(bounds[1].trim());
 
 	                        if (to < from || (to - from + 1) > 1000) {
-	                            logger.log("❌ Error: Invalid or too large range in INIT (max 1000). Line: " + init, true, false);
+	                            logger.log("Error: Invalid or too large range in INIT (max 1000). Line: " + init, true, false);
 	                            System.exit(1);
 	                        }
 
@@ -100,7 +100,7 @@ public class TRParser {
 	                        }
 
 	                    } catch (NumberFormatException e) {
-	                        logger.log("❌ Error: Range values must be integers in INIT: " + init, true, false);
+	                        logger.log("Error: Range values must be integers in INIT: " + init, true, false);
 	                        System.exit(1);
 	                    }
 	                    continue; // ya procesado
@@ -116,7 +116,7 @@ public class TRParser {
 	            String value = parts[1].trim();
 
 	            if (!beliefStore.isIntVar(varName) && !beliefStore.isRealVar(varName)) {
-	                logger.log("❌ Error #26: Variable '" + varName + "' is not declared in VARSINT or VARSREAL before initialization.\n   ❌ Line: " + init, true, false);
+	                logger.log("Error: Variable '" + varName + "' is not declared in VARSINT or VARSREAL before initialization.\n   ❌ Line: " + init, true, false);
 	                System.exit(1);
 	            }
 	            try {
@@ -126,7 +126,7 @@ public class TRParser {
 	                    beliefStore.setRealVar(varName, Double.parseDouble(value));
 	                }
 	            } catch (NumberFormatException e) {
-	                logger.log("❌ Error #27: Invalid format in initialization: " + init, true, false);
+	                logger.log("Error: Invalid format in initialization: " + init, true, false);
 	                System.exit(1);
 	            }
 	        }
@@ -138,7 +138,7 @@ public class TRParser {
 	    if (line.isEmpty()) return;
 	    String[] parts = line.split("->");
 	    if (parts.length != 2) {
-	    	logger.log("❌ Error #6: Invalid rule syntax - missing '->'. Rule: " + line, true, false);
+	    	logger.log("Error: Invalid rule syntax - missing '->'. Rule: " + line, true, false);
 	        System.exit(1);
 	    }
 	    String conditionStr = parts[0].trim();
@@ -154,7 +154,7 @@ public class TRParser {
 	        actionsStr = actionsAndUpdates.trim();
 	    }
 	    if (actionsStr.isEmpty() && updatesStr.isEmpty()) {
-	    	logger.log("❌ Error #9: A rule must have at least one action or BeliefStore update. Rule: " + line, true, false);
+	    	logger.log("Error: A rule must have at least one action or BeliefStore update. Rule: " + line, true, false);
 	        System.exit(1);
 	    }
 	    validateLogicalCondition(conditionStr, beliefStore, line);
@@ -183,9 +183,9 @@ public class TRParser {
 	                else if (action.matches(".*\\.(start|stop|pause|continue)\\(.*\\)")) {
 	                    discreteActions.add(action);
 	                } else if (action.startsWith("_send")) {
-	                    discreteActions.add(action); // ✅ Añadirla como acción especial
+	                    discreteActions.add(action); 
 	                } else {
-	                    logger.log("❌ Error #10: Action '" + action + "' is used in a rule but not declared.\n   ❌ Rule: " + line, true, false);
+	                    logger.log("Error: Action '" + action + "' is used in a rule but not declared.\n   ❌ Rule: " + line, true, false);
 	                    System.exit(1);
 	                }
 
@@ -206,13 +206,13 @@ public class TRParser {
 	            if (param.startsWith("out ")) {
 	                String varName = param.substring(4).trim();
 	                if (outVarsMap.containsKey(varName) && !outVarsMap.get(varName)) {
-	                    logger.log("❌ Error: Variable '" + varName + "' se usa con y sin 'out' en la misma condición", true, false);
+	                    logger.log("Error: Variable '" + varName + "' se usa con y sin 'out' en la misma condición", true, false);
 	                    System.exit(1);
 	                }
 	                outVarsMap.put(varName, true);
 	            } else {
 	                if (outVarsMap.containsKey(param) && outVarsMap.get(param)) {
-	                    logger.log("❌ Error: Variable '" + param + "' se usa con y sin 'out' en la misma condición", true, false);
+	                    logger.log("Error: Variable '" + param + "' se usa con y sin 'out' en la misma condición", true, false);
 	                    System.exit(1);
 	                }
 	                outVarsMap.putIfAbsent(param, false);
@@ -235,19 +235,19 @@ public class TRParser {
 
 	private static void validateLogicalCondition(String conditionStr, BeliefStore beliefStore, String fullRule) {
 	    if (conditionStr.contains("&") && !conditionStr.contains("&&")) {
-	    	logger.log("❌ Error #31: Invalid logical operator '&' found in: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
+	    	logger.log("Error: Invalid logical operator '&' found in: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
 	    	logger.log("   ↳ Use '&&' instead of '&'.", true, false);
 	        System.exit(1);
 	    }
 	    if (conditionStr.contains("|") && !conditionStr.contains("||")) {
-	    	logger.log("❌ Error #31: Invalid logical operator '|' found in: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
+	    	logger.log("Error: Invalid logical operator '|' found in: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
 	    	logger.log("   ↳ Use '||' instead of '|'.", true, false);
 	        System.exit(1);
 	    }
 
 	    String cleanedCondition = conditionStr.replaceAll("[a-zA-Z0-9_().<>=!&|, ]", ""); 
 	    if (!cleanedCondition.isEmpty()) {
-	    	logger.log("❌ Error #32: Invalid characters found in condition: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
+	    	logger.log("Error: Invalid characters found in condition: " + conditionStr + "\n   ❌ Rule: " + fullRule, false, false);
 	    	logger.log("   ↳ Found unexpected symbols: " + cleanedCondition, true, false);
 	        System.exit(1);
 	    }
@@ -257,7 +257,7 @@ public class TRParser {
 	    try {
 	        MVEL.compileExpression(logicalPart);
 	    } catch (Exception e) {
-	        logger.log("❌ Error #33: Logical expression error in condition: " + logicalPart + "\n   ❌ Rule: " + fullRule, false, false);
+	        logger.log("Error: Logical expression error in condition: " + logicalPart + "\n   ❌ Rule: " + fullRule, false, false);
 	        logger.log("   ↳ " + e.getMessage(), true, false);
 	        System.exit(1);
 	    }
@@ -274,7 +274,7 @@ public class TRParser {
 	        String expression = matcher.group(2).trim(); 
 
 	        if (expression.contains("++") || expression.contains("--") || expression.contains("**") || expression.contains("//")) {
-	        	logger.log("❌ Error #34: Invalid arithmetic expression in update: " + expression + "\n   ❌ Rule: " + fullRule, false, false);
+	        	logger.log("Error: Invalid arithmetic expression in update: " + expression + "\n   ❌ Rule: " + fullRule, false, false);
 	        	logger.log("   ↳ Use only valid arithmetic operators ('+', '-', '*', '/', '()').", true, false);
 	            System.exit(1);
 	        }
@@ -282,7 +282,7 @@ public class TRParser {
 	        try {
 	            MVEL.compileExpression(expression);
 	        } catch (Exception e) {
-	        	logger.log("❌ Error #35: Invalid arithmetic syntax: " + expression + "\n   ❌ Rule: " + fullRule, false, false);
+	        	logger.log("Error: Invalid arithmetic syntax: " + expression + "\n   ❌ Rule: " + fullRule, false, false);
 	        	logger.log("   ↳ " + e.getMessage(), true, false);
 	            System.exit(1);
 	        }
@@ -301,7 +301,7 @@ public class TRParser {
                 String timerName = actionName.split("\\.")[0]; 
 
                 if (!beliefStore.getDeclaredTimers().contains(timerName)) {
-                	logger.log("❌ Error #24: Timer '" + timerName + "' is used but not declared.\n   ❌ Rule: " + fullRule, true, false);
+                	logger.log("Error: Timer '" + timerName + "' is used but not declared.\n   ❌ Rule: " + fullRule, true, false);
                     System.exit(1);
                 }
 
@@ -309,14 +309,14 @@ public class TRParser {
                 int expectedParams = actionName.endsWith(".start") ? 1 : 0; 
 
                 if (givenParams != expectedParams) {
-                	logger.log("❌ Error #25: Command '" + actionName + "' expects " + expectedParams + " parameters but got " + givenParams + ".\n   ❌ Rule: " + fullRule, true, false);
+                	logger.log("Error: Command '" + actionName + "' expects " + expectedParams + " parameters but got " + givenParams + ".\n   ❌ Rule: " + fullRule, true, false);
                     System.exit(1);
                 }
                 continue;
             }
 
             if (!actionName.startsWith("_send") && !beliefStore.isDiscreteAction(actionName) && !beliefStore.isDurativeAction(actionName)) {
-            	logger.log("❌ Error #22: The action '" + actionName + "' is used but not declared.\n   ❌ Rule: " + fullRule, true, false);
+            	logger.log("Error: The action '" + actionName + "' is used but not declared.\n   ❌ Rule: " + fullRule, true, false);
                 System.exit(1);
             }
             if (!actionName.startsWith("_send")) {
@@ -324,7 +324,7 @@ public class TRParser {
             int givenParams = paramString.isEmpty() ? 0 : paramString.split(",").length;
 
             if (givenParams != expectedParams) {
-            	logger.log("❌ Error #23: Action '" + actionName + "' expects " + expectedParams + " parameters but got " + givenParams + ".\n   ❌ Rule: " + fullRule, true, false);
+            	logger.log("Error: Action '" + actionName + "' expects " + expectedParams + " parameters but got " + givenParams + ".\n   ❌ Rule: " + fullRule, true, false);
                 System.exit(1);
             }
             }
@@ -340,7 +340,7 @@ public class TRParser {
             } else if (ch == ')') {
                 parenCount--;
             } else if (ch == ',' && parenCount == 0) {
-            	logger.log("❌ Error: Found ',' instead of ';' in: " + expression, true, false);
+            	logger.log("Error: Found ',' instead of ';' in: " + expression, true, false);
                 return false;
             }
         }
@@ -380,12 +380,12 @@ public class TRParser {
                 }
             }
             if (!beliefStore.isFactDeclared(factName) && !factName.endsWith(".end")) {
-            	logger.log("❌ Error #17: The fact '" + factName + "' used in " + operation + "() is not declared.\n   ❌ Rule: " + fullRule, true, false);
+            	logger.log("Error: The fact '" + factName + "' used in " + operation + "() is not declared.\n   ❌ Rule: " + fullRule, true, false);
                 System.exit(1);
             }
 
             if (givenParams != expectedParams) {
-            	logger.log("❌ Error #18: Fact '" + factName + "' expects " + expectedParams + " parameters but got " + givenParams + " in " + operation + "().\n   ❌ Rule: " + fullRule, true, false);
+            	logger.log("Error: Fact '" + factName + "' expects " + expectedParams + " parameters but got " + givenParams + " in " + operation + "().\n   ❌ Rule: " + fullRule, true, false);
                 System.exit(1);
             }
         }
@@ -420,13 +420,13 @@ public class TRParser {
             int paramCount = paramString.isEmpty() ? 0 : paramString.split(",").length;
 
             if (!declaredFacts.containsKey(baseFact)) {
-            	logger.log("❌ Error #15: Fact '" + baseFact + "' is used in a rule but not declared.", true, false);
+            	logger.log("Error: Fact '" + baseFact + "' is used in a rule but not declared.", true, false);
                 System.exit(1);
             }
 
             int expectedParams = declaredFacts.get(baseFact);
             if (paramCount != expectedParams) {
-            	logger.log("❌ Error #16: Fact '" + baseFact + "' expects " + expectedParams + " parameters but got " + paramCount + ".", true, false);
+            	logger.log("Error: Fact '" + baseFact + "' expects " + expectedParams + " parameters but got " + paramCount + ".", true, false);
                 System.exit(1);
             }
         }
@@ -460,7 +460,7 @@ public class TRParser {
             boolean isDiscrete = declaredDiscrete.containsKey(baseAction);
             boolean isDurative = declaredDurative.containsKey(baseAction);
             if (!isDiscrete && !isDurative && !baseAction.startsWith("_send")) {
-            	logger.log("❌ Error #10: Action '" + action + "' is used in a rule but not declared.", true, false);
+            	logger.log("Error: Action '" + action + "' is used in a rule but not declared.", true, false);
                 System.exit(1);
             }
             if (!baseAction.equals("_send")) {
@@ -469,11 +469,11 @@ public class TRParser {
                 expectedParams = 0;
             }
             if (paramCount != expectedParams) {
-            	logger.log("❌ Error #12: Action '" + action + "' expects " + expectedParams + " parameters but got " + paramCount + ".", true, false);
+            	logger.log("Error: Action '" + action + "' expects " + expectedParams + " parameters but got " + paramCount + ".", true, false);
                 System.exit(1);
             }
             if (baseAction.equals("_send") && paramCount == 0) {
-                logger.log("⚠️ Warning: _send requires at least one parameter (event name).", true, false);
+                logger.log("Warning: _send requires at least one parameter (event name).", true, false);
             }
 
             }
@@ -500,7 +500,7 @@ public class TRParser {
                 if (varName.endsWith(".end")) {
                     String timerName = varName.replace(".end", "");
                     if (!beliefStore.getDeclaredTimers().contains(timerName)) {
-                    	logger.log("❌ Error #11: Timer '" + timerName + "' is used in a rule but not declared.", true, false);
+                    	logger.log("Error: Timer '" + timerName + "' is used in a rule but not declared.", true, false);
                         System.exit(1);
                     }
                     continue;
@@ -515,7 +515,7 @@ public class TRParser {
                         int declaredParams = beliefStore.getFactParameterCount(varName);
 
                         if (params.length != declaredParams) {
-                        	logger.log("❌ Error #18: Fact '" + varName + "' is used with " + params.length +
+                        	logger.log("Error: Fact '" + varName + "' is used with " + params.length +
                                                " parameters, but was declared with " + declaredParams + ".", true, false);
                             System.exit(1);
                         }
@@ -525,7 +525,7 @@ public class TRParser {
                 if (!varName.equals("_") && !varName.equals("out") && 
                 	    !declaredVars.contains(varName) && !beliefStore.isFactDeclared(varName)) {
 
-                	logger.log("❌ Error #11: Variable or fact '" + varName + "' is used in a rule but not declared.", true, false);
+                	logger.log("Error: Variable or fact '" + varName + "' is used in a rule but not declared.", true, false);
                     System.exit(1);
                 }
 
@@ -544,12 +544,12 @@ public class TRParser {
                         factWithParams.substring(0, factWithParams.indexOf("(")) : factWithParams;
 
                     if (!beliefStore.isFactDeclared(baseFactName)) {
-                    	logger.log("❌ Error #17: Cannot remember an undeclared fact: " + baseFactName, true, false);
+                    	logger.log("Error: Cannot remember an undeclared fact: " + baseFactName, true, false);
                         System.exit(1);
                     }
 
                     if (factWithParams.contains("_")) {
-                    	logger.log("❌ Error #8: The wildcard `_` cannot be used in remember(). Update: " + update, true, false);
+                    	logger.log("Error: The wildcard `_` cannot be used in remember(). Update: " + update, true, false);
                         System.exit(1);
                     }
 
@@ -585,12 +585,12 @@ public class TRParser {
                                     beliefStore.setRealVar(varName, ((Number) result).doubleValue());
                                 }
                             } else {
-                            	logger.log("❌ Error #11: Undeclared variable used: " + varName, true, false);
+                            	logger.log("Error: Undeclared variable used: " + varName, true, false);
                                 System.exit(1);
                             }
 
                         } catch (Exception e) {
-                        	logger.log("❌ Error #7: Invalid arithmetic expression: " + expression, true, false);
+                        	logger.log("Error: Invalid arithmetic expression: " + expression, true, false);
                             System.exit(1);
                         }
                     }
@@ -607,15 +607,15 @@ public class TRParser {
             var = var.trim();
             if (var.isEmpty()) continue;
             if (beliefStore.isRealVar(var)) {
-            	logger.log("❌ Error #28: Variable '" + var + "' is already declared as REAL and cannot be redeclared as INT.", true, false);
+            	logger.log("Error: Variable '" + var + "' is already declared as REAL and cannot be redeclared as INT.", true, false);
                 System.exit(1);
             }
             if (beliefStore.isFactDeclared(var)) {
-            	logger.log("❌ Error #29: Variable '" + var + "' cannot be declared as it conflicts with a FACTS declaration.", true, false);
+            	logger.log("Error: Variable '" + var + "' cannot be declared as it conflicts with a FACTS declaration.", true, false);
                 System.exit(1);
             }
             if (var.equals("out")) {
-            	logger.log("❌ Error: out is not a valid name for a Variable ", true, false);
+            	logger.log("Error: out is not a valid name for a Variable ", true, false);
                 System.exit(1);
             }
             if(!beliefStore.isIntVar(var)) {
@@ -633,15 +633,15 @@ public class TRParser {
             var = var.trim();
             if (var.isEmpty()) continue;
             if (beliefStore.isIntVar(var)) {
-            	logger.log("❌ Error #28: Variable '" + var + "' is already declared as INT and cannot be redeclared as REAL.", true, false);
+            	logger.log("Error: Variable '" + var + "' is already declared as INT and cannot be redeclared as REAL.", true, false);
                 System.exit(1);
             }
             if (beliefStore.isFactDeclared(var)) {
-            	logger.log("❌ Error #29: Variable '" + var + "' cannot be declared as it conflicts with a FACTS declaration.", true, false);
+            	logger.log("Error: Variable '" + var + "' cannot be declared as it conflicts with a FACTS declaration.", true, false);
                 System.exit(1);
             }
             if (var.equals("out")) {
-            	logger.log("❌ Error: out is not a valid name for a Variable ", true, false);
+            	logger.log("Error: out is not a valid name for a Variable ", true, false);
                 System.exit(1);
             }
             if(!beliefStore.isRealVar(var)) {
@@ -659,7 +659,7 @@ public class TRParser {
             if (fact.isEmpty()) continue;
 
             if (beliefStore.isIntVar(fact) || beliefStore.isRealVar(fact)) {
-                logger.log("❌ Error #30: Fact '" + fact + "' cannot be declared as it conflicts with a variable declaration.", true, false);
+                logger.log("Error: Fact '" + fact + "' cannot be declared as it conflicts with a variable declaration.", true, false);
                 System.exit(1);
             }
 
@@ -676,7 +676,7 @@ public class TRParser {
             if (percept.isEmpty()) continue;
 
             if (beliefStore.isIntVar(percept) || beliefStore.isRealVar(percept)) {
-                logger.log("❌ Error #30: Percept '" + percept + "' cannot be declared as it conflicts with a variable declaration.", true, false);
+                logger.log("Error: Percept '" + percept + "' cannot be declared as it conflicts with a variable declaration.", true, false);
                 System.exit(1);
             }
 
@@ -692,7 +692,7 @@ public class TRParser {
             }
 
             if (beliefStore.isIntVar(basePercept) || beliefStore.isRealVar(basePercept)) {
-                logger.log("❌ Error #30: Percept '" + basePercept + "' cannot be declared as it conflicts with a variable declaration.", true, false);
+                logger.log("Error: Percept '" + basePercept + "' cannot be declared as it conflicts with a variable declaration.", true, false);
                 System.exit(1);
             }
 

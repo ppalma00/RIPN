@@ -51,7 +51,7 @@ public class MainPN implements Observer {
             }
             new Thread(animator).start();
         } catch (IOException e) {
-        	logger.log("❌ Error loading files: " + e.getMessage(), true, false);
+        	logger.log("Error loading files: " + e.getMessage(), true, false);
         }
     }
     

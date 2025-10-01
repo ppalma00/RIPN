@@ -28,7 +28,7 @@ public class ExpressionEvaluatorPN {
 
 	        return MVEL.eval(expr, fullContext);
 	    } catch (Exception e) {
-	        logger.log("❌ Error evaluating expression with context: " + expr + " → " + e.getMessage(), true, false);
+	        logger.log("Error evaluating expression with context: " + expr + " → " + e.getMessage(), true, false);
 	        return null;
 	    }
 	}
@@ -50,7 +50,7 @@ public class ExpressionEvaluatorPN {
 	        while (outVarMatcher.find()) {
 	            String varName = outVarMatcher.group(1);
 	            if (!outVars.add(varName)) {
-	                logger.log("❌ Error: variable '" + varName + "' no puede usarse con 'out' más de una vez en una condición: " + condition, true, false);
+	                logger.log("Error: variable '" + varName + "' no puede usarse con 'out' más de una vez en una condición: " + condition, true, false);
 	                return false;
 	            }
 	        }
@@ -96,7 +96,7 @@ public class ExpressionEvaluatorPN {
 	                        if (tok.startsWith("out ")) {
 	                            String varName = tok.substring(4).trim();
 	                            if (varName.matches(".*[+\\-*/()].*")) {
-	                                logger.log("❌ Error: no se permite expresión aritmética con 'out': " + tok, true, false);
+	                                logger.log("Error: no se permite expresión aritmética con 'out': " + tok, true, false);
 	                                return false;
 	                            }
 	                            candidateContext.put(varName, value);
@@ -110,7 +110,7 @@ public class ExpressionEvaluatorPN {
 	                                    break;
 	                                }
 	                            } catch (Exception e) {
-	                                logger.log("❌ Error evaluando expresión: " + tok, true, false);
+	                                logger.log("Error evaluando expresión: " + tok, true, false);
 	                                valid = false;
 	                                break;
 	                            }
@@ -179,7 +179,7 @@ public class ExpressionEvaluatorPN {
 	                            break;
 	                        }
 	                    } catch (Exception e) {
-	                        logger.log("❌ Error evaluating full condition with binding: " + e.getMessage(), true, false);
+	                        logger.log("Error evaluating full condition with binding: " + e.getMessage(), true, false);
 	                    }
 	                }
 
@@ -198,7 +198,7 @@ public class ExpressionEvaluatorPN {
 	                            Object evaluated = MVEL.eval(token, context);
 	                            if (!evaluated.toString().equals(value.toString())) continue outer;
 	                        } catch (Exception e) {
-	                            logger.log("❌ Error evaluando expresión: " + token, true, false);
+	                            logger.log("Error evaluando expresión: " + token, true, false);
 	                            continue outer;
 	                        }
 	                    }
@@ -213,7 +213,7 @@ public class ExpressionEvaluatorPN {
 	        Object result = MVEL.eval(processedCondition.toString(), context);
 	        return result instanceof Boolean && (Boolean) result;
 	    } catch (Exception e) {
-	        logger.log("❌ Error evaluating logical expression: " + condition + " → " + e.getMessage(), true, false);
+	        logger.log("Error evaluating logical expression: " + condition + " → " + e.getMessage(), true, false);
 	        e.printStackTrace();
 	        return false;
 	    }

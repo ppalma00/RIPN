@@ -51,7 +51,7 @@ public class EnvPerceptConnector extends Thread {
                 removePercept(perceptFact);
 
             } catch (InterruptedException e) {
-                logger.log("❌ EnvPerceptConnector interrupted: " + e.getMessage(), true, false);
+                logger.log("Error: EnvPerceptConnector interrupted: " + e.getMessage(), true, false);
                 running = false;
             }
         }
@@ -70,7 +70,7 @@ public class EnvPerceptConnector extends Thread {
      */
     public void addPercept(String fact) {
         beliefStore.addFact(fact);
-        logger.log("✅ Percept added: " + fact, false, false);
+        logger.log("Msg: Percept added: " + fact, false, false);
     }
 
     /**
@@ -81,10 +81,10 @@ public class EnvPerceptConnector extends Thread {
     public void removePercept(String fact) {
         if (fact.contains("_")) {
             beliefStore.removeFactWithWildcard(fact);
-            logger.log("🗑️ Percept removed with wildcard: " + fact, false, false);
+            logger.log("Msg:️ Percept removed with wildcard: " + fact, false, false);
         } else {
             beliefStore.removeFact(fact);
-            logger.log("🗑️ Percept removed: " + fact, false, false);
+            logger.log("Msg:️ Percept removed: " + fact, false, false);
         }
     }
 }

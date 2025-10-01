@@ -33,7 +33,7 @@ public class EnvEventConnector extends Thread {
 
     @Override
     public void run() {
-        logger.log("🌐 EnvEventConnector started.", false, false);
+        logger.log("Msg: EnvEventConnector started.", false, false);
 
         while (running) {
             try {
@@ -47,7 +47,7 @@ public class EnvEventConnector extends Thread {
                 addEvent(eventName, params);
 
             } catch (InterruptedException e) {
-                logger.log("❌ EnvEventConnector interrupted: " + e.getMessage(), true, false);
+                logger.log("Error: EnvEventConnector interrupted: " + e.getMessage(), true, false);
                 running = false;
             }
         }
@@ -67,7 +67,7 @@ public class EnvEventConnector extends Thread {
      */
     public void addEvent(String eventName, double[] params) {
         EventPool.getInstance().addEvent(eventName, params);
-        logger.log("✅ Event added: " + eventName + " → " + java.util.Arrays.toString(params), false, false);
+        logger.log("Msg: Event added: " + eventName + " → " + java.util.Arrays.toString(params), false, false);
     }
 }
 

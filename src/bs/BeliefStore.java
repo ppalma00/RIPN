@@ -214,7 +214,7 @@ public class BeliefStore {
 
         List<String> expectedTypes = factParameterTypes.getOrDefault(baseFactName, new ArrayList<>());
         if (paramArray.length != expectedTypes.size()) {
-            logger.log("⚠️ Mismatch in parameter count for fact: " + factPattern, true, false);
+            logger.log("Warning:️ Mismatch in parameter count for fact: " + factPattern, true, false);
             return;
         }
 
@@ -229,11 +229,11 @@ public class BeliefStore {
                 } else if (expectedType.equals("REAL")) {
                     paramList.add(Double.parseDouble(value));
                 } else {
-                    logger.log("⚠️ Unknown parameter type for fact: " + factPattern, true, false);
+                    logger.log("Warning:️ Unknown parameter type for fact: " + factPattern, true, false);
                     return;
                 }
             } catch (NumberFormatException e) {
-                logger.log("⚠️ Invalid parameter format for fact: " + factPattern, true, false);
+                logger.log("Warning:️ Invalid parameter format for fact: " + factPattern, true, false);
                 return;
             }
         }
@@ -251,7 +251,7 @@ public class BeliefStore {
     }
 
     public synchronized void removeFactWithWildcard(String factPattern) {
-        logger.log("🔍 Calling removeFactWithWildcard with: " + factPattern, true, true);
+        logger.log("Msg: Calling removeFactWithWildcard with: " + factPattern, true, true);
 
         if (!factPattern.contains("_")) {
             removeFact(factPattern);
@@ -264,7 +264,7 @@ public class BeliefStore {
 
         String baseFactName = factPattern.substring(0, factPattern.indexOf("("));       
         if (baseFactName.endsWith("_end") || !activeFacts.containsKey(baseFactName)) {
-        	logger.log("⚠️ Ignoring wildcard removal for: " + factPattern, true, false);
+        	logger.log("Warning: Ignoring wildcard removal for: " + factPattern, true, false);
             return;
         }
 
@@ -283,7 +283,7 @@ public class BeliefStore {
             return true;
         });
         if (removed) {
-        	logger.log("🗑️ Removed facts matching wildcard pattern: " + factPattern, true, true);
+        	logger.log("Msg:️ Removed facts matching wildcard pattern: " + factPattern, true, true);
         }
         if (instances.isEmpty()) {
             activeFacts.remove(baseFactName);
@@ -310,11 +310,11 @@ public class BeliefStore {
         if (!intVars.containsKey(varName)) {
             intVars.put(varName, initialValue);
             if (logger != null) {
-                logger.log("ℹ️ Initialized integer variable '" + varName + "' to " + initialValue, true, false);
+                logger.log("Msg:️ Initialized integer variable '" + varName + "' to " + initialValue, true, false);
             }
         } else {
             if (logger != null) {
-                logger.log("🔁 Skipped reinitialization of int var '" + varName + "' (already has value: " + intVars.get(varName) + ")", true, false);
+                logger.log("Msg: Skipped reinitialization of int var '" + varName + "' (already has value: " + intVars.get(varName) + ")", true, false);
             }
         }
     }
@@ -338,11 +338,11 @@ public class BeliefStore {
         if (!realVars.containsKey(varName)) {
             realVars.put(varName, initialValue);
             if (logger != null) {
-                logger.log("ℹ️ Initialized real variable '" + varName + "' to " + initialValue, false, false);
+                logger.log("Msg:️ Initialized real variable '" + varName + "' to " + initialValue, false, false);
             }
         } else {
             if (logger != null) {
-                logger.log("🔁 Skipped reinitialization of real var '" + varName + "' (already has value: " + realVars.get(varName) + ")", false, false);
+                logger.log("Msg: Skipped reinitialization of real var '" + varName + "' (already has value: " + realVars.get(varName) + ")", false, false);
             }
         }
     }
@@ -404,7 +404,7 @@ public class BeliefStore {
             : factWithParams;
 
         if (!declaredFacts.containsKey(baseFactName)) {
-            logger.log("⚠️ Attempt to activate an undeclared fact: " + factWithParams, true, false);
+            logger.log("Warning:️ Attempt to activate an undeclared fact: " + factWithParams, true, false);
             return;
         }
 
@@ -415,7 +415,7 @@ public class BeliefStore {
             List<String> expectedTypes = perceptsParameterTypes.getOrDefault(baseFactName, new ArrayList<>());
 
             if (expectedTypes.size() != paramArray.length) {
-                logger.log("⚠️ Mismatch in parameter count for fact: " + factWithParams, true, false);
+                logger.log("Warning:️ Mismatch in parameter count for fact: " + factWithParams, true, false);
                 return;
             }
 
@@ -429,11 +429,11 @@ public class BeliefStore {
                     } else if (expectedType.equals("REAL")) {
                         parameters.add(Double.parseDouble(text));
                     } else {
-                        logger.log("⚠️ Unknown expected parameter type for " + baseFactName + ": " + expectedType, true, false);
+                        logger.log("Warning:️ Unknown expected parameter type for " + baseFactName + ": " + expectedType, true, false);
                         return;
                     }
                 } catch (NumberFormatException e) {
-                    logger.log("⚠️ Invalid parameter value: '" + text + "' for expected type: " + expectedType, true, false);
+                    logger.log("Warning:️ Invalid parameter value: '" + text + "' for expected type: " + expectedType, true, false);
                     return;
                 }
             }
@@ -490,28 +490,28 @@ public class BeliefStore {
 
     public void startTimer(String timerId, int durationSeconds) {
         if (!declaredTimers.contains(timerId)) {
-        	logger.log("⚠️ Attempt to start an undeclared timer: " + timerId, true, false);
+        	logger.log("Warning:️ Attempt to start an undeclared timer: " + timerId, true, false);
             return;
         }
         timers.put(timerId, System.currentTimeMillis() + (durationSeconds * 1000));
         removeFact(timerId + "_end");
-        logger.log("⏳ Timer started: " + timerId + " for " + durationSeconds + " seconds", true, true);
+        logger.log("Msg: Timer started: " + timerId + " for " + durationSeconds + " seconds", true, true);
     }
 
     public synchronized void stopTimer(String timerId) {
         if (!timers.containsKey(timerId) && !pausedTimers.containsKey(timerId)) {
-        	logger.log("⚠️ Attempt to stop an undeclared or already removed timer: " + timerId, true, true);
+        	logger.log("Warning:️ Attempt to stop an undeclared or already removed timer: " + timerId, true, true);
             return;
         }
         timers.remove(timerId);
         pausedTimers.remove(timerId);
         addFact(timerId + "_end");
-        logger.log("🛑 Timer stopped: " + timerId, true, true);
+        logger.log("Msg: Timer stopped: " + timerId, true, true);
     }
 
     public synchronized void pauseTimer(String timerId) {
         if (!timers.containsKey(timerId)) {
-        	logger.log("⚠️ Attempt to pause an undeclared timer: " + timerId, true, true);
+        	logger.log("Warning:️ Attempt to pause an undeclared timer: " + timerId, true, true);
             return;
         }
 
@@ -519,7 +519,7 @@ public class BeliefStore {
         if (remainingTime > 0) {
             pausedTimers.put(timerId, remainingTime);
             timers.remove(timerId);
-            logger.log("⏸️ Timer paused: " + timerId + ", remaining time: " + remainingTime + " ms", true, true);
+            logger.log("Msg:️ Timer paused: " + timerId + ", remaining time: " + remainingTime + " ms", true, true);
         }
     }
     public synchronized void continueTimer(String timerId) {
@@ -528,9 +528,9 @@ public class BeliefStore {
             long resumeTime = System.currentTimeMillis() + remainingTime;
 
             timers.put(timerId, resumeTime);
-            logger.log("▶️ Timer resumed: " + timerId + ", new expiration in " + remainingTime + " ms.", true, true);
+            logger.log("Msg:️ Timer resumed: " + timerId + ", new expiration in " + remainingTime + " ms.", true, true);
         } else {
-        	logger.log("⚠️ Attempted to resume a non-paused timer: " + timerId, true, true);
+        	logger.log("Warning:️ Attempted to resume a non-paused timer: " + timerId, true, true);
         }
     }
     public synchronized boolean isTimerExpired(String timerId) {
@@ -543,10 +543,10 @@ public class BeliefStore {
         if (expired) {
             if (!isFactActive(timerEndFact)) {
                 addFact(timerEndFact);
-                logger.log("✅ Timer expired: " + timerEndFact + " activated", true, true);
+                logger.log("Msg: Timer expired: " + timerEndFact + " activated", true, true);
             }
             timers.remove(timerId);
-            logger.log("🛑 Timer fully removed: " + timerId, true, true);
+            logger.log("Msg: Timer fully removed: " + timerId, true, true);
         }
         return expired;
     }
@@ -577,7 +577,7 @@ public class BeliefStore {
             return;
         }
         lastDump = currentDump;
-    	logger.log("\n🔹 Current BeliefStore state:", true, true);
+    	logger.log("\nCurrent BeliefStore state:", true, true);
     	logger.log("   Active facts without parameters: " + activeFactsNoParams, true, false);
         
     	logger.log("   Active facts with parameters: {", false, false);

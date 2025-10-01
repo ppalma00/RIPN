@@ -22,7 +22,7 @@ public class EventPool {
             writer.println("[LOG STARTED] " + LocalDateTime.now().format(formatter));
             writer.close();
         } catch (IOException e) {
-            System.err.println("❌ Error initializing event log: " + e.getMessage());
+            System.err.println("Error initializing event log: " + e.getMessage());
         }
     }
 
@@ -136,7 +136,7 @@ public class EventPool {
             }
             writer.println();
         } catch (IOException e) {
-            System.err.println("❌ Error writing to event log: " + e.getMessage());
+            System.err.println("Error writing to event log: " + e.getMessage());
         }
     }
 

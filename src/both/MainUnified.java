@@ -92,7 +92,7 @@ public class MainUnified implements Observer {
                 new Thread(animator).start();
 
             } catch (Exception e) {
-            	loggerTR.log("❌ Petri Net execution error: " + e.getMessage(),true, false);
+            	loggerTR.log("Error: Petri Net execution error: " + e.getMessage(),true, false);
                 e.printStackTrace();
             }
         }).start();
@@ -111,7 +111,7 @@ public class MainUnified implements Observer {
                 main.loggerTR.log("Initiating TR program...", true, true);
                 program.run(); // internally loops
             } catch (Exception e) {
-            	main.loggerTR.log("❌ TR Program execution error: " + e.getMessage(), true, false);
+            	main.loggerTR.log("Error TR Program execution error: " + e.getMessage(), true, false);
                 e.printStackTrace();
             }
         }).start();

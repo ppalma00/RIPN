@@ -66,7 +66,7 @@ static LoggerManager logger;
         for (String timer : timers) {
             String timerName = timer.trim();
             if (!isValidName(timerName)) {
-                logger.log("❌ Error: Invalid variable or timer name '" + timerName + "'", true, false);
+                logger.log("Error: Invalid variable or timer name '" + timerName + "'", true, false);
                 System.exit(1);
             }
             if (!timerName.isEmpty()) {
@@ -82,7 +82,7 @@ static LoggerManager logger;
             if (event.isEmpty()) continue;
 
             if (!event.contains("(") || !event.contains(")") || !event.endsWith(")")) {
-                logger.log("❌ Error #40: Invalid event declaration. Missing or malformed parentheses in: '" + event + "'", true, false);
+                logger.log("Error: Invalid event declaration. Missing or malformed parentheses in: '" + event + "'", true, false);
                 System.exit(1);
             }
 
@@ -90,18 +90,18 @@ static LoggerManager logger;
             String content = event.substring(event.indexOf("(") + 1, event.lastIndexOf(")")).trim();
 
             if (name.isEmpty() || !name.matches("[a-zA-Z_][a-zA-Z0-9_]*")) {
-                logger.log("❌ Error #41: Invalid event name: '" + name + "'", true, false);
+                logger.log("Error: Invalid event name: '" + name + "'", true, false);
                 System.exit(1);
             }
 
             if (content.isEmpty()) {
-                logger.log("❌ Error #42: Event '" + name + "' must contain at least the duration parameter.", true, false);
+                logger.log("Error: Event '" + name + "' must contain at least the duration parameter.", true, false);
                 System.exit(1);
             }
 
             String[] parts = content.split(",");
             if (parts.length == 0) {
-                logger.log("❌ Error #43: Event '" + name + "' must specify duration as the first parameter.", true, false);
+                logger.log("Error: Event '" + name + "' must specify duration as the first parameter.", true, false);
                 System.exit(1);
             }
 
@@ -109,11 +109,11 @@ static LoggerManager logger;
             try {
                 duration = Integer.parseInt(parts[0].trim());
                 if (duration < 0) {
-                    logger.log("❌ Error #44: Duration must be ≥ 0 in event '" + name + "'. Found: " + duration, true, false);
+                    logger.log("Error: Duration must be ≥ 0 in event '" + name + "'. Found: " + duration, true, false);
                     System.exit(1);
                 }
             } catch (NumberFormatException e) {
-                logger.log("❌ Error #45: First parameter must be a valid integer duration in event '" + name + "'", true, false);
+                logger.log("Error: First parameter must be a valid integer duration in event '" + name + "'", true, false);
                 System.exit(1);
             }
 
@@ -121,7 +121,7 @@ static LoggerManager logger;
             for (int i = 1; i < parts.length; i++) {
                 String type = parts[i].trim();
                 if (!type.equals("INT") && !type.equals("REAL")) {
-                    logger.log("❌ Error #46: Invalid type '" + type + "' in event '" + name + "'. Only INT or REAL are allowed.", true, false);
+                    logger.log("Error: Invalid type '" + type + "' in event '" + name + "'. Only INT or REAL are allowed.", true, false);
                     System.exit(1);
                 }
                 types.add(type);
@@ -138,7 +138,7 @@ static LoggerManager logger;
             fact = fact.trim();       
             if (!fact.isEmpty() && !beliefStore.isFactDeclared(fact)) {
             	if (!isValidName(fact)) {
-                    logger.log("❌ Error: Invalid FACT name '" + fact + "'", true, false);
+                    logger.log("Error: Invalid FACT name '" + fact + "'", true, false);
                     System.exit(1);
                 }
                 beliefStore.declareFact(fact);
@@ -153,7 +153,7 @@ static LoggerManager logger;
             var = var.trim();          
             if (!var.isEmpty() && !beliefStore.isIntVar(var) && !beliefStore.isRealVar(var)) {
             	if (!isValidName(var)) {
-                    logger.log("❌ Error: Invalid INTVAR name '" + var + "'", true, false);
+                    logger.log("Error: Invalid INTVAR name '" + var + "'", true, false);
                     System.exit(1);
                 }
             	if(!beliefStore.isIntVar(var)) {
@@ -170,7 +170,7 @@ static LoggerManager logger;
             var = var.trim();           
             if (!var.isEmpty() && !beliefStore.isIntVar(var) && !beliefStore.isRealVar(var)) {
             	if (!isValidName(var)) {
-                    logger.log("❌ Error: Invalid REALVAR name '" + var + "'", true, false);
+                    logger.log("Error: Invalid REALVAR name '" + var + "'", true, false);
                     System.exit(1);
                 }
             	if(!beliefStore.isRealVar(var)) {
@@ -202,11 +202,11 @@ static LoggerManager logger;
                         double value = Double.parseDouble(valueStr);
                         beliefStore.setRealVar(varName, value);
                     } else {
-                        logger.log("❌ Error: Variable '" + varName + "' no declarada en VARSINT o VARSREAL.\n   ❌ Línea: " + assignment, true, false);
+                        logger.log("Error: Variable '" + varName + "' no declarada en VARSINT o VARSREAL.\n   ❌ Línea: " + assignment, true, false);
                         System.exit(1);
                     }
                 } catch (NumberFormatException e) {
-                    logger.log("❌ Error: Valor no numérico en la inicialización: " + assignment, true, false);
+                    logger.log("Error: Valor no numérico en la inicialización: " + assignment, true, false);
                     System.exit(1);
                 }
 
@@ -220,21 +220,21 @@ static LoggerManager logger;
                         // Intervalo detectado
                         String[] bounds = inside.split("\\.\\.");
                         if (bounds.length != 2) {
-                            logger.log("❌ Error: Formato inválido de rango en INIT: " + assignment, true, false);
+                            logger.log("Error: Formato inválido de rango en INIT: " + assignment, true, false);
                             System.exit(1);
                         }
                         try {
                             int from = Integer.parseInt(bounds[0].trim());
                             int to = Integer.parseInt(bounds[1].trim());
                             if (to < from || (to - from + 1) > 1000) {
-                                logger.log("❌ Error: Rango inválido o demasiado grande (máx 1000). Línea: " + assignment, true, false);
+                                logger.log("Error: Rango inválido o demasiado grande (máx 1000). Línea: " + assignment, true, false);
                                 System.exit(1);
                             }
                             for (int i = from; i <= to; i++) {
                                 beliefStore.addFact(base + "(" + i + ")");
                             }
                         } catch (NumberFormatException e) {
-                            logger.log("❌ Error: Valores del rango deben ser enteros en INIT: " + assignment, true, false);
+                            logger.log("Error: Valores del rango deben ser enteros en INIT: " + assignment, true, false);
                             System.exit(1);
                         }
                     } else {
@@ -257,7 +257,7 @@ static LoggerManager logger;
             action = action.trim();
             if (!action.isEmpty()) {
             	if (!isValidName(action)) {
-                    logger.log("❌ Error: Invalid action name '" + action + "'", true, false);
+                    logger.log("Error: Invalid action name '" + action + "'", true, false);
                     System.exit(1);
                 }
                 if (isDurative) {
@@ -304,7 +304,7 @@ static LoggerManager logger;
     		}
     		if (line.contains(":")) {
     			if (!hasBalancedParenthesesAndBrackets(line)) {
-    			    logger.log("❌ Error: Unmatched parenthesis or bracket in line: " + line, true, false);
+    			    logger.log("Error: Unmatched parenthesis or bracket in line: " + line, true, false);
     			    System.exit(1); 
     			}
     			String[] parts = line.split(":", 2);
@@ -340,14 +340,14 @@ static LoggerManager logger;
     			    }
     			    actionLine = actionLine.replace(whenMatcher.group(0), "").trim(); 
     			}
-		
-    			// Buscar 'if(...)' con paréntesis equilibrados
-    			int ifIndex = actionLine.indexOf("if(");
-    			if (ifIndex != -1) {
-    			    int open = ifIndex + 2; // posición del primer paréntesis
+    			// Buscar 'if(...)' con o sin espacios tras "if"
+    			Pattern ifPattern = Pattern.compile("\\bif\\s*\\("); // admite "if(" y "if ("
+    			Matcher ifMatcher = ifPattern.matcher(actionLine);
+    			if (ifMatcher.find()) {
+    			    int parenOpen = ifMatcher.end() - 1; // posición real del '('
     			    int depth = 1;
     			    int close = -1;
-    			    for (int i = open + 1; i < actionLine.length(); i++) {
+    			    for (int i = parenOpen + 1; i < actionLine.length(); i++) {
     			        char c = actionLine.charAt(i);
     			        if (c == '(') depth++;
     			        else if (c == ')') depth--;
@@ -357,15 +357,16 @@ static LoggerManager logger;
     			        }
     			    }
     			    if (close != -1) {
-    			        condition = actionLine.substring(open + 1, close).trim();
-    			        actionLine = (actionLine.substring(0, ifIndex) + actionLine.substring(close + 1)).trim();
+    			        condition = actionLine.substring(parenOpen + 1, close).trim();
+
+    			        String before = actionLine.substring(0, ifMatcher.start()).trim();
+    			        String after  = actionLine.substring(close + 1).trim();
+    			        actionLine = (before + " " + after).trim();
     			    } else {
-    			        logger.log("❌ Error: unmatched parentheses in if(...) clause → " + line, true, false);
+    			        logger.log("Error: unmatched parentheses in if(...) clause → " + line, true, false);
     			        continue;
     			    }
     			}
-
-
     			actionLine = actionLine.trim();
 
     			if (actionLine.startsWith("[") && actionLine.endsWith("]")) {
@@ -377,7 +378,7 @@ static LoggerManager logger;
     			        if (rawAction.isEmpty()) continue;
 
     			        if (rawAction.contains("=") && !rawAction.contains(":=")) {
-    			            logger.log("⚠️ Malformed assignment (did you mean ':='?) → " + rawAction, true, false);
+    			            logger.log("Warning: Malformed assignment (did you mean ':='?) → " + rawAction, true, false);
     			            continue;
     			        }
 
@@ -386,7 +387,7 @@ static LoggerManager logger;
 	    
     			    if (net.getPlaces().containsKey(elementName)) {
     			    	if (!triggerEvents.isEmpty()) {
-    			            logger.log("⚠️ 'when' clauses are not allowed in place definitions: " + line, true, false);   			          
+    			            logger.log("Warning:'when' clauses are not allowed in place definitions: " + line, true, false);   			          
     			            continue;
     			    	}
     			        placeVariableUpdates.put(elementName, actionList);
@@ -404,10 +405,10 @@ static LoggerManager logger;
     			        if (condition != null) transitionConditions.put(elementName, condition);
     			        net.getTransitions().get(elementName).setTriggerEvents(triggerEvents);
     			    } else {
-    			        logger.log("⚠️ Warning: Element '" + elementName + "' not found in places or transitions.", true, false);
+    			        logger.log("Warning: Element '" + elementName + "' not found in places or transitions.", true, false);
     			    }
     			} else {
-    			    logger.log("⚠️ Malformed line in <pn>: " + line, true, false);    			   
+    			    logger.log("Warning: Malformed line in <pn>: " + line, true, false);    			   
     			}
     	}
     	}

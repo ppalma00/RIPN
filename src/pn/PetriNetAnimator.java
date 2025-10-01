@@ -58,6 +58,9 @@ public class PetriNetAnimator implements Runnable {
                 Map<String, Boolean> beforeFire = net.captureCurrentMarking();
                 List<String> discreteActions = net.fire(t);
 
+                waitingLogged = false;
+                net.updateDurativeActions(beforeFire);
+                
                 Transition firedTransition = net.getTransitions().get(t);
                 if (firedTransition != null) {
                     List<Place> outputPlaces = net.getOutputPlaces(firedTransition);
@@ -66,8 +69,6 @@ public class PetriNetAnimator implements Runnable {
                     }
                 }
 
-                waitingLogged = false;
-                net.updateDurativeActions(beforeFire);
                 net.checkExpiredTimers();
                 Observer observer = net.getObserver();
                 for (String action : discreteActions) {
@@ -98,7 +99,7 @@ public class PetriNetAnimator implements Runnable {
 
             if (nonImmediate.isEmpty()) {
                 if (!waitingLogged) {
-                    logger.log("⏸️ No fireable transitions at this moment. Waiting for changes...", true, false);
+                    logger.log("Msg:️ No fireable transitions at this moment. Waiting for changes...", true, false);
                     waitingLogged = true;
                 }
                 try {
@@ -125,7 +126,7 @@ public class PetriNetAnimator implements Runnable {
 
             if (t == null) {
                 if (!waitingLogged) {
-                    logger.log("⏸️ No non-immediate transitions enabled at this time. Waiting...", true, false);
+                    logger.log("Msg:️ No non-immediate transitions enabled at this time. Waiting...", true, false);
                     waitingLogged = true;
                 }
                 try {
@@ -141,6 +142,9 @@ public class PetriNetAnimator implements Runnable {
             Map<String, Boolean> beforeFire = net.captureCurrentMarking();
             List<String> discreteActions = net.fire(t);
             
+            waitingLogged = false;
+            net.updateDurativeActions(beforeFire);
+            
             Transition firedTransition = net.getTransitions().get(t);
             if (firedTransition != null) {
                 List<Place> outputPlaces = net.getOutputPlaces(firedTransition);
@@ -149,10 +153,6 @@ public class PetriNetAnimator implements Runnable {
                 }
             }
 
-            
-            waitingLogged = false;
-
-            net.updateDurativeActions(beforeFire);
             Observer observer = net.getObserver();
             for (String action : discreteActions) {
                 if (observer != null) {
@@ -198,7 +198,7 @@ public class PetriNetAnimator implements Runnable {
                             double[] values = inst.getParameters();
 
                             if (values.length != paramVars.length) {
-                                logger.log("❌ Event parameter count mismatch for event: " + name, true, false);
+                                logger.log("Error: Event parameter count mismatch for event: " + name, true, false);
                                 return false;
                             }
 
@@ -214,7 +214,7 @@ public class PetriNetAnimator implements Runnable {
                             return true;
                         }
                     } catch (Exception ex) {
-                        logger.log("❌ Error parsing multi-event trigger: " + ev + " → " + ex.getMessage(), true, false);
+                        logger.log("Error: Error parsing multi-event trigger: " + ev + " → " + ex.getMessage(), true, false);
                     }
                 }
             }

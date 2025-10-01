@@ -98,7 +98,7 @@ public class GUIEvents extends JFrame {
     public static void main(String[] args) {
     	EventPool pool = EventPool.getInstance();
         if (!pool.hasDeclaredEvents()) {
-            System.out.println("⚠️ No declared events found. GUIEvents will not launch.");
+            System.out.println("Warning: No declared events found. GUIEvents will not launch.");
             return;
         }
         SwingUtilities.invokeLater(GUIEvents::new);    }

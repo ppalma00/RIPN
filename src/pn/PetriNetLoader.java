@@ -80,7 +80,7 @@ public class PetriNetLoader {
 	            int i = 0;
 	        
 	            if (tokens.length != places.size()) {
-	            	logger.log("❌ Error: The number of entries in INITMARKING (" + tokens.length + 
+	            	logger.log("Error: The number of entries in INITMARKING (" + tokens.length + 
 	                                                   ") does not match the number of PLACES (" + places.size() + ").", true, false);
 	            	System.exit(1);
 	            }
@@ -113,15 +113,15 @@ public class PetriNetLoader {
 	            boolean toIsPlace = places.containsKey(to);
 	            boolean toIsTransition = transitions.containsKey(to);
 	            if ((fromIsPlace && toIsPlace) || (fromIsTransition && toIsTransition)) {
-	            	logger.log("❌ Error: Invalid arc '" + arc + "'. Arcs must connect a PLACE and a TRANSITION, not two PLACES or two TRANSITIONS.", true, false);
+	            	logger.log("Error: Invalid arc '" + arc + "'. Arcs must connect a PLACE and a TRANSITION, not two PLACES or two TRANSITIONS.", true, false);
 	                System.exit(1);
 	            }
 	            if (!fromIsPlace && !fromIsTransition) {
-	            	logger.log("❌ Error: '" + from + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.", true, false);
+	            	logger.log("Error: '" + from + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.", true, false);
 	                System.exit(1);
 	            }
 	            if (!toIsPlace && !toIsTransition) {
-	            	logger.log("❌ Error: '" + to + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.", true, false);
+	            	logger.log("Error: '" + to + "' in arc '" + arc + "' is not declared as PLACE or TRANSITION.", true, false);
 	                System.exit(1);
 	            }
 
@@ -138,7 +138,7 @@ public class PetriNetLoader {
 	                transition = transitions.get(from);
 	                isInput = false;
 	            } else {
-	            	logger.log("❌ Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.", true, false);
+	            	logger.log("Error: Invalid arc '" + arc + "'. Must connect PLACE → TRANSITION or TRANSITION → PLACE.", true, false);
 	            	System.exit(1);
 	            }
 	            arcs.add(new Arc(place, transition, isInput, isInhibitor));
@@ -148,20 +148,20 @@ public class PetriNetLoader {
 
 	    for (String name : places.keySet()) {
 	        if (transitions.containsKey(name)) {
-	            logger.log("❌ Error: The identifier '" + name + "' is declared both as a PLACE and a TRANSITION.", true, false);
+	            logger.log("Error: The identifier '" + name + "' is declared both as a PLACE and a TRANSITION.", true, false);
 	            System.exit(1);
 	        }
 	    }
 	    String namePattern = "^[a-zA-Z][a-zA-Z0-9_]*$";
 	    for (String name : places.keySet()) {
 	        if (!name.matches(namePattern)) {
-	        	logger.log("❌ Error: Invalid PLACE name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
+	        	logger.log("Error: Invalid PLACE name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
 	            System.exit(1);
 	        }
 	    }
 	    for (String name : transitions.keySet()) {
 	        if (!name.matches(namePattern)) {
-	        	logger.log("❌ Error: Invalid TRANSITION name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
+	        	logger.log("Error: Invalid TRANSITION name '" + name + "'. Only alphanumeric identifiers (starting with a letter) are allowed.", true, false);
 	            System.exit(1);
 	        }
 	    }
@@ -169,7 +169,7 @@ public class PetriNetLoader {
 	    if (!hasPlaces || !hasTransitions || !hasArcs || !hasInitMarking ||
 	    	    net.getPlaces().isEmpty() || net.getTransitions().isEmpty() || arcLines.isEmpty()) {
 	    	    
-	    	    StringBuilder missing = new StringBuilder("❌ Error: Missing or empty required section(s): ");
+	    	    StringBuilder missing = new StringBuilder("Error: Missing or empty required section(s): ");
 	    	    if (!hasPlaces || net.getPlaces().isEmpty()) missing.append("PLACES, ");
 	    	    if (!hasTransitions || net.getTransitions().isEmpty()) missing.append("TRANSITIONS, ");
 	    	    if (!hasArcs || arcLines.isEmpty()) missing.append("ARCS, ");
@@ -187,7 +187,7 @@ public class PetriNetLoader {
 	    List<String> toRemove = new ArrayList<>();
 	    for (String tName : net.getTransitions().keySet()) {
 	        if (!connectedTransitions.contains(tName)) {
-	        	logger.log("⚠️ Warning: Transition '" + tName + "' is declared but has no arcs. It will be ignored.", true, false);
+	        	logger.log("Warning: Transition '" + tName + "' is declared but has no arcs. It will be ignored.", true, false);
 	            toRemove.add(tName);
 	        }
 	    }

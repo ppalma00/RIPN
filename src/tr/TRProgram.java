@@ -79,10 +79,10 @@ public class TRProgram {
             try {
                 Thread.sleep(cycleDelayMs); // Control del ciclo de ejecución
             } catch (InterruptedException e) {
-                logger.log("⚠️ TR execution interrupted.", true, true);
+                logger.log("Warning:️ TR execution interrupted.", true, true);
                 return;
             } catch (Exception e) {
-                logger.log("❌ Exception in TR execution: " + e.getMessage(), true, true);
+                logger.log("Error: Exception in TR execution: " + e.getMessage(), true, true);
                 e.printStackTrace();
             }
         }
@@ -98,7 +98,7 @@ public class TRProgram {
                 action = action.trim();
 
                 if (!action.matches(".*\\(.*\\)$")) { 
-                	logger.log("⚠️ Malformed action detected: " + action, true, false);
+                	logger.log("Warning:️ Malformed action detected: " + action, true, false);
                     continue;
                 }
 
@@ -115,12 +115,12 @@ public class TRProgram {
                     double[] eventParams = envData.getValue();
 
                     if (eventName == null || eventName.isEmpty()) {
-                        logger.log("⚠️ Cannot send event: missing or invalid name.", true, false);
+                        logger.log("Warning:️ Cannot send event: missing or invalid name.", true, false);
                         continue;
                     }
 
                     EventPool.getInstance().addEvent(eventName, eventParams);
-                    logger.log("📤 Event sent to environment: " + eventName + Arrays.toString(eventParams), true, true);
+                    logger.log("Msg: Event sent to environment: " + eventName + Arrays.toString(eventParams), true, true);
                     continue;
                 }
  else {
@@ -152,7 +152,7 @@ public class TRProgram {
     private void executeTimerCommand(String action, Double[] parameters) {
         String[] parts = action.split("\\.");
         if (parts.length < 2) {
-        	logger.log("⚠️ Malformed timer command: " + action, true, false);
+        	logger.log("Warning:️ Malformed timer command: " + action, true, false);
             return;
         }
 
@@ -160,10 +160,10 @@ public class TRProgram {
         String commandWithParams = parts[1];  
         String command = commandWithParams.split("\\(")[0];  
 
-        logger.log("🛠 Extracted timer command: " + command + " for timer: " + timerId, true, true);
+        logger.log("Msg: Extracted timer command: " + command + " for timer: " + timerId, true, true);
 
         if (!beliefStore.getDeclaredTimers().contains(timerId)) {
-        	logger.log("⚠️ Attempted to use an undeclared timer: " + timerId, true, false);
+        	logger.log("Warning: Attempted to use an undeclared timer: " + timerId, true, false);
             return;
         }
 
@@ -172,7 +172,7 @@ public class TRProgram {
                 if (parameters.length > 0) {
                     beliefStore.startTimer(timerId, parameters[0].intValue());
                 } else {
-                	logger.log("⚠️ `start` requires a duration (seconds).", true, false);
+                	logger.log("Warning:️ `start` requires a duration (seconds).", true, false);
                 }
                 break;
             case "stop":
@@ -185,7 +185,7 @@ public class TRProgram {
                 beliefStore.continueTimer(timerId);
                 break;
             default:
-            	logger.log("⚠️ Unknown timer action: " + command, true, false);
+            	logger.log("Warning:️ Unknown timer action: " + command, true, false);
         }
     }
 
@@ -209,7 +209,7 @@ public class TRProgram {
         for (String action : rule.getDurativeActions()) {
             if (activeDurativeActions.containsKey(action)) {
                 activeDurativeActions.remove(action);
-                logger.log("✅ Stopping durative action: " + action, true, true);
+                logger.log("Msg: Stopping durative action: " + action, true, true);
                 notifyDurativeActionStopped(action);
             }
         }
@@ -219,13 +219,13 @@ public class TRProgram {
         int endIndex = action.lastIndexOf(")");
 
         if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
-            logger.log("⚠️ Error extracting parameters from: " + action, true, false);
+            logger.log("Warning:️ Error extracting parameters from: " + action, true, false);
             return new Pair<>(null, new double[0]);
         }
 
         String paramString = action.substring(startIndex + 1, endIndex).trim();
         if (paramString.isEmpty()) {
-            logger.log("⚠️ _send requires at least one parameter (event name).", true, false);
+            logger.log("Warning:️ _send requires at least one parameter (event name).", true, false);
             return new Pair<>(null, new double[0]);
         }
 
@@ -245,7 +245,7 @@ public class TRProgram {
                     paramList.add(Double.parseDouble(p));
                 }
             } catch (Exception e) {
-                logger.log("⚠️ Invalid numeric parameter in _send: " + p, true, false);
+                logger.log("Warning:️ Invalid numeric parameter in _send: " + p, true, false);
             }
         }
 
@@ -258,7 +258,7 @@ public class TRProgram {
         int endIndex = action.lastIndexOf(")");
 
         if (startIndex == -1 || endIndex == -1 || startIndex > endIndex) {
-            logger.log("⚠️ Error extracting parameters from: " + action, true, false);
+            logger.log("Warning:️ Error extracting parameters from: " + action, true, false);
             return new Double[0];
         }
 
@@ -283,7 +283,7 @@ public class TRProgram {
                     paramList.add(Double.parseDouble(param));
                 }
             } catch (Exception e) {
-                logger.log("⚠️ Invalid parameter: " + param, true, true);
+                logger.log("Warning:️ Invalid parameter: " + param, true, true);
             }
         }
 
@@ -294,12 +294,12 @@ public class TRProgram {
     public void shutdown() {
         running = false;
         stopAllDurativeActions();
-        logger.log("🚨 TRProgram stopped.", true, true);
+        logger.log("Msg: TRProgram stopped.", true, true);
     }
 
     private void stopAllDurativeActions() {
         for (String action : activeDurativeActions.keySet()) {
-        	logger.log("✅ Stopping durative action: " + action, true, true);
+        	logger.log("Msg: Stopping durative action: " + action, true, true);
             notifyDurativeActionStopped(action);
         }
         activeDurativeActions.clear();

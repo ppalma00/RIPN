@@ -32,7 +32,7 @@ public class ExpressionEvaluator {
 	        int parenStart = part.indexOf("(");
 	        int parenEnd = part.lastIndexOf(")");
 	        if (parenStart == -1 || parenEnd == -1 || parenEnd < parenStart) {
-	            logger.log("❌ Error: condición mal formada: " + part, true, false);
+	            logger.log("Error: condición mal formada: " + part, true, false);
 	            return false;
 	        }
 
@@ -68,7 +68,7 @@ public class ExpressionEvaluator {
 	                            int val = Integer.parseInt(factVal);
 	                            store.setIntVar(param, val);
 	                        } catch (NumberFormatException e) {
-	                            logger.log("❌ Error: no se pudo asignar valor INT a " + param, true, false);
+	                            logger.log("Error: no se pudo asignar valor INT a " + param, true, false);
 	                            return false;
 	                        }
 	                    } else {
@@ -84,7 +84,7 @@ public class ExpressionEvaluator {
 	                            double val = Double.parseDouble(factVal);
 	                            store.setRealVar(param, val);
 	                        } catch (NumberFormatException e) {
-	                            logger.log("❌ Error: no se pudo asignar valor REAL a " + param, true, false);
+	                            logger.log("Error: no se pudo asignar valor REAL a " + param, true, false);
 	                            return false;
 	                        }
 	                    } else {
@@ -138,7 +138,7 @@ public class ExpressionEvaluator {
 	                            break;
 	                        }
 	                    } catch (Exception e) {
-	                        logger.log("❌ Error evaluando expresión lógica/arimética con binding: " + exprOnly + " → " + e.getMessage(), true, false);
+	                        logger.log("Error evaluando expresión lógica/arimética con binding: " + exprOnly + " → " + e.getMessage(), true, false);
 	                        return false;
 	                    }
 	                } else {
@@ -155,7 +155,6 @@ public class ExpressionEvaluator {
 	    if (!expressions.isEmpty()) {
 	        String logicalExpr = String.join(" && ", expressions);
 
-	        // 👇 Sustituye hechos sin parámetros
 	        for (String fact : store.getDeclaredFacts()) {
 	            if (!fact.contains("(")) {
 	                boolean isActive = store.getActiveFactsNoParams().contains(fact);
@@ -176,10 +175,10 @@ public class ExpressionEvaluator {
 
 	            Object result = MVEL.eval(logicalExpr, context);
 	            if (result instanceof Boolean) return (Boolean) result;
-	            logger.log("❌ Error: expresión no booleana: " + logicalExpr, true, false);
+	            logger.log("Error: expresión no booleana: " + logicalExpr, true, false);
 	            return false;
 	        } catch (Exception e) {
-	            logger.log("❌ Error en MVEL: " + e.getMessage() + "\n   ❌ Expresión: " + expr, true, false);
+	            logger.log("Error en MVEL: " + e.getMessage() + "\n   Expresión: " + expr, true, false);
 	            return false;
 	        }
 	    }
@@ -270,7 +269,7 @@ public class ExpressionEvaluator {
 	        Object result = MVEL.eval(condition, context);
 	        return result instanceof Boolean && (Boolean) result;
 	    } catch (Exception e) {
-	        logger.log("❌ Error evaluating logical expression: " + condition, true, false);
+	        logger.log("Error evaluating logical expression: " + condition, true, false);
 	        e.printStackTrace();
 	        return false;
 	    }
