@@ -464,7 +464,7 @@ public class PetriNet {
                         String timerName = name.substring(0, name.indexOf(".stop"));
                         if (beliefStore.getDeclaredTimers().contains(timerName)) {
                             beliefStore.stopTimer(timerName);
-                            logger.log("⏹️ Timer " + timerName + " stopped manually → t.end() activated", true, true);
+                            logger.log("Msg:️ Timer " + timerName + " stopped manually → t.end() activated", true, true);
                             continue; 
                         }
                     }
@@ -496,7 +496,7 @@ public class PetriNet {
 
     public void checkExpiredTimers() {
         for (String timerId : beliefStore.getDeclaredTimers()) {
-            beliefStore.isTimerExpired(timerId); // este método añade el hecho t1.end() si expira
+            beliefStore.isTimerExpired(timerId); 
         }
     }
 
@@ -508,7 +508,7 @@ public class PetriNet {
         combinedContext.putAll(beliefStore.getAllRealVars());
 
         if (context != null) {
-            combinedContext.putAll(context); // sobrescribe si hay conflicto
+            combinedContext.putAll(context); 
         }
 
         return MVEL.eval(expression, combinedContext);
@@ -522,9 +522,9 @@ public class PetriNet {
     public void printState() {
     	logger.log("Current state of the Petri Net:", true, true);
         for (Place p : places.values()) {
-        	logger.log(p.getName() + ": " + (p.hasToken() ? "●" : "○"), true, false);
+        	logger.log(p.getName() + ": " + (p.hasToken() ? "\u25CF" : "\u25CB"), true, false);
         }
-        beliefStore.dumpState(); // Mostrar estado actualizado del BeliefStore
+        beliefStore.dumpState(); 
     }
     public Map<String, Transition> getTransitions() {
         return transitions;
@@ -553,7 +553,6 @@ public class PetriNet {
     }
 
     public void updateDurativeActions(Map<String, Boolean> previousMarking) {
-        // 1) Parar durativas al perder el marcado SOLO si estaban activas
         for (String placeName : places.keySet()) {
             Place place = places.get(placeName);
             boolean currentlyMarked = place.hasToken();
@@ -564,7 +563,7 @@ public class PetriNet {
                     for (String update : placeVariableUpdates.get(placeName)) {
                         if (isDurativeAction(update)) {
                             String key = durativeKey(placeName, update);
-                            if (activeDuratives.remove(key)) { // ← solo si estaba activa
+                            if (activeDuratives.remove(key)) { 
                                 String actionName = extractActionName(update);
                                 if (observer != null) {
                                     observer.onDurativeActionStopped(actionName);
@@ -576,7 +575,6 @@ public class PetriNet {
             }
         }
 
-        // 2) Iniciar durativas al ganar marcado SI la condición del lugar es verdadera
         for (String placeName : places.keySet()) {
             Place place = places.get(placeName);
             boolean currentlyMarked = place.hasToken();
@@ -589,14 +587,14 @@ public class PetriNet {
                     if (!ok) {
                         logger.log("Msg: Skipped durative starts in place " + placeName +
                                    " (Condition not met: " + cond + ")", true, true);
-                        continue; // no iniciar durativas si la condición no se cumple
+                        continue; 
                     }
                 }
                 if (placeVariableUpdates.containsKey(placeName)) {
                     for (String update : placeVariableUpdates.get(placeName)) {
                         if (isDurativeAction(update)) {
                             String key = durativeKey(placeName, update);
-                            if (activeDuratives.add(key)) { // ← marca como activa (evita reinicios)
+                            if (activeDuratives.add(key)) { 
                                 String actionName = extractActionName(update);
                                 double[] params = extractActionParameters(update);
                                 if (observer != null) {
