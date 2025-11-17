@@ -261,6 +261,12 @@ public class PetriNet {
         }
     }
     private void processForgetFactWithContext(String fact, Map<String, Object> context) {
+    	if (!fact.contains("(")) {
+    	    // Fact without parameters → remove directly
+    	    beliefStore.removeFact(fact);
+    	    return;
+    	}
+
         if (fact.contains("(") && fact.endsWith(")")) {
             String factName = fact.substring(0, fact.indexOf("(")).trim();
             String paramStr = fact.substring(fact.indexOf("(") + 1, fact.length() - 1).trim();
@@ -274,8 +280,9 @@ public class PetriNet {
                     .map(String::trim)
                     .map(p -> {
                         Object val = ExpressionEvaluatorPN.evaluateExpression(p, beliefStore, logger, context);
-                        return val.toString();
+                        return (val != null) ? val.toString() : p; 
                     })
+
                     .collect(Collectors.toList());
 
             if (beliefStore.getActiveFacts().containsKey(factName)) {
